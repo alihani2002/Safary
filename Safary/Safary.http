@@ -1,0 +1,6 @@
+@Safary_HostAddress = http://localhost:5120
+
+GET {{Safary_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
