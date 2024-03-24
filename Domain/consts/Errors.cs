@@ -21,6 +21,8 @@
 		public const string InvalidMobileNumber = "Invalid mobile number.";
         public const string InvalidNationalId = "Invalid national ID.";
         public const string EmptyImage = "Please select an image.";
+        public const string DateValidation = "End date must be later than start date.";
+        public const string MaxHourDuration = "Duration Must be more Than 1 Hour less Than 24 Hours.";
 
     }
 }

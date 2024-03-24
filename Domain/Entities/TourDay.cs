@@ -1,4 +1,5 @@
 ﻿using Domain.Consts;
+using Domain.Filters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,7 @@ namespace Domain.Entities
         [Range(1, 30)]
         public int Duration { get; set; }
         public DateTime StartDate { get; set; }
-        
+        [DateGreaterThan("StartDate")]
         public DateTime EndDate { get; set; }
         public ICollection<Place>? Places { get; set; }
         public int? TourGuideId { get; set; }

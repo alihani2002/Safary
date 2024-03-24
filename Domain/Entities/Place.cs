@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Consts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Domain.Entities
     public class Place : BaseModel
     {
         public int Id { get; set; }
-        [MaxLength(150, ErrorMessage = "Username cannot exceed 150 characters")]
+        [MaxLength(150, ErrorMessage = Errors.MaxLength)]
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
