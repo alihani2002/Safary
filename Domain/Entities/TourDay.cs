@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Tour : BaseModel
+    public class TourDay : BaseModel
     {
         public int Id { get; set; }
 
@@ -19,12 +19,17 @@ namespace Domain.Entities
         
         public string Description { get; set; } = null!;
         
-        [Range(1, 23, ErrorMessage = "Duration Must be more Than 1 Hour less Than 24 Hours")]
+        [Range(1, 30)]
         public int Duration { get; set; }
-        
         public DateTime StartDate { get; set; }
         
         public DateTime EndDate { get; set; }
+        public ICollection<Places> Places { get; set; }
+        public int TourGuideId { get; set; }
+        public TourGuide TourGuide { get; set; }
+        public int CountryId { get; set; }
+        public Country Country { get; set; }
+
 
     }
 }
