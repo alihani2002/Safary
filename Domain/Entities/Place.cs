@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Places : BaseModel
+    public class Place : BaseModel
     {
         public int Id { get; set; }
         [MaxLength(150, ErrorMessage = "Username cannot exceed 150 characters")]
