@@ -24,11 +24,13 @@ namespace Domain.Entities
         public DateTime StartDate { get; set; }
         
         public DateTime EndDate { get; set; }
-        public ICollection<Places> Places { get; set; }
-        public int TourGuideId { get; set; }
+        public ICollection<Place> Places { get; set; }
+        public int? TourGuideId { get; set; }
         public TourGuide TourGuide { get; set; }
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
         public Country Country { get; set; }
+        public int? TouristId { get; set; }
+        public Tourist Tourist { get; set; }
 
 
     }
