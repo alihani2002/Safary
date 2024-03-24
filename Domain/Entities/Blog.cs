@@ -13,7 +13,8 @@ namespace Domain.Entities
         public int Id { get; set; }
 
         [MaxLength(150, ErrorMessage = Errors.MaxLength)]
-        public string Name { get; set; } = null!;
+        public string Title { get; set; } = null!;
+        public string CoverImage { get; set; } = null!;
         public string Description { get; set; } = null!;
         public DateTime Time { get; set; }
         public string Content { get; set; } = null!;
