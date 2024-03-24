@@ -18,9 +18,9 @@ namespace Domain.Entities
         public decimal DayPrice { get; set; }
         public decimal HourPrice { get; set; }
         public int Age { get; set; }
-        public string Bio { get; set; }
-        public string LanguageSpoken { get; set; }
-        public string ImageUrl { get; set;}
+        public string Bio { get; set; } = null!;
+        public string LanguageSpoken { get; set; } = null!;
+        public string ImageUrl { get; set; } = null!;
 
 
     }
