@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection.Emit;
 
 namespace Persistence.Configurations
 {
@@ -13,6 +14,14 @@ namespace Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Blog> builder)
         {
+           builder.HasKey(x => x.Id);
+           builder.HasMany(b => b.TourDays)
+           .WithOne()
+           .HasForeignKey(td => td.BlogId);
+
+            builder.HasMany(b => b.TourHours)
+           .WithOne()
+           .HasForeignKey(td => td.BlogId);
         }
     }
 }

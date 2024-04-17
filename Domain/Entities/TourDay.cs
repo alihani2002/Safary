@@ -31,6 +31,8 @@ namespace Domain.Entities
         public ICollection<Country>? Countries{ get; set; }
         public int? TouristId { get; set; }
         public Tourist? Tourist { get; set; }
+        public int? BlogId { get; set; }
+        public Blog? Blog { get; set; }
 
 
     }

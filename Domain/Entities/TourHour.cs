@@ -29,6 +29,8 @@ namespace Domain.Entities
         public Country? Country { get; set; }
         public int? TouristId { get; set; }
         public Tourist? Tourist { get; set; }
+        public int BlogId { get; set; }
+        public Blog? Blog { get; set; }
 
     }
 }

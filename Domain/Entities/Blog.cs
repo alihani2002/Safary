@@ -18,6 +18,8 @@ namespace Domain.Entities
         public string Description { get; set; } = null!;
         public DateTime Time { get; set; }
         public string Content { get; set; } = null!;
+        public ICollection<TourDay>? TourDays { get; set; }
+        public ICollection<TourHour>? TourHours { get; set; }
 
     }
 }
