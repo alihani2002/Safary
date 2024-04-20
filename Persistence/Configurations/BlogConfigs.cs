@@ -17,11 +17,11 @@ namespace Persistence.Configurations
            builder.HasKey(x => x.Id);
            builder.HasMany(b => b.TourDays)
            .WithOne()
-           .HasForeignKey(td => td.BlogId);
+           .HasForeignKey(td => td.Id);
 
             builder.HasMany(b => b.TourHours)
            .WithOne()
-           .HasForeignKey(td => td.BlogId);
+           .HasForeignKey(td => td.Id);
         }
     }
 }
