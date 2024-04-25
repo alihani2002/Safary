@@ -6,35 +6,35 @@ namespace Presentations.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TourDayController : ControllerBase
+    public class TourHourController : ControllerBase
     {
-        // GET: api/<TourDayController>
+        // GET: api/<TourHourController>
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<TourDayController>/5
+        // GET api/<TourHourController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<TourDayController>
+        // POST api/<TourHourController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/<TourDayController>/5
+        // PUT api/<TourHourController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<TourDayController>/5
+        // DELETE api/<TourHourController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
