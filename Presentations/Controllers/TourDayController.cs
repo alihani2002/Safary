@@ -1,8 +1,11 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Persistence.Data;
+using Shared.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,10 +16,13 @@ namespace Presentations.Controllers
     public class TourDayController : ControllerBase
     {
         private readonly IBaseRepository<TourDay> _baseRepository;
+        private readonly IMapper _mapper;
 
-        public TourDayController(IBaseRepository<TourDay> baseRepository)
+
+        public TourDayController(IBaseRepository<TourDay> baseRepository , IMapper mapper)
         {
             _baseRepository = baseRepository ?? throw new ArgumentNullException(nameof(baseRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
@@ -52,12 +58,17 @@ namespace Presentations.Controllers
         }
 
         [HttpPost]
-        public ActionResult<TourDay> PostTourDay(TourDay tourDay)
+        public ActionResult<TourDay> PostTourDay(TourDayPostDTO dto)
         {
             try
             {
-                var createdTourDay = _baseRepository.Add(tourDay);
-                return CreatedAtAction(nameof(GetTourDay), new { id = createdTourDay.Id }, createdTourDay);
+                if (dto != null)
+                {
+                    var tourDay = _mapper.Map<TourDay>(dto);
+                    var createdTourDay = _baseRepository.Add(tourDay);
+                    return CreatedAtAction(nameof(GetTourDay), new { id = createdTourDay.Id }, createdTourDay);
+                }
+                else { return BadRequest("Somethingwent wrong"); }
             }
             catch (Exception ex)
             {
@@ -66,17 +77,22 @@ namespace Presentations.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutTourDay(int id, TourDay tourDay)
+        public IActionResult PutTourDay(int id, TourDayDTO dto)
         {
             try
             {
-                if (id != tourDay.Id)
+                if (id != dto.Id)
                 {
                     return BadRequest();
                 }
-
-                _baseRepository.Update(tourDay);
-                return NoContent();
+                if (dto != null)
+                {
+                    var tourDay = _mapper.Map<TourDay>(dto);
+                    _baseRepository.Update(tourDay);
+                    return Ok();
+                }
+                else { return BadRequest("Somethingwent wrong"); }
+                
             }
             catch (Exception ex)
             {

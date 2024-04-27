@@ -119,7 +119,7 @@ namespace Persistence.Repositories
 					query = query.OrderByDescending(orderBy);
 			}
 
-			return query.ToList();
+            return query.ToList();
 		}
 
 		public T Add(T entity)

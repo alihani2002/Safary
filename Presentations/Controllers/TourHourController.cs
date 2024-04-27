@@ -1,4 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Domain.Entities;
+using Domain.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Persistence.Data;
+using Shared.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +15,103 @@ namespace Presentations.Controllers
     [ApiController]
     public class TourHourController : ControllerBase
     {
-        // GET: api/<TourHourController>
+        private readonly IBaseRepository<TourHour> _baseRepository;
+        private readonly IMapper _mapper;
+
+
+        public TourHourController(IBaseRepository<TourHour> baseRepository, IMapper mapper)
+        {
+            _baseRepository = baseRepository ?? throw new ArgumentNullException(nameof(baseRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<TourHour>> GetTourHours()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var TourHours = _baseRepository.GetAll();
+                return Ok(TourHours);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // GET api/<TourHourController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<TourHour> GetTourHour(int id)
         {
-            return "value";
+            try
+            {
+                var TourHour = _baseRepository.GetById(id);
+                if (TourHour == null)
+                {
+                    return NotFound();
+                }
+                return Ok(TourHour);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // POST api/<TourHourController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<TourHour> PostTourHour(TourHourPostDTO dto)
         {
+            try
+            {
+                if (dto != null)
+                {
+                    var TourHour = _mapper.Map<TourHour>(dto);
+                    var createdTourHour = _baseRepository.Add(TourHour);
+                    return CreatedAtAction(nameof(GetTourHour), new { id = createdTourHour.Id }, createdTourHour);
+                }
+                else { return BadRequest("Somethingwent wrong"); }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // PUT api/<TourHourController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult PutTourHour(int id, TourHourDTO dto)
         {
+            try
+            {
+                if (id != dto.Id)
+                {
+                    return BadRequest();
+                }
+                if (dto != null)
+                {
+                    var TourHour = _mapper.Map<TourHour>(dto);
+                    _baseRepository.Update(TourHour);
+                    return Ok();
+                }
+                else { return BadRequest("Somethingwent wrong"); }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // DELETE api/<TourHourController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult DeleteTourHour(int id)
         {
+            try
+            {
+                _baseRepository.Remove(_baseRepository.GetById(id));
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

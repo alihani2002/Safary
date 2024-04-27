@@ -15,7 +15,7 @@ namespace Persistence.Configurations
         {
             builder.HasOne(a => a.Blog)
                    .WithMany(g => g.TourHours)
-                   .HasForeignKey(a => a.BlogId)
+                   .HasForeignKey(a => a.BlogId) 
                    .OnDelete(DeleteBehavior.SetNull);
             builder.HasMany(a => a.Places)
               .WithOne(s => s.TourHour)
