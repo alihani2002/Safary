@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Shared.DTOs
 {
-    public class TourDayDTO : BaseDTO
+    public class TourDayPostDTO
     {
-        public int Id { get; set; }
         public string Name { get; set; } = null!;
         public decimal Price { get; set; }
         public string Description { get; set; } = null!;
@@ -18,5 +17,6 @@ namespace Shared.DTOs
         public DateTime EndDate { get; set; }
         public ICollection<Place>? Places { get; set; }
         public TourGuide? TourGuide { get; set; }
+
     }
 }
