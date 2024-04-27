@@ -26,6 +26,7 @@ namespace Domain.Entities
         [DateGreaterThan("StartDate")]
         public DateTime EndDate { get; set; }
         public ICollection<Place>? Places { get; set; }
+
         public int? TourGuideId { get; set; }
         public TourGuide? TourGuide { get; set; }
         public ICollection<Country>? Countries{ get; set; }
