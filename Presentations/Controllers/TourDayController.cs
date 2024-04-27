@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.Entities;
+using Domain.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Persistence.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +12,90 @@ namespace Presentations.Controllers
     [ApiController]
     public class TourDayController : ControllerBase
     {
-        // GET: api/<TourDayController>
+        private readonly IBaseRepository<TourDay> _baseRepository;
+
+        public TourDayController(IBaseRepository<TourDay> baseRepository)
+        {
+            _baseRepository = baseRepository ?? throw new ArgumentNullException(nameof(baseRepository));
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<TourDay>> GetTourDays()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var tourDays = _baseRepository.GetAll();
+                return Ok(tourDays);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // GET api/<TourDayController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<TourDay> GetTourDay(int id)
         {
-            return "value";
+            try
+            {
+                var tourDay = _baseRepository.GetById(id);
+                if (tourDay == null)
+                {
+                    return NotFound();
+                }
+                return Ok(tourDay);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // POST api/<TourDayController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<TourDay> PostTourDay(TourDay tourDay)
         {
+            try
+            {
+                var createdTourDay = _baseRepository.Add(tourDay);
+                return CreatedAtAction(nameof(GetTourDay), new { id = createdTourDay.Id }, createdTourDay);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // PUT api/<TourDayController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult PutTourDay(int id, TourDay tourDay)
         {
+            try
+            {
+                if (id != tourDay.Id)
+                {
+                    return BadRequest();
+                }
+
+                _baseRepository.Update(tourDay);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-        // DELETE api/<TourDayController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult DeleteTourDay(int id)
         {
+            try
+            {
+                _baseRepository.Remove(_baseRepository.GetById(id));
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }
