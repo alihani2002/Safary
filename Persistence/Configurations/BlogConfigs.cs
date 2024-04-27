@@ -14,14 +14,14 @@ namespace Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Blog> builder)
         {
-           builder.HasKey(x => x.Id);
-           builder.HasMany(b => b.TourDays)
-           .WithOne()
-           .HasForeignKey(td => td.Id);
+            builder.HasMany(a => a.TourDays)
+               .WithOne(s => s.Blog)
+               .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasMany(b => b.TourHours)
-           .WithOne()
-           .HasForeignKey(td => td.Id);
+            builder.HasMany(a => a.TourHours)
+               .WithOne(s => s.Blog)
+               .OnDelete(DeleteBehavior.SetNull);
+
         }
     }
 }

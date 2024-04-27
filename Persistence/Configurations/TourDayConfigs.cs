@@ -13,6 +13,16 @@ namespace Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<TourDay> builder)
         {
+            builder.HasOne(a => a.Blog)
+                   .WithMany(g => g.TourDays)
+                   .HasForeignKey(a => a.BlogId)
+                   .OnDelete(DeleteBehavior.SetNull);
+
+
+            builder.HasMany(a => a.Places)
+               .WithOne(s => s.TourDay)
+               .OnDelete(DeleteBehavior.SetNull);
+
         }
     }
 }

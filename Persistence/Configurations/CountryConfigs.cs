@@ -13,6 +13,9 @@ namespace Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Country> builder)
         {
+            builder.HasMany(a => a.Cities)
+               .WithOne(s => s.Country)
+               .OnDelete(DeleteBehavior.SetNull);
 
         }
     }
