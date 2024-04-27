@@ -12,5 +12,6 @@ namespace Domain.Entities
         public int Id { get; set; }
         [MaxLength(150)]
         public string Name { get; set; } = null!;
+        public ICollection<City>? Cities { get; set; }
     }
 }

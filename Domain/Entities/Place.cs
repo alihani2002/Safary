@@ -16,11 +16,11 @@ namespace Domain.Entities
         public string Description { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public string Location { get; set; } = null!;
-        public int CountryId { get; set; } 
-        public Country? Country { get; set; }
-        public int TourHourId { get; set; }
+        public int? CityId { get; set; } 
+        public City? City { get; set; }
+        public int? TourHourId { get; set; }
         public TourHour? TourHour { get; set; }
-        public int TourDayId { get; set; }
+        public int? TourDayId { get; set; }
         public TourDay? TourDay { get; set; }
 
     }
