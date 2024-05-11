@@ -32,23 +32,11 @@ namespace Presentations.Controllers
             var dto = _mapper.Map<IEnumerable<BlogDTO>>(blogs);
             return Ok(dto);
         }
-
+        
         [HttpGet("{id}")]
         public async Task<ActionResult> GetBlogById(int id)
         {
-            //try
-            //{
-            //    var Blog = _baseRepository.GetById(id);
-            //    if (Blog == null)
-            //    {
-            //        return NotFound();
-            //    }
-            //    return Ok(Blog);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, $"Internal server error: {ex.Message}");
-            //}
+            
 
             var blog = await _unitOfWork.Blogs.GetById(id);
 
@@ -70,62 +58,39 @@ namespace Presentations.Controllers
             _unitOfWork.Complete();
             return Ok(blog);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBlog(int id, BlogDTO model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        //[HttpPost]
-        //public ActionResult<Blog> AddBlog(BlogPostDTO dto)
-        //{
-        //    //try
-        //    //{
-        //    //    if (dto != null)
-        //    //    {
-        //    //        var Blog = _mapper.Map<Blog>(dto);
-        //    //        var createdBlog = _baseRepository.Add(Blog);
-        //    //        return CreatedAtAction(nameof(GetBlog), new { id = createdBlog.Id }, createdBlog);
-        //    //    }
-        //    //    else { return BadRequest("Somethingwent wrong"); }
-        //    //}
-        //    //catch (Exception ex)
-        //    //{
-        //    //    return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    //}
-        //}
+            var existingBlog = await _unitOfWork.Blogs.GetById(id);
 
-        //[HttpPut("{id}")]
-        //public IActionResult PutBlog(int id, BlogDTO dto)
-        //{
-        //    try
-        //    {
-        //        if (id != dto.Id)
-        //        {
-        //            return BadRequest();
-        //        }
-        //        if (dto != null)
-        //        {
-        //            var Blog = _mapper.Map<Blog>(dto);
-        //            _baseRepository.Update(Blog);
-        //            return Ok();
-        //        }
-        //        else { return BadRequest("Somethingwent wrong"); }
+            if (existingBlog == null)
+                return NotFound();
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
+            existingBlog = _mapper.Map<Blog>(model);
 
-        //[HttpDelete("{id}")]
-        //public IActionResult DeleteBlog(int id)
-        //{
-        //    try
-        //    {
-        //        _baseRepository.Remove(_baseRepository.GetById(id));
-        //        return NoContent();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
+            _unitOfWork.Blogs.Update(existingBlog);
+            _unitOfWork.Complete();
+
+            return Ok(existingBlog);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBlog(int id)
+        {
+            var existingBlog = await _unitOfWork.Blogs.GetById(id);
+
+            if (existingBlog == null)
+                return NotFound();
+
+            _unitOfWork.Blogs.Remove(existingBlog);
+            _unitOfWork.Complete();
+
+            return Ok(existingBlog);
+        }
+
+
     }
 }

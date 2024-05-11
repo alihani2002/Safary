@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence.Data;
+using Persistence.Repositories;
 using Shared.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,103 +16,81 @@ namespace Presentations.Controllers
     [ApiController]
     public class TourDayController : ControllerBase
     {
-        private readonly IBaseRepository<TourDay> _baseRepository;
+
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
 
-        public TourDayController(IBaseRepository<TourDay> baseRepository , IMapper mapper)
+        public TourDayController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _baseRepository = baseRepository ?? throw new ArgumentNullException(nameof(baseRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<TourDay>> GetTourDays()
+        [HttpGet("GetAll")]
+        public async Task<ActionResult> GetTourDays()
         {
-            try
-            {
-                var tourDays = _baseRepository.GetAll();
-                return Ok(tourDays);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var TourDays = await _unitOfWork.TourDays.FindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
+            var dto = _mapper.Map<IEnumerable<TourDayDTO>>(TourDays);
+            return Ok(dto);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<TourDay> GetTourDay(int id)
+        public async Task<ActionResult> GetTourDayById(int id)
         {
-            try
-            {
-                var tourDay = _baseRepository.GetById(id);
-                if (tourDay == null)
-                {
-                    return NotFound();
-                }
-                return Ok(tourDay);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var TourDay = await _unitOfWork.TourDays.GetById(id);
+
+            if (TourDay is null)
+                return NotFound();
+
+            return Ok(TourDay);
         }
 
         [HttpPost]
-        public ActionResult<TourDay> PostTourDay(TourDayPostDTO dto)
+        public async Task<IActionResult> AddTourDay(TourDayDTO model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (dto != null)
-                {
-                    var tourDay = _mapper.Map<TourDay>(dto);
-                    var createdTourDay = _baseRepository.Add(tourDay);
-                    return CreatedAtAction(nameof(GetTourDay), new { id = createdTourDay.Id }, createdTourDay);
-                }
-                else { return BadRequest("Somethingwent wrong"); }
+                return BadRequest(ModelState);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
 
+            var TourDay = _mapper.Map<TourDay>(model);
+
+            await _unitOfWork.TourDays.Add(TourDay);
+            _unitOfWork.Complete();
+            return Ok(TourDay);
+        }
         [HttpPut("{id}")]
-        public IActionResult PutTourDay(int id, TourDayDTO dto)
+        public async Task<IActionResult> UpdateTourDay(int id, TourDayDTO model)
         {
-            try
-            {
-                if (id != dto.Id)
-                {
-                    return BadRequest();
-                }
-                if (dto != null)
-                {
-                    var tourDay = _mapper.Map<TourDay>(dto);
-                    _baseRepository.Update(tourDay);
-                    return Ok();
-                }
-                else { return BadRequest("Somethingwent wrong"); }
-                
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existingTourDay = await _unitOfWork.TourDays.GetById(id);
+
+            if (existingTourDay == null)
+                return NotFound();
+
+            existingTourDay = _mapper.Map<TourDay>(model);
+
+            _unitOfWork.TourDays.Update(existingTourDay);
+            _unitOfWork.Complete();
+
+            return Ok(existingTourDay);
         }
 
-        //[HttpDelete("{id}")]
-        //public IActionResult DeleteTourDay(int id)
-        //{
-        //    try
-        //    {
-        //        _baseRepository.Remove(_baseRepository.GetById(id));
-        //        return NoContent();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTourDay(int id)
+        {
+            var existingTourDay = await _unitOfWork.TourDays.GetById(id);
+
+            if (existingTourDay == null)
+                return NotFound();
+
+            _unitOfWork.TourDays.Remove(existingTourDay);
+            _unitOfWork.Complete();
+
+            return Ok(existingTourDay);
+        }
     }
 }

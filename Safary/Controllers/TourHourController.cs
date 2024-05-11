@@ -15,103 +15,81 @@ namespace Presentations.Controllers
     [ApiController]
     public class TourHourController : ControllerBase
     {
-        private readonly IBaseRepository<TourHour> _baseRepository;
+
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
 
-        public TourHourController(IBaseRepository<TourHour> baseRepository, IMapper mapper)
+        public TourHourController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _baseRepository = baseRepository ?? throw new ArgumentNullException(nameof(baseRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<TourHour>> GetTourHours()
+        [HttpGet("GetAll")]
+        public async Task<ActionResult> GetTourHours()
         {
-            try
-            {
-                var TourHours = _baseRepository.GetAll();
-                return Ok(TourHours);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var TourHours = await _unitOfWork.TourHours.FindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
+            var dto = _mapper.Map<IEnumerable<TourHourDTO>>(TourHours);
+            return Ok(dto);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<TourHour> GetTourHour(int id)
+        public async Task<ActionResult> GetTourHourById(int id)
         {
-            try
-            {
-                var TourHour = _baseRepository.GetById(id);
-                if (TourHour == null)
-                {
-                    return NotFound();
-                }
-                return Ok(TourHour);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var TourHour = await _unitOfWork.TourHours.GetById(id);
+
+            if (TourHour is null)
+                return NotFound();
+
+            return Ok(TourHour);
         }
 
         [HttpPost]
-        public ActionResult<TourHour> PostTourHour(TourHourPostDTO dto)
+        public async Task<IActionResult> AddTourHour(TourHourDTO model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (dto != null)
-                {
-                    var TourHour = _mapper.Map<TourHour>(dto);
-                    var createdTourHour = _baseRepository.Add(TourHour);
-                    return CreatedAtAction(nameof(GetTourHour), new { id = createdTourHour.Id }, createdTourHour);
-                }
-                else { return BadRequest("Somethingwent wrong"); }
+                return BadRequest(ModelState);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
 
+            var TourHour = _mapper.Map<TourHour>(model);
+
+            await _unitOfWork.TourHours.Add(TourHour);
+            _unitOfWork.Complete();
+            return Ok(TourHour);
+        }
         [HttpPut("{id}")]
-        public IActionResult PutTourHour(int id, TourHourDTO dto)
+        public async Task<IActionResult> UpdateTourHour(int id, TourHourDTO model)
         {
-            try
-            {
-                if (id != dto.Id)
-                {
-                    return BadRequest();
-                }
-                if (dto != null)
-                {
-                    var TourHour = _mapper.Map<TourHour>(dto);
-                    _baseRepository.Update(TourHour);
-                    return Ok();
-                }
-                else { return BadRequest("Somethingwent wrong"); }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var existingTourHour = await _unitOfWork.TourHours.GetById(id);
+
+            if (existingTourHour == null)
+                return NotFound();
+
+            existingTourHour = _mapper.Map<TourHour>(model);
+
+            _unitOfWork.TourHours.Update(existingTourHour);
+            _unitOfWork.Complete();
+
+            return Ok(existingTourHour);
         }
 
-        //[HttpDelete("{id}")]
-        //public IActionResult DeleteTourHour(int id)
-        //{
-        //    try
-        //    {
-        //        _baseRepository.Remove(_baseRepository.GetById(id));
-        //        return NoContent();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTourHour(int id)
+        {
+            var existingTourHour = await _unitOfWork.TourHours.GetById(id);
+
+            if (existingTourHour == null)
+                return NotFound();
+
+            _unitOfWork.TourHours.Remove(existingTourHour);
+            _unitOfWork.Complete();
+
+            return Ok(existingTourHour);
+        }
     }
 }
