@@ -13,25 +13,25 @@ namespace Presentations.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BlogController : ControllerBase
+    public class TourHourController : ControllerBase
     {
-        private readonly IBaseRepository<Blog> _baseRepository;
+        private readonly IBaseRepository<TourHour> _baseRepository;
         private readonly IMapper _mapper;
 
 
-        public BlogController(IBaseRepository<Blog> baseRepository, IMapper mapper)
+        public TourHourController(IBaseRepository<TourHour> baseRepository, IMapper mapper)
         {
             _baseRepository = baseRepository ?? throw new ArgumentNullException(nameof(baseRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Blog>> GetBlogs()
+        public ActionResult<IEnumerable<TourHour>> GetTourHours()
         {
             try
             {
-                var Blogs = _baseRepository.GetAll();
-                return Ok(Blogs);
+                var TourHours = _baseRepository.GetAll();
+                return Ok(TourHours);
             }
             catch (Exception ex)
             {
@@ -40,16 +40,16 @@ namespace Presentations.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Blog> GetBlog(int id)
+        public ActionResult<TourHour> GetTourHour(int id)
         {
             try
             {
-                var Blog = _baseRepository.GetById(id);
-                if (Blog == null)
+                var TourHour = _baseRepository.GetById(id);
+                if (TourHour == null)
                 {
                     return NotFound();
                 }
-                return Ok(Blog);
+                return Ok(TourHour);
             }
             catch (Exception ex)
             {
@@ -58,15 +58,15 @@ namespace Presentations.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Blog> PostBlog(BlogPostDTO dto)
+        public ActionResult<TourHour> PostTourHour(TourHourPostDTO dto)
         {
             try
             {
                 if (dto != null)
                 {
-                    var Blog = _mapper.Map<Blog>(dto);
-                    var createdBlog = _baseRepository.Add(Blog);
-                    return CreatedAtAction(nameof(GetBlog), new { id = createdBlog.Id }, createdBlog);
+                    var TourHour = _mapper.Map<TourHour>(dto);
+                    var createdTourHour = _baseRepository.Add(TourHour);
+                    return CreatedAtAction(nameof(GetTourHour), new { id = createdTourHour.Id }, createdTourHour);
                 }
                 else { return BadRequest("Somethingwent wrong"); }
             }
@@ -77,7 +77,7 @@ namespace Presentations.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutBlog(int id, BlogDTO dto)
+        public IActionResult PutTourHour(int id, TourHourDTO dto)
         {
             try
             {
@@ -87,8 +87,8 @@ namespace Presentations.Controllers
                 }
                 if (dto != null)
                 {
-                    var Blog = _mapper.Map<Blog>(dto);
-                    _baseRepository.Update(Blog);
+                    var TourHour = _mapper.Map<TourHour>(dto);
+                    _baseRepository.Update(TourHour);
                     return Ok();
                 }
                 else { return BadRequest("Somethingwent wrong"); }
@@ -100,18 +100,18 @@ namespace Presentations.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteBlog(int id)
-        {
-            try
-            {
-                _baseRepository.Remove(_baseRepository.GetById(id));
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+        //[HttpDelete("{id}")]
+        //public IActionResult DeleteTourHour(int id)
+        //{
+        //    try
+        //    {
+        //        _baseRepository.Remove(_baseRepository.GetById(id));
+        //        return NoContent();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
     }
 }

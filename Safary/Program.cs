@@ -1,4 +1,6 @@
 using AutoMapper;
+using Safary.Seeds;
+using Domain.Entities;
 using Domain.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +10,8 @@ using Microsoft.OpenApi.Models;
 using Persistence.Data;
 using Safary.Mapping;
 using System.Text;
+using Domain.Repositories;
+using Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,20 +24,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
  .AddEntityFrameworkStores<ApplicationDbContext>()
  .AddDefaultTokenProviders();
 
-builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+builder.Services.Configure<JWT>(builder.Configuration.GetSection(nameof(JWT)));
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// Auto Mapper Configurations
-//var mapperConfig = new MapperConfiguration(mc =>
-//{
-//    mc.AddProfile(new MappingProfile());
-//});
-//IMapper mapper = mapperConfig.CreateMapper();
-//builder.Services.AddSingleton(mapper);
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -66,7 +64,7 @@ builder.Services.AddSwaggerGen(swagger =>
     swagger.SwaggerDoc("v2", new OpenApiInfo
     {
         Version = "v1",
-        Title = "ASP.NET 5 Web API",
+        Title = "ASP.NET 8 Web API",
         Description = " ITI Projrcy"
     });
 
@@ -109,6 +107,16 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+
+using var scope = scopeFactory.CreateScope();
+
+var roleManger = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+var userManger = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+await DefaultRoles.SeedAsync(roleManger);
+await DefaultUsers.SeedAdminUserAsync(userManger);
 
 app.MapControllers();
 

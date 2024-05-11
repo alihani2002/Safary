@@ -12,7 +12,7 @@ namespace Shared.DTOs
         public string Title { get; set; } = null!;
         public string CoverImage { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public DateTime Time { get; set; }
+        public DateTime Time { get; set; } = DateTime.Now;
         public string Content { get; set; } = null!;
     }
 }

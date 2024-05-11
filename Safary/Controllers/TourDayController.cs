@@ -100,18 +100,18 @@ namespace Presentations.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteTourDay(int id)
-        {
-            try
-            {
-                _baseRepository.Remove(_baseRepository.GetById(id));
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+        //[HttpDelete("{id}")]
+        //public IActionResult DeleteTourDay(int id)
+        //{
+        //    try
+        //    {
+        //        _baseRepository.Remove(_baseRepository.GetById(id));
+        //        return NoContent();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
     }
 }

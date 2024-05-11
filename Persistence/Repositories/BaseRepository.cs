@@ -21,14 +21,14 @@ namespace Persistence.Repositories
 			_context = context;
 		}
 
-		public IEnumerable<T> GetAll(bool withNoTracking = true)
+		public async Task<IEnumerable<T>> GetAll(bool withNoTracking = true)
 		{
 			IQueryable<T> query = _context.Set<T>();
 
 			if (withNoTracking)
 				query = query.AsNoTracking();
 
-			return query.ToList();
+			return await query.ToListAsync();
 		}
 
 		public IQueryable<T> GetQueryable()
@@ -36,12 +36,12 @@ namespace Persistence.Repositories
 			return _context.Set<T>();
 		}
 
-		public T? GetById(int id) => _context.Set<T>().Find(id);
+		public async Task<T?> GetById(int id) => await _context.Set<T>().FindAsync(id);
 
-		public T? Find(Expression<Func<T, bool>> predicate) =>
-			_context.Set<T>().SingleOrDefault(predicate);
+		public async Task<T?> Find(Expression<Func<T, bool>> predicate) =>
+			await _context.Set<T>().SingleOrDefaultAsync(predicate);
 
-		public T? Find(Expression<Func<T, bool>> predicate, string[]? includes = null)
+		public async Task<T?> Find(Expression<Func<T, bool>> predicate, string[]? includes = null)
 		{
 			IQueryable<T> query = _context.Set<T>();
 
@@ -49,10 +49,10 @@ namespace Persistence.Repositories
 				foreach (var include in includes)
 					query = query.Include(include);
 
-			return query.SingleOrDefault(predicate);
+			return await query.SingleOrDefaultAsync(predicate);
 		}
 
-		public T? Find(Expression<Func<T, bool>> predicate,
+		public async Task<T?> Find(Expression<Func<T, bool>> predicate,
 				Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null)
 		{
 			IQueryable<T> query = _context.Set<T>().AsQueryable();
@@ -60,10 +60,10 @@ namespace Persistence.Repositories
 			if (include is not null)
 				query = include(query);
 
-			return query.SingleOrDefault(predicate);
+			return await query.SingleOrDefaultAsync(predicate);
 		}
 
-		public IEnumerable<T> FindAll(Expression<Func<T, bool>> predicate,
+		public async Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> predicate,
 			Expression<Func<T, object>>? orderBy = null, string? orderByDirection = OrderBy.Ascending)
 		{
 			IQueryable<T> query = _context.Set<T>().Where(predicate);
@@ -76,10 +76,10 @@ namespace Persistence.Repositories
 					query = query.OrderByDescending(orderBy);
 			}
 
-			return query.ToList();
+			return await query.ToListAsync();
 		}
 
-		public IEnumerable<T> FindAll(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null,
+		public async Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null,
 			Expression<Func<T, object>>? orderBy = null, string? orderByDirection = OrderBy.Ascending)
 		{
 			IQueryable<T> query = _context.Set<T>().Where(predicate);
@@ -98,10 +98,10 @@ namespace Persistence.Repositories
 			if (take.HasValue)
 				query = query.Take(take.Value);
 
-			return query.ToList();
+			return await query.ToListAsync();
 		}
 
-		public IEnumerable<T> FindAll(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+		public async Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
 			Expression<Func<T, object>>? orderBy = null, string? orderByDirection = OrderBy.Ascending)
 		{
 			IQueryable<T> query = _context.Set<T>().AsQueryable();
@@ -119,18 +119,18 @@ namespace Persistence.Repositories
 					query = query.OrderByDescending(orderBy);
 			}
 
-            return query.ToList();
+            return await query.ToListAsync();
 		}
 
-		public T Add(T entity)
+		public async Task<T> Add(T entity)
 		{
-			_context.Add(entity);
-			return entity;
+			await _context.AddAsync(entity);
+			return  entity;
 		}
 
-		public IEnumerable<T> AddRange(IEnumerable<T> entities)
+		public async Task<IEnumerable<T>> AddRange(IEnumerable<T> entities)
 		{
-			_context.AddRange(entities);
+			await _context.AddRangeAsync(entities);
 			return entities;
 		}
 

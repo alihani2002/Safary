@@ -10,7 +10,7 @@ namespace Domain.Helpers
     {
         public string ValidIssuer { get; set; }
         public string ValidAudiance { get; set; }
-        public double DurationInMinutes { get; set; }
+        public double DurationInDays { get; set; }
         public string Key { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Domain.Consts;
+using Domain.Filters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,10 +17,13 @@ namespace Domain.Entities
         public string Title { get; set; } = null!;
         public string CoverImage { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public DateTime Time { get; set; }
-        public string Content { get; set; } = null!;
-        public ICollection<TourDay>? TourDays { get; set; }
-        public ICollection<TourHour>? TourHours { get; set; }
-
+		[Range(1, 30)]
+		public int Duration { get; set; }
+		public DateTime StartDate { get; set; }
+		[DateGreaterThan("StartDate")]
+		public DateTime EndDate { get; set; }
+		public string Content { get; set; } = null!;
+        public ICollection<Tour>? Tours { get; set; } = new List<Tour>();
+        public ICollection<ApplicationUser>? TouristsAndTourGuides { get; set; } = new List<ApplicationUser>();
     }
 }

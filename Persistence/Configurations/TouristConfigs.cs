@@ -9,9 +9,9 @@ using Domain.Entities;
 
 namespace Persistence.Configurations
 {
-    public class TouristConfigs : IEntityTypeConfiguration<Tourist>
+    public class TouristConfigs : IEntityTypeConfiguration<ApplicationUser>
     {
-        public void Configure(EntityTypeBuilder<Tourist> builder)
+        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
         }
     }

@@ -1,4 +1,5 @@
-﻿using Domain.Repositories;
+﻿using Domain.Entities;
+using Domain.Repositories;
 using Persistence.Data;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,20 @@ namespace Persistence.Repositories
 		{
 			_context = context;
 		}
+
+		public IBaseRepository<Blog> Blogs => new BaseRepository<Blog>(_context);
+
+		public IBaseRepository<TourDay> TourDays =>  new BaseRepository<TourDay>(_context);
+
+		public IBaseRepository<TourHour> TourHours =>  new BaseRepository<TourHour>(_context);
+
+		public IBaseRepository<Place> Places =>  new BaseRepository<Place>(_context);
+
+		public IBaseRepository<Country> Countries =>  new BaseRepository<Country>(_context);
+
+		public IBaseRepository<Tour> Tours =>  new BaseRepository<Tour>(_context);
+
+		public IBaseRepository<City> Cities =>  new BaseRepository<City>(_context);
 
 		public int Complete()
 		{

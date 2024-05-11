@@ -22,7 +22,7 @@ namespace Shared.DTOs
         public DateTime EndDate { get; set; }
         public ICollection<Place>? Places { get; set; }
         public int? TourGuideId { get; set; }
-        public TourGuide? TourGuide { get; set; }
+        public ApplicationUser? TourGuide { get; set; }
   
     }
 }

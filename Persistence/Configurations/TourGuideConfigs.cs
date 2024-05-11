@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Persistence.Configurations
 {
-    public class TourGuideConfigs : IEntityTypeConfiguration<TourGuide>
+    public class TourGuideConfigs : IEntityTypeConfiguration<ApplicationUser>
     {
-        public void Configure(EntityTypeBuilder<TourGuide> builder)
+        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
         }
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Data;
 
@@ -11,9 +12,11 @@ using Persistence.Data;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240504233035_InitCreateTablesInDb")]
+    partial class InitCreateTablesInDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,7 @@ namespace Persistence.Migrations
                     b.Property<string>("Bio")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("BlogId")
+                    b.Property<int>("BlogId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -81,6 +84,9 @@ namespace Persistence.Migrations
                     b.Property<decimal>("HourPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -109,6 +115,14 @@ namespace Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordConfirm")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -124,13 +138,13 @@ namespace Persistence.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TourDayId")
+                    b.Property<int>("TourDayId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TourGuideId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TourHourId")
+                    b.Property<int>("TourHourId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TouristId")
@@ -160,12 +174,10 @@ namespace Persistence.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("TourDayId")
-                        .IsUnique()
-                        .HasFilter("[TourDayId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("TourHourId")
-                        .IsUnique()
-                        .HasFilter("[TourHourId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("UserName")
                         .IsUnique()
@@ -611,15 +623,21 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Blog", "Blog")
                         .WithMany("TouristsAndTourGuides")
-                        .HasForeignKey("BlogId");
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.TourDay", "TourDay")
                         .WithOne("Person")
-                        .HasForeignKey("Domain.Entities.ApplicationUser", "TourDayId");
+                        .HasForeignKey("Domain.Entities.ApplicationUser", "TourDayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.TourHour", "TourHour")
                         .WithOne("Person")
-                        .HasForeignKey("Domain.Entities.ApplicationUser", "TourHourId");
+                        .HasForeignKey("Domain.Entities.ApplicationUser", "TourHourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Blog");
 

@@ -16,7 +16,7 @@ namespace Shared.DTOs
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public ICollection<Place>? Places { get; set; }
-        public TourGuide? TourGuide { get; set; }
+        public ApplicationUser? TourGuide { get; set; }
 
     }
 }

@@ -14,13 +14,13 @@ namespace Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Blog> builder)
         {
-            builder.HasMany(a => a.TourDays)
-               .WithOne(s => s.Blog)
-               .OnDelete(DeleteBehavior.SetNull);
+            //builder.HasMany(a => a.TourDays)
+            //   .WithOne(s => s.Blog)
+            //   .OnDelete(DeleteBehavior.SetNull);
 
-            builder.HasMany(a => a.TourHours)
-               .WithOne(s => s.Blog)
-               .OnDelete(DeleteBehavior.SetNull);
+            //builder.HasMany(a => a.TourHours)
+            //   .WithOne(s => s.Blog)
+            //   .OnDelete(DeleteBehavior.SetNull);
 
         }
     }
