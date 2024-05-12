@@ -20,6 +20,8 @@ namespace Safary.Mapping
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Title));
 
             //Tour
+
+
             CreateMap<TourDay, TourDayDTO>();
             CreateMap<TourDayPostDTO, TourDay>().ReverseMap();
             CreateMap<TourDay, SelectListItem>()
@@ -31,6 +33,11 @@ namespace Safary.Mapping
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Name));
 
+            CreateMap<Tour, TourDTO>();
+            CreateMap<TourPostDTO, Tour>().ReverseMap();
+            CreateMap<Tour, SelectListItem>()
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Name));
             // user 
             CreateMap<UserDTO, ApplicationUser>().ReverseMap();
 

@@ -46,7 +46,7 @@ namespace Presentations.Controllers
             return Ok(blog);
         }
         [HttpPost]
-        public async Task<IActionResult> AddBlog(BlogDTO model)
+        public async Task<IActionResult> AddBlog(BlogPostDTO model)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -59,7 +59,7 @@ namespace Presentations.Controllers
             return Ok(blog);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBlog(int id, BlogDTO model)
+        public async Task<IActionResult> UpdateBlog( int id,[FromForm] BlogPostDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -69,13 +69,15 @@ namespace Presentations.Controllers
             if (existingBlog == null)
                 return NotFound();
 
-            existingBlog = _mapper.Map<Blog>(model);
+            _mapper.Map(dto, existingBlog);
 
             _unitOfWork.Blogs.Update(existingBlog);
             _unitOfWork.Complete();
 
-            return Ok(existingBlog);
+            return Ok(existingBlog); 
         }
+
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBlog(int id)

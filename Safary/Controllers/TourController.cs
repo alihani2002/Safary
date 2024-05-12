@@ -42,7 +42,7 @@ namespace Safary.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTour(TourDTO model)
+        public async Task<IActionResult> AddTour(TourPostDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -55,8 +55,9 @@ namespace Safary.Controllers
             _unitOfWork.Complete();
             return Ok(tour);
         }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTour(int id, TourDTO model)
+        public async Task<IActionResult> UpdateTour(int id, [FromForm] TourPostDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -66,7 +67,7 @@ namespace Safary.Controllers
             if (existingTour == null)
                 return NotFound();
 
-            existingTour = _mapper.Map<Tour>(model);
+            _mapper.Map(dto, existingTour);
 
             _unitOfWork.Tours.Update(existingTour);
             _unitOfWork.Complete();
