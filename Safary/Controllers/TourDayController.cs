@@ -16,7 +16,6 @@ namespace Presentations.Controllers
     [ApiController]
     public class TourDayController : ControllerBase
     {
-
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
@@ -47,7 +46,7 @@ namespace Presentations.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTourDay(TourDayDTO model)
+        public async Task<IActionResult> AddTourDay(TourDayPostDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -60,8 +59,9 @@ namespace Presentations.Controllers
             _unitOfWork.Complete();
             return Ok(TourDay);
         }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTourDay(int id, TourDayDTO model)
+        public async Task<IActionResult> UpdateTourDay(int id, [FromForm] TourDayPostDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -71,7 +71,7 @@ namespace Presentations.Controllers
             if (existingTourDay == null)
                 return NotFound();
 
-            existingTourDay = _mapper.Map<TourDay>(model);
+            _mapper.Map(dto, existingTourDay);
 
             _unitOfWork.TourDays.Update(existingTourDay);
             _unitOfWork.Complete();
