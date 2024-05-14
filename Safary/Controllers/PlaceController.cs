@@ -21,13 +21,13 @@ namespace Safary.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        //[HttpGet("GetAll")]
-        //public async Task<ActionResult> GetPlaces()
-        //{
-        //    var Places = await _unitOfWork.Places.FindAll(;
-        //    var dto = _mapper.Map<IEnumerable<PlaceDTO>>(Places);
-        //    return Ok(dto);
-        //}
+        [HttpGet("GetAll")]
+        public async Task<ActionResult> GetPlaces()
+        {
+            var Places = await _unitOfWork.Places.GetAll();
+            var dto = _mapper.Map<IEnumerable<PlaceDTO>>(Places);
+            return Ok(dto);
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetPlaceById(int id)
@@ -42,7 +42,7 @@ namespace Safary.Controllers
             return Ok(Place);
         }
         [HttpPost]
-        public async Task<IActionResult> AddPlace(PlaceDTO model)
+        public async Task<IActionResult> AddPlace(PlacePostDTO model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -55,7 +55,7 @@ namespace Safary.Controllers
             return Ok(Place);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePlace(int id, [FromForm] PlaceDTO dto)
+        public async Task<IActionResult> UpdatePlace(int id, [FromForm] PlacePostDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
