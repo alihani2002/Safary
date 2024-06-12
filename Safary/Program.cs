@@ -26,6 +26,8 @@ builder.Services.AddServicesRegistration(builder.Configuration);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
  .AddEntityFrameworkStores<ApplicationDbContext>()
  .AddDefaultTokenProviders();
