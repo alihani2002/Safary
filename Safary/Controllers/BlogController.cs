@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence.Data;
 using Shared.DTOs;
+using Sieve.Models;
+using Sieve.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,15 +17,27 @@ namespace Presentations.Controllers
     [Route("api/[controller]")]
     public class BlogController : ControllerBase
     {
+        private readonly ISieveProcessor _sieveProcessor;
         private readonly IUnitOfWork _unitOfWork;   
         private readonly IMapper _mapper;
 
 
-		public BlogController(IMapper mapper, IUnitOfWork unitOfWork)
+		public BlogController(IMapper mapper, IUnitOfWork unitOfWork , ISieveProcessor sieveProcessor)
 		{
             _mapper = mapper;
 			_unitOfWork = unitOfWork;
-		}
+            _sieveProcessor = sieveProcessor; 
+        }
+        [HttpGet("GetFilterdAndSorted")]
+        public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
+        {
+            var blogs = _unitOfWork.Blogs.FilterFindAll(s => s.Id > 0, include: s => s.Include(x => x.Tours));
+
+            // Apply Sieve to the queryable collection
+            var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, blogs);
+            var dto = _mapper.Map<IEnumerable<BlogDTO>>(filteredSortedPagedProducts);
+            return Ok( dto);
+        }
 
         [HttpGet("GetAll")]
         public async Task<ActionResult> GetBlogs()

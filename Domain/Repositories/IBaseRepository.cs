@@ -13,7 +13,11 @@ namespace Domain.Repositories
 		Task<T?> Find(Expression<Func<T, bool>> predicate, string[]? includes = null);
 		Task<T?> Find(Expression<Func<T, bool>> predicate,
 				Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null);
-		Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null,
+        IQueryable<T> FilterFindAll(Expression<Func<T, bool>> predicate,
+                         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+                         Expression<Func<T, object>>? orderBy = null,
+                         string? orderByDirection = OrderBy.Ascending);
+        Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> predicate, int? skip = null, int? take = null,
 			Expression<Func<T, object>>? orderBy = null, string? orderByDirection = OrderBy.Ascending);
 		Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> predicate,
 			Expression<Func<T, object>>? orderBy = null, string? orderByDirection = OrderBy.Ascending);

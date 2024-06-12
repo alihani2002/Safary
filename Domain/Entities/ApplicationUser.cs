@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Sieve.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,8 +29,10 @@ namespace Domain.Entities
 
         // TourGuide
         public string? Description { get; set; }
+        [Sieve(CanFilter = true, CanSort = true)]
         public double Rate { get; set; }
         public decimal DayPrice { get; set; }
+        [Sieve(CanFilter = true, CanSort = true)]
         public decimal HourPrice { get; set; }
         public int Age { get; set; }
         public string? Bio { get; set; }

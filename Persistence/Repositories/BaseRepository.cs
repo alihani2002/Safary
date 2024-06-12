@@ -16,12 +16,38 @@ namespace Persistence.Repositories
 	{
 		protected readonly ApplicationDbContext _context;
 
+
 		public BaseRepository(ApplicationDbContext context)
 		{
 			_context = context;
 		}
 
-		public async Task<IEnumerable<T>> GetAll(bool withNoTracking = true)
+
+        public IQueryable<T> FilterFindAll(Expression<Func<T, bool>> predicate,
+                                     Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+                                     Expression<Func<T, object>>? orderBy = null,
+                                     string? orderByDirection = OrderBy.Ascending)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            query = query.Where(predicate);
+
+            if (orderBy != null)
+            {
+                query = orderByDirection == OrderBy.Ascending
+                    ? query.OrderBy(orderBy)
+                    : query.OrderByDescending(orderBy);
+            }
+
+            return query;
+        }
+
+        public async Task<IEnumerable<T>> GetAll(bool withNoTracking = true)
 		{
 			IQueryable<T> query = _context.Set<T>();
 

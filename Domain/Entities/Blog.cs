@@ -1,5 +1,6 @@
 ﻿using Domain.Consts;
 using Domain.Filters;
+using Sieve.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +14,7 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
 
+        [Sieve(CanFilter = true,CanSort =true)]
         [MaxLength(150, ErrorMessage = Errors.MaxLength)]
         public string Title { get; set; } = null!;
         public string CoverImage { get; set; } = null!;

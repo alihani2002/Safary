@@ -14,6 +14,8 @@ using Domain.Repositories;
 using Persistence.Repositories;
 using Service.Abstractions;
 using Safary.Repository;
+using Persistence.Configurations;
+using Sieve.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +40,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddScoped<ISieveProcessor, SieveProcessor>();
+builder.Services.AddScoped<ISieveConfiguration, SieveConfiguration>();
 
 builder.Services.AddAuthentication(option =>
 {

@@ -1,5 +1,6 @@
 ﻿using Domain.Consts;
 using Domain.Filters;
+using Sieve.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,6 @@ namespace Domain.Entities
     public class TourDay : BaseModel
     {
         public int Id { get; set; }
-
         [MaxLength(150, ErrorMessage = Errors.MaxLength)]
         public string Name { get; set; } = null!;
         

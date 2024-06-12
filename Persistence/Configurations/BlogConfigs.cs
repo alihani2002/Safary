@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sieve.Models;
+using Sieve.Services;
+
 using System.Reflection.Emit;
 
 namespace Persistence.Configurations
@@ -14,6 +17,8 @@ namespace Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Blog> builder)
         {
+            
+
             //builder.HasMany(a => a.TourDays)
             //   .WithOne(s => s.Blog)
             //   .OnDelete(DeleteBehavior.SetNull);
