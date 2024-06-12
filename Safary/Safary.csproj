@@ -18,7 +18,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
+    <ProjectReference Include="..\Service.Abstractions\Service.Abstractions.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\pdfs\" />
   </ItemGroup>
 
 </Project>

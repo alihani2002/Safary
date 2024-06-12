@@ -10,18 +10,13 @@ namespace Safary.Mapping
         public MappingProfile()
         {
             //Blog 
-
             CreateMap<Blog,BlogDTO>().ReverseMap();
-
-
             CreateMap<BlogPostDTO,Blog>().ReverseMap();
             CreateMap<Blog, SelectListItem>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Title));
 
             //Tour
-
-
             CreateMap<TourDay, TourDayDTO>();
             CreateMap<TourDayPostDTO, TourDay>().ReverseMap();
             CreateMap<TourDay, SelectListItem>()
@@ -57,13 +52,17 @@ namespace Safary.Mapping
             CreateMap<Country, SelectListItem>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Name));
+
             // user 
             CreateMap<UserDTO, ApplicationUser>().ReverseMap();
+
+            // tour guide
+            CreateMap<RegisterTourGuideDTO, ApplicationUser>().ReverseMap();
 
 
             CreateMap<Tour, TourDTO>().ReverseMap();
 
-
+            CreateMap<RegisterDTO, ApplicationUser>().ReverseMap();
 
         } 
     }

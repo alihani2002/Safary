@@ -15,7 +15,9 @@ namespace Shared.DTOs
 		[MaxLength(50, ErrorMessage = Errors.MaxLength)]
 		public string LastName { get; set; }
 		[MaxLength(100, ErrorMessage = Errors.MaxLength)]
-		public string UserName { get; set; }
+		public string FullName { get; set; }
+        [MaxLength(100, ErrorMessage = Errors.MaxLength)]
+        public string UserName { get; set; }
 		[DataType(DataType.EmailAddress)]
 		public string Email { get; set; }
 

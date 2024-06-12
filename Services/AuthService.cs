@@ -3,6 +3,8 @@ using Domain.Consts;
 using Domain.Entities;
 using Domain.Helpers;
 using Domain.Repositories;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Options;
@@ -24,22 +26,74 @@ namespace Services
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IWebHostEnvironment _webHostEnvironment;
 		private JWT _jwt;
 		private IMapper _mapper;
 
-		public AuthService(UserManager<ApplicationUser> userManager, 
-			RoleManager<IdentityRole> roleManager,
-			IUnitOfWork unitOfWork, IOptions<JWT> jwt,
-			IMapper mapper)
-		{
-			_userManager = userManager;
-			_roleManager = roleManager;
-			_unitOfWork = unitOfWork;
-			_jwt = jwt.Value;
-			_mapper = mapper;
-		}
+		private List<string> _allowedExtensions = new() { ".pdf", ".docs" };
+		private int _maxAllowedSize = 5242880;
 
-		public async Task<UserDTO> RegisterAsUserAsync(RegisterDTO model)
+        public AuthService(UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IUnitOfWork unitOfWork, IOptions<JWT> jwt,
+            IMapper mapper, IWebHostEnvironment webHostEnvironment)
+        {
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
+            _jwt = jwt.Value;
+            _mapper = mapper;
+            _webHostEnvironment = webHostEnvironment;
+        }
+
+        public async Task<TourGuideDTO> RegisterAsTourGuideAsync(RegisterTourGuideDTO model)
+        {
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
+                return new TourGuideDTO { Message = "Email is already registed!" };
+
+            if (await _userManager.FindByNameAsync(model.UserName) != null)
+                return new TourGuideDTO { Message = "UserName is already registed!" };
+
+            var tourGuide = _mapper.Map<ApplicationUser>(model);
+
+			var extension = Path.GetExtension(model.CV.FileName);
+
+            if (!_allowedExtensions.Contains(extension))
+				return new TourGuideDTO { Message = "Only .pdf, .docs files are allowed!"};
+
+			if(model.CV.Length > _maxAllowedSize)
+                return new TourGuideDTO { Message = "File cannot be more than 5 MB!" };
+
+			var fileName = $"{Guid.NewGuid()}{extension}";
+
+			var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/pdfs", fileName);
+			using var stream = System.IO.File.Create(path);
+			model.CV.CopyTo(stream);
+
+            tourGuide.CvUrl = fileName;
+
+            var result = await _userManager.CreateAsync(tourGuide, model.Password);
+            if (!result.Succeeded)
+            {
+                var errors = string.Empty;
+                foreach (var item in result.Errors)
+                {
+                    errors += $"{item.Description},";
+                }
+                return new TourGuideDTO { Message = errors };
+            }
+            await _userManager.AddToRoleAsync(tourGuide, AppRoles.User);
+
+            var JwtSecurityToken = await CreateJwtToken(tourGuide);
+            var returnModel = _mapper.Map<TourGuideDTO>(tourGuide);
+            returnModel.ExpiredOn = JwtSecurityToken.ValidTo;
+            returnModel.IsAuthenticated = true;
+            returnModel.Roles = [AppRoles.User];
+            returnModel.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
+            return returnModel;
+        }
+
+        public async Task<UserDTO> RegisterAsUserAsync(RegisterDTO model)
 		{
 			if (await _userManager.FindByEmailAsync(model.Email) != null)
 				return new UserDTO { Message = "Email is already registed!" };
@@ -103,5 +157,19 @@ namespace Services
 
 			return jwtSecurityToken;
 		}
-	}
+        // Confirm Email
+        public async Task<bool> ConfirmEmailAsync(string email, string token)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user is not null)
+            {
+                user.EmailConfirmed = true;
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                    return true;
+            }
+            return false;
+        }
+    }
 }

@@ -12,10 +12,14 @@ using Safary.Mapping;
 using System.Text;
 using Domain.Repositories;
 using Persistence.Repositories;
+using Service.Abstractions;
+using Safary.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddServicesRegistration(builder.Configuration);
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -104,6 +108,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
