@@ -40,7 +40,7 @@ public class AccountController : ControllerBase
         var user = await _userManager.FindByEmailAsync(result.Email);
         if (user == null)
             return BadRequest(ModelState);
-        //// Confirm email
+        // Confirm email
         await ConfirmAndSendEmailAsync(user);
         result.Message = "Please Look in your email box";
         return Ok(result);
@@ -65,13 +65,13 @@ public class AccountController : ControllerBase
            protocol: Request.Scheme);
 
         var Placeholders = new Dictionary<string, string>()
-                 {
-                     {"imageUrl","https://res.cloudinary.com/mhmdnosair/image/upload/v1700380565/icon-positive-vote-1_nvd6xb.png"},
-                     {"header",$"Hey {user.FirstName}, thanks for joining us!" },
-                     {"body","please confirm your email" },
-                     {"url",$"{callbackUrl}" },
-                     {"linkTitle","Active Acount" },
-                 };
+        {
+            {"imageUrl","https://res.cloudinary.com/mhmdnosair/image/upload/v1700380565/icon-positive-vote-1_nvd6xb.png"},
+            {"header",$"Hey {user.FirstName}, thanks for joining us!" },
+            {"body","please confirm your email" },
+            {"url",$"{callbackUrl}" },
+            {"linkTitle","Active Acount" },
+        };
         #region Send massage Email
         var body = _emailBodyBuilder.GetEmailBody("email", Placeholders);
         await _emailSender.SendEmailAsync(user.Email!, "Confirm your email", body);

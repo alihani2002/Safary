@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using Domain.Helpers;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Abstractions;
@@ -17,6 +18,7 @@ namespace Safary.Repository
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEmailBodyBuilder, EmailBodyBuilder>();
             services.AddTransient<IEmailSender, EmailSender>();
+            
 
             return services;
         }
