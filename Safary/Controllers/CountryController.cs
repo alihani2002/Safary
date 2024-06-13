@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace Safary.Controllers
 {
@@ -14,18 +16,29 @@ namespace Safary.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ISieveProcessor _sieveProcessor;
 
-
-        public CountryController(IMapper mapper, IUnitOfWork unitOfWork)
+        public CountryController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _sieveProcessor = sieveProcessor;
+        }
+        [HttpGet("GetFilterdAndSorted")]
+        public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
+        {
+            var Countries = _unitOfWork.Countries.FilterFindAll(s => s.Id > 0, include: s => s.Include(x => x.Cities));
+
+            // Apply Sieve to the queryable collection
+            var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, Countries);
+            var dto = _mapper.Map<IEnumerable<CountryDTO>>(filteredSortedPagedProducts);
+            return Ok(dto);
         }
 
         [HttpGet("GetAll")]
         public async Task<ActionResult> GetCountrys()
         {
-            var Countrys = await _unitOfWork.Countries.FindAll(s => s.Id > 0, include: s => s.Include(x => x.Cities)!);
+            var Countrys = await _unitOfWork.Countries.FindAll(s => s.Id > 0, include: s => s.Include(x => x.Cities));
             var dto = _mapper.Map<IEnumerable<CountryDTO>>(Countrys);
             return Ok(dto);
         }

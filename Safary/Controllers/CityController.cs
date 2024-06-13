@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace Safary.Controllers
 {
@@ -12,23 +14,37 @@ namespace Safary.Controllers
     [ApiController]
     public class CityController : ControllerBase
     {
+        private readonly ISieveProcessor _sieveProcessor;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
 
-        public CityController(IMapper mapper, IUnitOfWork unitOfWork)
+        public CityController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _sieveProcessor = sieveProcessor;
         }
-
-        [HttpGet("GetAll")]
-        public async Task<ActionResult> GetCitys()
+        [HttpGet("GetFilterdAndSorted")]
+        public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
         {
-            var Citys = await _unitOfWork.Cities.FindAll(s => s.Id > 0, include: s => s.Include(x => x.Places)!);
-            var dto = _mapper.Map<IEnumerable<CityDTO>>(Citys);
+            var cities = _unitOfWork.Cities.FilterFindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
+
+            // Apply Sieve to the queryable collection
+            var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, cities);
+            var dto = _mapper.Map<IEnumerable<CityDTO>>(filteredSortedPagedProducts);
             return Ok(dto);
         }
+
+
+        [HttpGet("GetAll")]
+        public async Task<ActionResult> GetCities()
+        {
+            var cities = await _unitOfWork.Cities.FindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
+            var dto = _mapper.Map<IEnumerable<CityDTO>>(cities);
+            return Ok(dto);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetCityById(int id)
