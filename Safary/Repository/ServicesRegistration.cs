@@ -17,6 +17,7 @@ namespace Safary.Repository
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEmailBodyBuilder, EmailBodyBuilder>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddTransient<IEmailSender, EmailSender>();
             
 

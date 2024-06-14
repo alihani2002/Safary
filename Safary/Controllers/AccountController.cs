@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Domain.Entities;
 using Domain.Repositories;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -78,7 +80,7 @@ public class AccountController : ControllerBase
 		return Ok(result);
 	}
 
-	[HttpPost("Login-As-TourGuide")]
+	[HttpPost("Login")]
 	public async Task<IActionResult> LoginAsync([FromForm] LoginDTO model)
 	{
 		if (!ModelState.IsValid)
@@ -176,6 +178,13 @@ public class AccountController : ControllerBase
 		return Ok("Password has changed");
 	}
 
+	[HttpPost("logout")]
+	[Authorize]
+	public async Task<IActionResult> Logout()
+	{
+		await HttpContext.SignOutAsync();
+		return Ok(new { message = "Logged out successfully" });
+	}
 
 	private async Task ConfirmAndSendEmailAsync(ApplicationUser user)
     {
@@ -199,5 +208,6 @@ public class AccountController : ControllerBase
         await _emailSender.SendEmailAsync(user.Email!, "Confirm your email", body);
         #endregion
     }
+
 
 }

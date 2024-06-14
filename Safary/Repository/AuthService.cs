@@ -172,17 +172,18 @@ namespace Safary.Repository
 					return new AuthModel { Message = authModel.Message };
 				}
 				return await CreateTokenAsync(authModel, user);
-			}			
-			if (!user.EmailConfirmed)
-			{
-				authModel.Message = "Your Email Not Verified!";
-				return new AuthModel { Message = authModel.Message };
 			}
 			if (!user.AdminAccepted)
 			{
 				authModel.Message = "Please wait to accept from admin!";
 				return new AuthModel { Message = authModel.Message };
 			}
+			if (!user.EmailConfirmed)
+			{
+				authModel.Message = "Your Email Not Verified!";
+				return new AuthModel { Message = authModel.Message };
+			}
+			
 
             return await CreateTokenAsync(authModel, user);
 		}
