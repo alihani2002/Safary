@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace Safary.Controllers
 {
@@ -14,14 +16,25 @@ namespace Safary.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ISieveProcessor _sieveProcessor;
 
 
-        public TourController(IMapper mapper, IUnitOfWork unitOfWork)
+        public TourController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _sieveProcessor = sieveProcessor;
         }
+        [HttpGet("GetFilterdAndSorted")]
+        public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
+        {
+            var tours = _unitOfWork.Tours.FilterFindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
 
+            // Apply Sieve to the queryable collection
+            var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, tours);
+            var dto = _mapper.Map<IEnumerable<TourDTO>>(filteredSortedPagedProducts);
+            return Ok(dto);
+        }
         [HttpGet("GetAll")]
         public async Task<ActionResult> GetTours()
         {

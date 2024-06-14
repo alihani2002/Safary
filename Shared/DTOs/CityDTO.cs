@@ -13,7 +13,7 @@ namespace Shared.DTOs
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string Location { get; set; } = null!;
-        public ICollection<Place>? Places { get; set; }
+        public List<PlaceDTO> Places { get; set; }
         public int? CountryId { get; set; }
     }
 }

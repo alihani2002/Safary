@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence.Data;
 using Shared.DTOs;
+using Sieve.Models;
+using Sieve.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,14 +19,24 @@ namespace Presentations.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ISieveProcessor _sieveProcessor;
 
-
-        public TourHourController(IMapper mapper, IUnitOfWork unitOfWork)
+        public TourHourController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _sieveProcessor = sieveProcessor;
         }
+        [HttpGet("GetFilterdAndSorted")]
+        public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
+        {
+            var tourHours = _unitOfWork.TourHours.FilterFindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
 
+            // Apply Sieve to the queryable collection
+            var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, tourHours);
+            var dto = _mapper.Map<IEnumerable<TourHourDTO>>(filteredSortedPagedProducts);
+            return Ok(dto);
+        }
         [HttpGet("GetAll")]
         public async Task<ActionResult> GetTourHours()
         {

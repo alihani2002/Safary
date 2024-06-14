@@ -47,6 +47,24 @@ namespace Persistence.Repositories
             return query;
         }
 
+        public IQueryable<T> FilterGetAll(bool withNoTracking = true , string? orderByDirection = OrderBy.Ascending , Expression<Func<T, object>>? orderBy = null)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            if (withNoTracking)
+                query = query.AsNoTracking();
+
+
+            if (orderBy != null)
+            {
+                query = orderByDirection == OrderBy.Ascending
+                    ? query.OrderBy(orderBy)
+                    : query.OrderByDescending(orderBy);
+            }
+
+            return query;
+        }
+
         public async Task<IEnumerable<T>> GetAll(bool withNoTracking = true)
 		{
 			IQueryable<T> query = _context.Set<T>();
