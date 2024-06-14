@@ -16,6 +16,8 @@ using Service.Abstractions;
 using Safary.Repository;
 using Persistence.Configurations;
 using Sieve.Services;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,70 +49,79 @@ builder.Services.AddScoped<ISieveConfiguration, SieveConfiguration>();
 
 builder.Services.AddAuthentication(option =>
 {
-    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+	option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+	option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(option =>
 {
-    option.SaveToken = true;
-    option.RequireHttpsMetadata = false;
-    option.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:ValidAudiance"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
-    };
+	option.SaveToken = true;
+	option.RequireHttpsMetadata = false;
+	option.TokenValidationParameters = new TokenValidationParameters()
+	{
+		ValidateIssuer = true,
+		ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+		ValidateAudience = true,
+		ValidAudience = builder.Configuration["JWT:ValidAudiance"],
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+	};
+});
+
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+builder.Services.AddScoped(x =>
+{
+	var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+	var factory = x.GetRequiredService<IUrlHelperFactory>();
+	return factory.GetUrlHelper(actionContext!);
 });
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo", Version = "v1" });
+	c.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo", Version = "v1" });
 });
 builder.Services.AddSwaggerGen(swagger =>
 {
-    //This is to generate the Default UI of Swagger Documentation    
-    swagger.SwaggerDoc("v2", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "ASP.NET 8 Web API",
-        Description = " ITI Projrcy"
-    });
+	//This is to generate the Default UI of Swagger Documentation    
+	swagger.SwaggerDoc("v2", new OpenApiInfo
+	{
+		Version = "v1",
+		Title = "ASP.NET 8 Web API",
+		Description = " ITI Projrcy"
+	});
 
-    // To Enable authorization using Swagger (JWT)    
-    swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
-    });
-    swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                       new OpenApiSecurityScheme
-                    {
-                       Reference = new OpenApiReference
-                    {
-                       Type = ReferenceType.SecurityScheme,
-                       Id = "Bearer"
-                    }
+	// To Enable authorization using Swagger (JWT)    
+	swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+	{
+		Name = "Authorization",
+		Type = SecuritySchemeType.ApiKey,
+		Scheme = "Bearer",
+		BearerFormat = "JWT",
+		In = ParameterLocation.Header,
+		Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+	});
+	swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
+					{
+					   new OpenApiSecurityScheme
+					{
+					   Reference = new OpenApiReference
+					{
+					   Type = ReferenceType.SecurityScheme,
+					   Id = "Bearer"
+					}
 
-                    },
-                       new string[] {}
-                    }
-                });
+					},
+					   new string[] {}
+					}
+				});
 });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

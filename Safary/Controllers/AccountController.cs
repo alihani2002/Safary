@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Service.Abstractions;
 using Shared.DTOs;
 
@@ -18,17 +19,21 @@ public class AccountController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IEmailSender _emailSender;
     private readonly IEmailBodyBuilder _emailBodyBuilder;
+	private readonly IUrlHelper _urlHelper;
+	private readonly ILogger<AccountController> _logger;
 
-    public AccountController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IAuthService authService, IEmailSender emailSender, IEmailBodyBuilder emailBodyBuilder)
-    {
-        _userManager = userManager;
-        _unitOfWork = unitOfWork;
-        _authService = authService;
-        _emailSender = emailSender;
-        _emailBodyBuilder = emailBodyBuilder;
-    }
+	public AccountController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IAuthService authService, IEmailSender emailSender, IEmailBodyBuilder emailBodyBuilder, IUrlHelper urlHelper, ILogger<AccountController> logger)
+	{
+		_userManager = userManager;
+		_unitOfWork = unitOfWork;
+		_authService = authService;
+		_emailSender = emailSender;
+		_emailBodyBuilder = emailBodyBuilder;
+		_urlHelper = urlHelper;
+		_logger = logger;
+	}
 
-    [HttpPost("Register-As-User")]
+	[HttpPost("Register-As-User")]
     public async Task<IActionResult> RegisterAsUserAsync([FromForm] RegisterDTO model)
     {
         if (!ModelState.IsValid)
@@ -45,8 +50,41 @@ public class AccountController : ControllerBase
         result.Message = "Please Look in your email box";
         return Ok(result);
     }
+	[HttpPost("Register-As-TourGuide")]
+	public async Task<IActionResult> RegisterAsTourGuideAsync([FromForm] RegisterTourGuideDTO model)
+	{
+		if (!ModelState.IsValid)
+			return BadRequest(ModelState);
+		var result = await _authService.RegisterAsTourGuideAsync(model);
 
-    [HttpGet("Confirm-Email")]
+		if (!result.IsAuthenticated)
+			return BadRequest(result.Message);
+
+		var user = await _userManager.FindByEmailAsync(result.Email);
+		if (user == null)
+			return BadRequest(ModelState);
+
+		//// Confirm email
+		//await ConfirmAndSendEmailAsync(user);
+		//result.Message = "Please Look in your email box";
+		return Ok(result);
+	}
+
+	[HttpPost("Login-As-TourGuide")]
+	public async Task<IActionResult> LoginAsync([FromForm] LoginDTO model)
+	{
+		if (!ModelState.IsValid)
+			return BadRequest(ModelState);
+
+		var result = await _authService.GetTokenAsync(model);
+
+		if (!result.IsAuthenticated)
+			return BadRequest(result.Message);
+		result.Message = "Success";
+		return Ok(result);
+	}
+
+	[HttpGet("Confirm-Email")]
     public async Task<IActionResult> ConfirmEmail(string email, string token)
     {
         var confirm = await _authService.ConfirmEmailAsync(email, token);
@@ -55,7 +93,66 @@ public class AccountController : ControllerBase
                 "Pleaese wait admin aceept..");
         return BadRequest("This User Not Exist!");
     }
-    private async Task ConfirmAndSendEmailAsync(ApplicationUser user)
+
+	// Forget Password
+	[HttpPost("Forget-Passward")]
+	public async Task<IActionResult> ForgetPassward(string email)
+	{
+		if (string.IsNullOrEmpty(email))
+			return BadRequest("Invalid email address");
+
+		var user = await _userManager.FindByEmailAsync(email);
+
+		if (user is null)
+			return BadRequest("User not found. Please try again.");
+
+		if (!await _userManager.IsEmailConfirmedAsync(user))
+			return BadRequest("Email not verified. Please verify your email address.");
+
+		var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+		var passResetLink = _urlHelper.Action(nameof(ResetPassward), "Account", new { Email = email, Token = token }, Request.Scheme);
+
+		_logger.Log(LogLevel.Warning, passResetLink);
+
+		try
+		{
+			await _emailSender.SendEmailAsync(email, "Password Reset", $"Password Reset Link: {passResetLink}");
+			return Ok("Password reset link sent successfully. Check your email to reset your password.");
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error sending password reset email");
+			return StatusCode(500, "Error sending password reset email. Please try again later.");
+		}
+	}
+
+	// Reset Password
+	[HttpPost("Reset-Passward")]
+	public async Task<IActionResult> ResetPassward(ResetPassword resetPassword)
+	{
+		if (string.IsNullOrEmpty(resetPassword.Email))
+			return BadRequest("Invalid email address");
+
+		var user = await _userManager.FindByEmailAsync(resetPassword.Email);
+
+		if (user is null)
+			return BadRequest("User not found. Please try again.");
+
+		var resetPassResult = await _userManager.ResetPasswordAsync(user, resetPassword.Token, resetPassword.Password);
+
+		if (!resetPassResult.Succeeded)
+		{
+			foreach (var error in resetPassResult.Errors)
+				ModelState.AddModelError(error.Code, error.Description);
+
+			return Ok(ModelState);
+		}
+		return Ok("Password has changed");
+	}
+
+
+	private async Task ConfirmAndSendEmailAsync(ApplicationUser user)
     {
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user!);
         var callbackUrl = Url.Action(

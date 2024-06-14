@@ -1,4 +1,5 @@
-﻿using Shared.DTOs;
+﻿using Domain.Models;
+using Shared.DTOs;
 
 namespace Service.Abstractions
 {
@@ -7,6 +8,7 @@ namespace Service.Abstractions
 		Task<UserDTO> RegisterAsUserAsync(RegisterDTO model);
 		Task<TourGuideDTO> RegisterAsTourGuideAsync(RegisterTourGuideDTO model);
         Task<bool> ConfirmEmailAsync(string email, string token);
-
-    }
+		//Task<AuthModel> GetTokensTourGuideAsync(LoginDTO model);
+		Task<AuthModel> GetTokenAsync(LoginDTO model);
+	}
 }

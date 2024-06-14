@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Shared.DTOs;
 
@@ -59,10 +60,16 @@ namespace Safary.Mapping
             // tour guide
             CreateMap<RegisterTourGuideDTO, ApplicationUser>().ReverseMap();
 
+            CreateMap<TourGuideDTO, ApplicationUser>().ReverseMap();
+           
 
             CreateMap<Tour, TourDTO>().ReverseMap();
 
             CreateMap<RegisterDTO, ApplicationUser>().ReverseMap();
+
+
+            CreateMap<AuthModel, ApplicationUser>().ReverseMap();
+
 
         } 
     }

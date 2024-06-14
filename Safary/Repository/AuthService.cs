@@ -2,8 +2,10 @@
 using Domain.Consts;
 using Domain.Entities;
 using Domain.Helpers;
+using Domain.Models;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Service.Abstractions;
@@ -23,7 +25,7 @@ namespace Safary.Repository
         private JWT _jwt;
         private IMapper _mapper;
 
-        private List<string> _allowedExtensions = new() { ".pdf", ".docs" };
+        private List<string> _allowedExtensions = new() { ".pdf", ".docx" };
         private int _maxAllowedSize = 5242880;
 
         public AuthService(UserManager<ApplicationUser> userManager,
@@ -52,7 +54,7 @@ namespace Safary.Repository
             var extension = Path.GetExtension(model.CV.FileName);
 
             if (!_allowedExtensions.Contains(extension))
-                return new TourGuideDTO { Message = "Only .pdf, .docs files are allowed!" };
+                return new TourGuideDTO { Message = "Only .pdf, .docx files are allowed!" };
 
             if (model.CV.Length > _maxAllowedSize)
                 return new TourGuideDTO { Message = "File cannot be more than 5 MB!" };
@@ -75,13 +77,13 @@ namespace Safary.Repository
                 }
                 return new TourGuideDTO { Message = errors };
             }
-            await _userManager.AddToRoleAsync(tourGuide, AppRoles.User);
+            await _userManager.AddToRoleAsync(tourGuide, AppRoles.TourGuide);
 
             var JwtSecurityToken = await CreateJwtToken(tourGuide);
             var returnModel = _mapper.Map<TourGuideDTO>(tourGuide);
             returnModel.ExpiredOn = JwtSecurityToken.ValidTo;
             returnModel.IsAuthenticated = true;
-            returnModel.Roles = [AppRoles.User];
+            returnModel.Roles = [AppRoles.TourGuide];
             returnModel.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
             return returnModel;
         }
@@ -150,8 +152,84 @@ namespace Safary.Repository
 
             return jwtSecurityToken;
         }
-        // Confirm Email
-        public async Task<bool> ConfirmEmailAsync(string email, string token)
+
+		// Login
+		public async Task<AuthModel> GetTokenAsync(LoginDTO model)
+		{
+			var authModel = new AuthModel();
+			var user = await _userManager.Users
+				.FirstOrDefaultAsync(x => x.Email == model.Email);
+           if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
+		   {
+					authModel.Message = "Email or Password is incorrect!";
+					return new AuthModel { Message = authModel.Message };
+		   }
+            if(await _userManager.IsInRoleAsync(user, "User"))
+            {				
+				if (!user.EmailConfirmed)
+				{
+					authModel.Message = "Your Email Not Verified!";
+					return new AuthModel { Message = authModel.Message };
+				}
+				return await CreateTokenAsync(authModel, user);
+			}			
+			if (!user.EmailConfirmed)
+			{
+				authModel.Message = "Your Email Not Verified!";
+				return new AuthModel { Message = authModel.Message };
+			}
+			if (!user.AdminAccepted)
+			{
+				authModel.Message = "Please wait to accept from admin!";
+				return new AuthModel { Message = authModel.Message };
+			}
+
+            return await CreateTokenAsync(authModel, user);
+		}
+
+        public async Task<AuthModel> CreateTokenAsync(AuthModel authModel, ApplicationUser user)
+        {
+			authModel = _mapper.Map<AuthModel>(user);
+			var jwtSecurityToken = await CreateJwtToken(user);
+			authModel.IsAuthenticated = true;
+			authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+			authModel.ExpiredOn = jwtSecurityToken.ValidTo;
+			authModel.Roles = (List<string>)await _userManager.GetRolesAsync(user);
+            return authModel;
+		} 
+
+		//public async Task<AuthModel> GetTokenAsUserAsync(LoginDTO model)
+		//{
+		//	var authModel = new AuthModel();
+		//	var user = await _userManager.Users
+		//		.FirstOrDefaultAsync(x => x.Email == model.Email);
+
+		//	if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
+		//	{
+		//		authModel.Message = "Email or Password is incorrect!";
+		//		return new AuthModel { Message = authModel.Message };
+		//	}
+		//	if (!user.EmailConfirmed)
+		//	{
+		//		authModel.Message = "Your Email Not Verified!";
+		//		return new AuthModel { Message = authModel.Message };
+		//	}
+		//	if (!user.AdminAccepted)
+		//	{
+		//		authModel.Message = "Please wait to accept from admin!";
+		//		return new AuthModel { Message = authModel.Message };
+		//	}
+
+		//	authModel = _mapper.Map<AuthModel>(user);
+		//	var jwtSecurityToken = await CreateJwtToken(user);
+		//	authModel.IsAuthenticated = true;
+		//	authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+		//	authModel.ExpiredOn = jwtSecurityToken.ValidTo;
+		//	authModel.Roles = (List<string>)await _userManager.GetRolesAsync(user);
+		//	return authModel;
+		//}
+		// Confirm Email
+		public async Task<bool> ConfirmEmailAsync(string email, string token)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
