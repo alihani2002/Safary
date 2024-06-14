@@ -70,6 +70,8 @@ namespace Safary.Mapping
 
             CreateMap<AuthModel, ApplicationUser>().ReverseMap();
 
+            // All Users 
+            CreateMap<ApplicationUser, ApplicationUsersDTO>().ReverseMap();
 
         } 
     }

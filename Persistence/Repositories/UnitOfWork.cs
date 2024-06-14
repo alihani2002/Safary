@@ -17,8 +17,9 @@ namespace Persistence.Repositories
 		{
 			_context = context;
 		}
+        public IBaseRepository<ApplicationUser> ApplicationUsers => new BaseRepository<ApplicationUser>(_context);
 
-		public IBaseRepository<Blog> Blogs => new BaseRepository<Blog>(_context);
+        public IBaseRepository<Blog> Blogs => new BaseRepository<Blog>(_context);
 
 		public IBaseRepository<TourDay> TourDays =>  new BaseRepository<TourDay>(_context);
 

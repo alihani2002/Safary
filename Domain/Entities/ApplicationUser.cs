@@ -16,11 +16,16 @@ namespace Domain.Entities
     public class ApplicationUser: IdentityUser 
     {
         [MaxLength(150)]
+        [Sieve(CanFilter = true, CanSort = true)]
         public string FirstName { get; set; }
+        [Sieve(CanFilter = true, CanSort = true)]
         [MaxLength(150)]
-        public string LastName { get; set; } 
+        public string LastName { get; set; }
+        [Sieve(CanFilter = true, CanSort = true)]
         public string FullName { get; set; }
+        [Sieve(CanFilter = true, CanSort = true)]
         public string Address { get; set; }
+        [Sieve(CanFilter = true, CanSort = true)]
         public bool IsDeleted { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.Now;
         public bool AdminAccepted { get; set; } = false;

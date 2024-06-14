@@ -1,12 +1,16 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
 using Service.Abstractions;
 using Shared.DTOs;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace Safary.Controllers;
 
@@ -21,8 +25,10 @@ public class AccountController : ControllerBase
     private readonly IEmailBodyBuilder _emailBodyBuilder;
 	private readonly IUrlHelper _urlHelper;
 	private readonly ILogger<AccountController> _logger;
+    private readonly ISieveProcessor _sieveProcessor;
+	private readonly IMapper _mapper;
 
-	public AccountController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IAuthService authService, IEmailSender emailSender, IEmailBodyBuilder emailBodyBuilder, IUrlHelper urlHelper, ILogger<AccountController> logger)
+    public AccountController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IAuthService authService, IEmailSender emailSender, IEmailBodyBuilder emailBodyBuilder, IUrlHelper urlHelper, ILogger<AccountController> logger, ISieveProcessor sieveProcessor , IMapper mapper)
 	{
 		_userManager = userManager;
 		_unitOfWork = unitOfWork;
@@ -31,6 +37,8 @@ public class AccountController : ControllerBase
 		_emailBodyBuilder = emailBodyBuilder;
 		_urlHelper = urlHelper;
 		_logger = logger;
+		_sieveProcessor = sieveProcessor;
+		_mapper = mapper;
 	}
 
 	[HttpPost("Register-As-User")]
@@ -93,9 +101,26 @@ public class AccountController : ControllerBase
                 "Pleaese wait admin aceept..");
         return BadRequest("This User Not Exist!");
     }
+	
+    [HttpGet("GetAllUsers")]
+    public async Task<ActionResult> GetUsers()
+    {
+        var users = await _unitOfWork.ApplicationUsers.GetAll();
+        var dto = _mapper.Map<IEnumerable<ApplicationUsersDTO>>(users);
+        return Ok(dto);
+    }
+    [HttpGet("GetFilterdAndSorted")]
+    public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
+    {
+        var ApplicationUsers = _unitOfWork.ApplicationUsers.FilterGetAll();
 
-	// Forget Password
-	[HttpPost("Forget-Passward")]
+        // Apply Sieve to the queryable collection
+        var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, ApplicationUsers);
+        var dto = _mapper.Map<IEnumerable<ApplicationUsersDTO>>(filteredSortedPagedProducts);
+        return Ok(dto);
+    }
+    // Forget Password
+    [HttpPost("Forget-Passward")]
 	public async Task<IActionResult> ForgetPassward(string email)
 	{
 		if (string.IsNullOrEmpty(email))

@@ -9,7 +9,8 @@ namespace Domain.Repositories
 {
 	public interface IUnitOfWork
 	{
-		IBaseRepository<Blog> Blogs { get; }
+        IBaseRepository<ApplicationUser> ApplicationUsers { get; }
+        IBaseRepository<Blog> Blogs { get; }
 		IBaseRepository<TourDay> TourDays { get; }
 		IBaseRepository<TourHour> TourHours { get; }
 		IBaseRepository<Place> Places { get; }
