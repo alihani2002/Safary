@@ -50,6 +50,8 @@ namespace Domain.Entities
         public TourDay? TourDay { get; set; }
         public int? TourHourId { get; set; }
         public TourHour? TourHour { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
     }
 }
