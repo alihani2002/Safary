@@ -14,13 +14,7 @@ namespace Persistence.Configurations
         {
             public void Configure(EntityTypeBuilder<ApplicationUser> builder)
             {
-                builder.HasMany(u => u.WrittenReviews)
-                       .WithOne(r => r.Tourist)
-                       .HasForeignKey(r => r.TouristId);
-
-                builder.HasMany(u => u.ReceivedReviews)
-                       .WithOne(r => r.TourGuide)
-                       .HasForeignKey(r => r.TourGuideId);
+             
             }
         }
 }

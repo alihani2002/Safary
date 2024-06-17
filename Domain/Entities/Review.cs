@@ -12,11 +12,9 @@ namespace Domain.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int? TouristId { get; set; } // Foreign key to ApplicationUser (Tourist)
-        [ForeignKey("TouristId")]
+        public string TouristId { get; set; } // Foreign key to ApplicationUser (Tourist)
         public ApplicationUser? Tourist { get; set; }
-        public int? TourGuideId { get; set; } // Foreign key to ApplicationUser (TourGuide)
-        [ForeignKey("TourGuideId")]
+        public string TourGuideId { get; set; } // Foreign key to ApplicationUser (TourGuide)
         public ApplicationUser? TourGuide { get; set; }
         public double Rating { get; set; }
         public string Comment { get; set; }

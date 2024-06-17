@@ -18,7 +18,7 @@ namespace Safary.Repository
         {
             var reviews = _context.Reviews
                 .Include(r => r.Tourist)
-                .Where(r => r.TourGuideId == tourGuideId)
+                .Where(r => r.TourGuideId == tourGuideId.ToString())
                 .ToList();
 
             double averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
