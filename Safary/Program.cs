@@ -37,6 +37,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.Configure<JWT>(builder.Configuration.GetSection(nameof(JWT)));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+// Registering the ReviewService with its interface
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

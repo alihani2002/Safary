@@ -18,27 +18,27 @@ namespace Safary.Controllers
 			_unitOfWork = unitOfWork;
 		}
 
-		public IActionResult GetAll(string duration)
-		{
-			// !(specificStartDate <= user.EndDate && specificEndDate >= user.StartDate)
+		//public IActionResult GetAll(string duration)
+		//{
+		//	// !(specificStartDate <= user.EndDate && specificEndDate >= user.StartDate)
 
-			if (!string.IsNullOrEmpty(duration))
-			{
-				if (!DateTime.TryParse(duration.Split(separator: " - ")[0], out DateTime from))
-				{
-					ModelState.AddModelError("Duration", Errors.InvalidStartDate);
-					return BadRequest(ModelState);
-				}
+		//	if (!string.IsNullOrEmpty(duration))
+		//	{
+		//		if (!DateTime.TryParse(duration.Split(separator: " - ")[0], out DateTime from))
+		//		{
+		//			ModelState.AddModelError("Duration", Errors.InvalidStartDate);
+		//			return BadRequest(ModelState);
+		//		}
 
-				if (!DateTime.TryParse(duration.Split(" - ")[1], out DateTime to))
-				{
-					ModelState.AddModelError("Duration", Errors.InvalidEndDate);
-					return BadRequest(ModelState);
-				}
+		//		if (!DateTime.TryParse(duration.Split(" - ")[1], out DateTime to))
+		//		{
+		//			ModelState.AddModelError("Duration", Errors.InvalidEndDate);
+		//			return BadRequest(ModelState);
+		//		}
 
-			}
+		//	}
 
-		}
+		//}
 
 	}
 }

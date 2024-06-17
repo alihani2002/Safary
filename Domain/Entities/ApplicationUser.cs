@@ -53,5 +53,13 @@ namespace Domain.Entities
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+
+
+        // Reviews written by the tourist
+        public ICollection<Review>? WrittenReviews { get; set; }
+
+        // Reviews received by the tour guide
+        public ICollection<Review>? ReceivedReviews { get; set; }
+
     }
 }
