@@ -77,6 +77,16 @@ namespace Safary.Mapping
             CreateMap<Review, ReviewDTO>();
             CreateMap<ReviewDTO, Review>().ReverseMap();
 
-        } 
+            //Tourist 
+            CreateMap<TouristDto, ApplicationUser>().ReverseMap();
+
+
+            //TourGiude
+            CreateMap<TourgiudeDto, ApplicationUser>().ReverseMap();
+
+
+
+
+        }
     }
 }

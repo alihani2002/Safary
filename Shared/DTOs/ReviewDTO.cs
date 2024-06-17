@@ -14,7 +14,7 @@ namespace Shared.DTOs
         public int Id { get; set; }
         public double Rating { get; set; }
         public string Comment { get; set; }
-        public string ReviewerName { get; set; }
+        public string ReviewerName { get; set; } 
         public string UserID { get; set; }
     }
 }

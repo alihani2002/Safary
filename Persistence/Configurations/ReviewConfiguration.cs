@@ -17,8 +17,7 @@ namespace Persistence.Configurations
 
             builder.HasOne(r => r.User)
                    .WithMany(u => u.Reviews)
-                   .HasForeignKey(r => r.UserID)
-                   .OnDelete(DeleteBehavior.SetNull);
+                   .HasForeignKey(r => r.UserID);
         }
     }
 }
