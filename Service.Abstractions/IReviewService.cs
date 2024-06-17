@@ -9,6 +9,7 @@ namespace Service.Abstractions
 {
     public interface IReviewService
     {
-        ReviewSummary GetReviews(int tourGuideId);
+        double GetAverageRating(int tourGuideId);
+        List<Review> GetReviewsByTourGuideId(int tourGuideId);
     }
 }

@@ -14,20 +14,24 @@ namespace Safary.Repository
             _context = context;
         }
 
-        public ReviewSummary GetReviews(int tourGuideId)
+        // Method to calculate the average rating for a specific TourGuide
+        public double GetAverageRating(int tourGuideId)
         {
-            var reviews = _context.Reviews
-                .Include(r => r.Tourist)
-                .Where(r => r.TourGuideId == tourGuideId.ToString())
-                .ToList();
-
-            double averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
-
-            return new ReviewSummary
+            var reviews = _context.Reviews.Where(r => r.UserID == tourGuideId.ToString());
+            if (reviews.Any())
             {
-                AverageRating = averageRating,
-                Reviews = reviews
-            };
+                return reviews.Average(r => r.Rating);
+            }
+            return 0;
+        }
+
+        // Method to get all reviews for a specific TourGuide
+        public List<Review> GetReviewsByTourGuideId(int tourGuideId)
+        {
+            return _context.Reviews
+                .Include(r => r.User)
+                .Where(r => r.UserID == tourGuideId.ToString())
+                .ToList();
         }
     }
 }

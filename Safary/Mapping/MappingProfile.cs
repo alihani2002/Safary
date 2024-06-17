@@ -73,6 +73,10 @@ namespace Safary.Mapping
             // All Users 
             CreateMap<ApplicationUser, ApplicationUsersDTO>().ReverseMap();
 
+            //Countries 
+            CreateMap<Review, ReviewDTO>();
+            CreateMap<ReviewDTO, Review>().ReverseMap();
+
         } 
     }
 }

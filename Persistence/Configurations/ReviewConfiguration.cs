@@ -15,14 +15,9 @@ namespace Persistence.Configurations
         {
             builder.HasKey(r => r.Id);
 
-            builder.HasOne(r => r.Tourist)
-                   .WithMany(u => u.WrittenReviews)
-                   .HasForeignKey(r => r.TouristId)
-                   .OnDelete(DeleteBehavior.SetNull);
-
-            builder.HasOne(r => r.TourGuide)
-                   .WithMany(u => u.ReceivedReviews)
-                   .HasForeignKey(r => r.TourGuideId)
+            builder.HasOne(r => r.User)
+                   .WithMany(u => u.Reviews)
+                   .HasForeignKey(r => r.UserID)
                    .OnDelete(DeleteBehavior.SetNull);
         }
     }

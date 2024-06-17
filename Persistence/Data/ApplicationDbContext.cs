@@ -22,6 +22,7 @@ namespace Persistence.Data
         public DbSet<Review> Reviews { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

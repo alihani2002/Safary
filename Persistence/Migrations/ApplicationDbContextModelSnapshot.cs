@@ -225,7 +225,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("Blogs", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.City", b =>
@@ -255,7 +255,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Country", b =>
@@ -282,7 +282,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Place", b =>
@@ -340,7 +340,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TourId");
 
-                    b.ToTable("Places");
+                    b.ToTable("Places", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Tour", b =>
@@ -367,7 +367,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("Tour");
+                    b.ToTable("Tour", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.TourDay", b =>
@@ -418,7 +418,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("TourDays");
+                    b.ToTable("TourDays", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.TourHour", b =>
@@ -477,7 +477,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("tourHours");
+                    b.ToTable("tourHours", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

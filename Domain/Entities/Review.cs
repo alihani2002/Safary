@@ -12,12 +12,12 @@ namespace Domain.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string TouristId { get; set; } // Foreign key to ApplicationUser (Tourist)
-        public ApplicationUser? Tourist { get; set; }
-        public string TourGuideId { get; set; } // Foreign key to ApplicationUser (TourGuide)
-        public ApplicationUser? TourGuide { get; set; }
         public double Rating { get; set; }
         public string Comment { get; set; }
-     
+        public string ReviewerName { get; set; } = null!;
+
+        [ForeignKey("User")]
+        public string UserID { get; set; } // Foreign key to ApplicationUser (Tourist)
+        public ApplicationUser? User { get; set; }
     }
 }
