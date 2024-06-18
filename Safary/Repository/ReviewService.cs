@@ -55,26 +55,5 @@ namespace Safary.Repository
              _unitOfWork.Complete();
             return true;
         }
-
-
-        //// Method to calculate the average rating for a specific TourGuide
-        //public double GetAverageRating(string tourGuideEmail)
-        //{
-        //    var reviews = _context.Reviews.Where(r => r.UserID == tourGuideEmail.ToString());
-        //    if (reviews.Any())
-        //    {
-        //        return reviews.Average(r => r.Rating);
-        //    }
-        //    return 0;
-        //}
-
-        //// Method to get all reviews for a specific TourGuide
-        //public List<Review> GetReviewsByTourGuideId(string tourGuideEmail)
-        //{
-        //    return _context.Reviews
-        //        .Include(r => r.User)
-        //        .Where(r => r.UserID == tourGuideEmail.ToString())
-        //        .ToList();
-        //}
     }
 }

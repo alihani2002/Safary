@@ -10,8 +10,6 @@ namespace Service.Abstractions
 {
     public interface IReviewService
     {
-        //double GetAverageRating(string tourGuideId);
-        //List<Review> GetReviewsByTourGuideId(string tourGuideId);
         Task<IEnumerable<ReviewDTO>> GetAllReviewsAsync();
         Task<ReviewDTO> GetReviewByIdAsync(int id);
         Task<ReviewDTO> AddReviewAsync(ReviewPostDto reviewPostDto);
