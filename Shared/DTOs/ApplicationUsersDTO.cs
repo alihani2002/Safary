@@ -8,12 +8,9 @@ using System.Threading.Tasks;
 
 namespace Shared.DTOs
 {
-    public class ApplicationUsersDTO
+    public class ApplicationUsersDTO : RegisterDTO
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string FullName { get; set; }
-        public string Address { get; set; }
+      
         public bool IsDeleted { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.Now;
         public bool AdminAccepted { get; set; } = false;

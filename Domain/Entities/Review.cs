@@ -17,7 +17,7 @@ namespace Domain.Entities
         public string ReviewerName { get; set; } = null!;
 
         [ForeignKey("User")]
-        public string? UserID { get; set; } // Foreign key to ApplicationUser (Tourist)
+        public string? UserEmail { get; set; } // Foreign key to ApplicationUser (Tourist)
         public ApplicationUser? User { get; set; }
     }
 }

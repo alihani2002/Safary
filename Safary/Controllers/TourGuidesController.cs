@@ -47,19 +47,17 @@ namespace Safary.Controllers
         }
 
         // GET: api/Tourists
-        [HttpGet("GetAllTourGiudes")]
-        public async Task<ActionResult> GetTourist()
+        [HttpGet("")]
+        public async Task<ActionResult> GetAllTourGiudes()
         {
             var users = await _unitOfWork.ApplicationUsers.FindAll(r => r.CvUrl != null, 0);
             var dto = _mapper.Map<IEnumerable<TourgiudeDto>>(users);
             return Ok(dto);
         }
 
-       
-
         // POST: api/Tourists
         [HttpPost]
-        public async Task<ActionResult<TouristDto>> CreateTourist(TourgiudeDto tourgiudeDto)
+        public async Task<ActionResult> CreateTourguide([FromForm]TourgiudeDto tourgiudeDto)
         {
             if (!ModelState.IsValid)
             {
@@ -70,65 +68,60 @@ namespace Safary.Controllers
             await _unitOfWork.ApplicationUsers.Add(Tourgiude);
             _unitOfWork.Complete();
 
-            var createdTouristDto = _mapper.Map<TouristDto>(Tourgiude);
-            return CreatedAtAction(nameof(GetTourist), new { id = Tourgiude.Id }, createdTouristDto);
+            var createdTourgiude = _mapper.Map<TourgiudeDto>(Tourgiude);
+            return Ok(createdTourgiude);
         }
 
-        //// GET: api/Tourists/{id}
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<TouristDto>> GetTourist(int id)
-        //{
-        //    var tourist = await _unitOfWork.ApplicationUsers.GetById(id);
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var touristDto = _mapper.Map<TouristDto>(tourist);
-        //    return Ok(touristDto);
-        //}
+        // GET: api/Tourists/{id}
+        [HttpGet("{email}")]
+        public async Task<ActionResult> GetTourguideByEmail(string email)
+        {
+            var tourgiude = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
+            if (!ModelState.IsValid)
+            {
+                return NotFound();
+            }
+            var touristDto = _mapper.Map<TouristDto>(tourgiude);
+            return Ok(touristDto);
+        }
 
-        //    // PUT: api/Tourists/{id}
-        //    [HttpPut("{id}")]
-        //    public async Task<ActionResult> UpdateTourist(int id, TouristDto touristDto)
-        //    {
+        // PUT: api/Tourists/{id}
+        [HttpPut("{email}")]
+        public async Task<ActionResult> UpdateTourGuide(string email, TourgiudeDto TourgiudeDto)
+        {
 
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var tourguide = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
 
-        //        var existingTourist = await _unitOfWork.ApplicationUsers.GetById(id);
-        //        if (existingTourist == null || existingTourist.TouristId == null)
-        //        {
-        //            return NotFound();
-        //        }
+            if (tourguide == null || tourguide.Email == null)
+            {
+                return NotFound();
+            }
 
-        //        _mapper.Map(touristDto, existingTourist);
-        //        _unitOfWork.ApplicationUsers.Update(existingTourist);
-        //        _unitOfWork.Complete();
-        //        return Ok(existingTourist);
-        //    }
+            _mapper.Map(TourgiudeDto, tourguide);
+            _unitOfWork.ApplicationUsers.Update(tourguide);
+            _unitOfWork.Complete();
+            return Ok(tourguide);
+        }
 
-        //    // DELETE: api/Tourists/{id}
-        //    [HttpDelete("{id}")]
-        //    public async Task<ActionResult> DeleteTourist(int id)
-        //    {
-        //        var tourist = await _unitOfWork.ApplicationUsers.GetById(id);
-        //        if (tourist == null || tourist.TouristId == null)
-        //        {
-        //            return NotFound();
-        //        }
+        // DELETE: api/Tourists/{id}
+        [HttpDelete("{email}")]
+        public async Task<ActionResult> DeleteTourguide(string email)
+        {
+            var tourguide = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
+            if (tourguide == null || tourguide.Email == email)
+            {
+                return NotFound();
+            }
 
-        //        _unitOfWork.ApplicationUsers.Remove(tourist);
-        //        _unitOfWork.Complete();
-        //        return Ok(tourist);
-        //    }
-        //}
-
-
-
-
-
+            _unitOfWork.ApplicationUsers.Remove(tourguide);
+            _unitOfWork.Complete();
+            return Ok(tourguide);
+        }
     }
 }
+
 

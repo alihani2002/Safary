@@ -14,85 +14,59 @@ namespace Safary.Controllers
     [ApiController]
     public class ReviewsController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IReviewService _reviewService;
 
-        public ReviewsController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ReviewsController(IReviewService reviewService)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _reviewService = reviewService;
         }
 
-        // GET: api/Reviews/tourGuideId
-        [HttpGet("{tourGuideId}")]
-        public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviewsByTourGuideId(int tourGuideId)
+        // GET: api/Reviews
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()
         {
-            var reviews = await _unitOfWork.Reviews.FindAll(r => r.UserID == tourGuideId.ToString() , 0);
-            var reviewDtos = _mapper.Map<IEnumerable<ReviewDTO>>(reviews);
-            return Ok(reviewDtos);
+            var reviews = await _reviewService.GetAllReviewsAsync();
+            return Ok(reviews);
         }
 
-        // GET: api/Reviews/averageRating/tourGuideId
-        [HttpGet("averageRating/{tourGuideId}")]
-        public async Task<ActionResult<double>> GetAverageRating(int tourGuideId)
+        // GET: api/Reviews/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ReviewDTO>> GetReview(int id)
         {
-            var reviews = await _unitOfWork.Reviews.FindAll(r => r.UserID == tourGuideId.ToString(), 0);
-            var averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
-            return Ok(averageRating);
-        }
+            var review = await _reviewService.GetReviewByIdAsync(id);
 
-
-        // POST: api/Reviews
-        [HttpPost]
-        public async Task<ActionResult<ReviewDTO>> CreateReview([FromBody] ReviewDTO reviewDto)
-        {
-            if (reviewDto == null)
-            {
-                return BadRequest();
-            }
-
-            var review = _mapper.Map<Review>(reviewDto);
-            await _unitOfWork.Reviews.Add(review);
-             _unitOfWork.Complete();
-
-            var createdReviewDto = _mapper.Map<ReviewDTO>(review);
-            return CreatedAtAction(nameof(GetReviewsByTourGuideId), new { tourGuideId = review.UserID }, createdReviewDto);
-        }
-
-        // PUT: api/Reviews/{id}
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateReview(int id, [FromBody] ReviewDTO reviewDto)
-        {
-            if (id != reviewDto.Id)
-            {
-                return BadRequest();
-            }
-
-            var existingReview = await _unitOfWork.Reviews.GetById(id);
-            if (existingReview == null)
-            {
-                return NotFound();
-            }
-
-            _mapper.Map(reviewDto, existingReview);
-            _unitOfWork.Reviews.Update(existingReview);
-            _unitOfWork.Complete();
-
-            return NoContent();
-        }
-
-        // DELETE: api/Reviews/{id}
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteReview(int id)
-        {
-            var review = await _unitOfWork.Reviews.GetById(id);
             if (review == null)
             {
                 return NotFound();
             }
 
-            _unitOfWork.Reviews.Remove(review);
-            _unitOfWork.Complete();
+            return Ok(review);
+        }
+
+        // POST: api/Reviews
+        [HttpPost]
+        public async Task<ActionResult<ReviewDTO>> PostReview(ReviewPostDto reviewPostDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var review = await _reviewService.AddReviewAsync(reviewPostDto);
+
+            return CreatedAtAction(nameof(GetReview), new { id = review.Id }, review);
+        }
+
+        // DELETE: api/Reviews/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReview(int id)
+        {
+            var success = await _reviewService.DeleteReviewAsync(id);
+
+            if (!success)
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

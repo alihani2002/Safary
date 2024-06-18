@@ -58,7 +58,5 @@ namespace Domain.Entities
         // Reviews written by the tourist
         public ICollection<Review>? Reviews { get; set; }
 
- 
-
     }
 }
