@@ -12,11 +12,15 @@ namespace Safary.Repository
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ApplicationDbContext _context;
 
-        public ReviewService(IUnitOfWork unitOfWork, IMapper mapper)
+
+        public ReviewService(ApplicationDbContext context, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
+
         }
 
         public async Task<IEnumerable<ReviewDTO>> GetAllReviewsAsync()
@@ -29,6 +33,15 @@ namespace Safary.Repository
         {
             var review = await _unitOfWork.Reviews.GetById(id);
             return _mapper.Map<ReviewDTO>(review);
+        }
+
+        public async Task<double?> GetAverageRatingForTourGuideAsync(string tourGuideEmail)
+        {
+            var averageRating = await _context.Reviews
+                .Where(r => r.User.Email == tourGuideEmail)
+                .AverageAsync(r => (double?)r.Rating);
+
+            return averageRating;
         }
 
         public async Task<ReviewDTO> AddReviewAsync(ReviewPostDto reviewPostDto)

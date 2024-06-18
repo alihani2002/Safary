@@ -43,6 +43,17 @@ namespace Safary.Controllers
             return Ok(review);
         }
 
+        [HttpGet("average-rating/{tourGuideEmail}")]
+        public async Task<ActionResult<double?>> GetAverageRatingForTourGuide(string tourGuideEmail)
+        {
+            var averageRating = await _reviewService.GetAverageRatingForTourGuideAsync(tourGuideEmail);
+            if (averageRating == null)
+            {
+                return NotFound($"No reviews found for tour guide with email {tourGuideEmail}");
+            }
+            return Ok(averageRating);
+        }
+
         // POST: api/Reviews
         [HttpPost]
         public async Task<ActionResult<ReviewDTO>> PostReview(ReviewPostDto reviewPostDto)

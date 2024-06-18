@@ -14,5 +14,8 @@ namespace Service.Abstractions
         Task<ReviewDTO> GetReviewByIdAsync(int id);
         Task<ReviewDTO> AddReviewAsync(ReviewPostDto reviewPostDto);
         Task<bool> DeleteReviewAsync(int id);
+        Task<double?> GetAverageRatingForTourGuideAsync(string tourGuideEmail);
+
+
     }
 }
