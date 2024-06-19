@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Shared.DTOs
 {
-    public class ReviewPostDto
+    public class ReviewPostDto 
     {
         public double Rating { get; set; }
         public string Comment { get; set; }

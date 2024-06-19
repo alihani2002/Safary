@@ -84,11 +84,11 @@ namespace Safary.Mapping
             //TourGiude
             CreateMap<TourgiudeDto, ApplicationUser>().ReverseMap();
             CreateMap<CardTourGuideDTO, ApplicationUser>().ReverseMap();
-            CreateMap<TourGuideDetailsDTO, ApplicationUser>().ReverseMap()
-                .ForMember(dest => dest.TourGuideSelectedDTO.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.TourGuideSelectedDTO.Adults, opt => opt.MapFrom(src => src.Adults))
-                .ForMember(dest => dest.TourGuideSelectedDTO.SelectedDate, opt => opt.MapFrom(src => src.SelectedDate))
-                .ForMember(dest => dest.TourGuideSelectedDTO.SelectedTime, opt => opt.MapFrom(src => src.SelectedTime));
+            //CreateMap<TourGuideDetailsDTO, ApplicationUser>().ReverseMap()
+            //    .ForMember(dest => dest.TourGuideSelectedDTO.Id, opt => opt.MapFrom(src => src.Id))
+            //    .ForMember(dest => dest.TourGuideSelectedDTO.Adults, opt => opt.MapFrom(src => src.Adults))
+            //    .ForMember(dest => dest.TourGuideSelectedDTO.SelectedDate, opt => opt.MapFrom(src => src.SelectedDate))
+            //    .ForMember(dest => dest.TourGuideSelectedDTO.SelectedTime, opt => opt.MapFrom(src => src.SelectedTime));
 
             CreateMap<SelectedTourGuide, TourGuideSelectedDTO>().ReverseMap();
 		}

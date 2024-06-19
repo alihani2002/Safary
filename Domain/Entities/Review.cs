@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Review
+    public class Review : BaseModel
     {
         [Key]
         public int Id { get; set; }

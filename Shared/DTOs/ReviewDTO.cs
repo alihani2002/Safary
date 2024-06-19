@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Shared.DTOs
 {
-    public class ReviewDTO
+    public class ReviewDTO : BaseDTO
     {
         public int Id { get; set; }
         public double Rating { get; set; }
