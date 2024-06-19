@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.DTOs;
 using System.Globalization;
+using System.Security.Claims;
 
 namespace Safary.Controllers
 {
@@ -47,13 +48,36 @@ namespace Safary.Controllers
         }
 
         // GET: api/Tourists
-        [HttpGet("")]
+        [HttpGet("GetAll")]
         public async Task<ActionResult> GetAllTourGiudes()
         {
-            var users = await _unitOfWork.ApplicationUsers.FindAll(r => r.CvUrl != null, 0);
-            var dto = _mapper.Map<IEnumerable<TourgiudeDto>>(users);
+            var tourGuides = await _unitOfWork.ApplicationUsers.FindAll(r => r.CvUrl != null, 0);
+            var dto = _mapper.Map<IEnumerable<CardTourGuideDTO>>(tourGuides);
             return Ok(dto);
         }
+
+        [HttpGet("Details")]
+        public async Task<ActionResult> GetDetails(string id)
+        {
+            var tourGuide = await _unitOfWork.ApplicationUsers.Find(g => g.Id == id);
+
+            if (tourGuide is null) return NotFound();
+
+            var dto = _mapper.Map<TourGuideDetailsDTO>(tourGuide);
+            return Ok(dto);
+        }
+
+        [HttpPost("TourGuideSelected")]
+        public async Task<IActionResult> PostTour(TourGuideSelectedDTO dto)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var selectTourGuide = _mapper.Map<SelectedTourGuide>(dto);
+            selectTourGuide.TourGuideId = dto.Id!;
+            selectTourGuide.UserId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            return Ok(selectTourGuide);
+		}
 
         // POST: api/Tourists
         [HttpPost]
@@ -76,27 +100,29 @@ namespace Safary.Controllers
         [HttpGet("{email}")]
         public async Task<ActionResult> GetTourguideByEmail(string email)
         {
-            var tourgiude = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
-            if (!ModelState.IsValid)
-            {
-                return NotFound();
-            }
+			if (!ModelState.IsValid)
+				return NotFound();
+
+			var tourgiude = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
+            
+            if (tourgiude is null)
+                return NotFound(ModelState);
+
             var touristDto = _mapper.Map<TouristDto>(tourgiude);
             return Ok(touristDto);
         }
 
-        // PUT: api/Tourists/{id}
-        [HttpPut("{email}")]
+		// PUT: api/Tourists/{id}
+		[HttpPut("{email}")]
         public async Task<ActionResult> UpdateTourGuide(string email, TourgiudeDto TourgiudeDto)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             var tourguide = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
 
-            if (tourguide == null || tourguide.Email == null)
+            if (tourguide is null || tourguide.Email is null)
             {
                 return NotFound();
             }

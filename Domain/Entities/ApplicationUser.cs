@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UoN.ExpressiveAnnotations.NetCore.Attributes;
 
 namespace Domain.Entities
 {
@@ -50,13 +51,16 @@ namespace Domain.Entities
         public TourDay? TourDay { get; set; }
         public int? TourHourId { get; set; }
         public TourHour? TourHour { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-
-
+        public bool HasCar { get; set; } = false;
+        public DateTime? SelectedDate { get; set; }
+        public TimeSpan? SelectedTime { get; set; }
+        public int Adults { get; set; } = 1;
+        public int? ReviewsNumber { get; set; }
 
         // Reviews written by the tourist
         public ICollection<Review>? Reviews { get; set; }
+
+        public SelectedTourGuide? SelectedTourGuide { get; set; }
 
     }
 }

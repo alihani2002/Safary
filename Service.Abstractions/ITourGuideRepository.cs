@@ -10,6 +10,6 @@ namespace Service.Abstractions
 {
 	public interface ITourGuideRepository: IBaseRepository<ApplicationUser>
 	{
-		IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to);
+		//IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to);
 	}
 }

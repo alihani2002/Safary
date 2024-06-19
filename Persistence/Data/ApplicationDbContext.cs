@@ -20,8 +20,7 @@ namespace Persistence.Data
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Review> Reviews { get; set; }
-
-
+        public DbSet<SelectedTourGuide> SelectedTourGuides { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

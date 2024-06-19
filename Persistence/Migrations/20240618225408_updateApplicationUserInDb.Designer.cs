@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Data;
 
@@ -11,9 +12,11 @@ using Persistence.Data;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240618225408_updateApplicationUserInDb")]
+    partial class updateApplicationUserInDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -383,39 +386,6 @@ namespace Persistence.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("Domain.Entities.SelectedTourGuide", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Adults")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("SelectedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<TimeSpan?>("SelectedTime")
-                        .HasColumnType("time");
-
-                    b.Property<string>("TourGuideId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TourGuideId")
-                        .IsUnique();
-
-                    b.ToTable("SelectedTourGuides");
-                });
-
             modelBuilder.Entity("Domain.Entities.Tour", b =>
                 {
                     b.Property<int>("Id")
@@ -749,17 +719,6 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.SelectedTourGuide", b =>
-                {
-                    b.HasOne("Domain.Entities.ApplicationUser", "ApplicationUser")
-                        .WithOne("SelectedTourGuide")
-                        .HasForeignKey("Domain.Entities.SelectedTourGuide", "TourGuideId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-                });
-
             modelBuilder.Entity("Domain.Entities.Tour", b =>
                 {
                     b.HasOne("Domain.Entities.Blog", "Blog")
@@ -841,8 +800,6 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Reviews");
-
-                    b.Navigation("SelectedTourGuide");
                 });
 
             modelBuilder.Entity("Domain.Entities.Blog", b =>
