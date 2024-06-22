@@ -24,7 +24,7 @@ namespace Domain.Entities
 		public TimeOnly SelectedTime { get; set; }
 		public int Adults { get; set; } = 1;
 		public bool IsConfirmed { get; set; } = false;
-        public string TourName { get; set; }
+        public string? TourName { get; set; }
         public Tour? Tour { get; set; }
     }
 }
