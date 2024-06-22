@@ -11,8 +11,9 @@ namespace Domain.Repositories
 	{
         IBaseRepository<ApplicationUser> ApplicationUsers { get; }
         IBaseRepository<Blog> Blogs { get; }
-		IBaseRepository<TourHour> TourHours { get; }
-		IBaseRepository<Tour> Tours { get; }	
+		IBaseRepository<Tour> Tours { get; }
+		IBaseRepository<TourImage> TourImages { get; }
+		IBaseRepository<TourBlog> TourBlogs { get; }	
         IBaseRepository<Review> Reviews { get; }
         IBaseRepository<SelectedTourGuide> SelectedTourGuides { get; }
 

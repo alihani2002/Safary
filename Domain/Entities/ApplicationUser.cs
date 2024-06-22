@@ -47,12 +47,7 @@ namespace Domain.Entities
         public int? TouristId { get; set; }
         public int? BlogId { get; set; }    
         public Blog? Blog { get; set; }
-        public int? TourHourId { get; set; }
-        public TourHour? TourHour { get; set; }
         public bool HasCar { get; set; } = false;
-        //public DateTime? SelectedDate { get; set; }
-        //public TimeOnly? SelectedTime { get; set; }
-        //public int Adults { get; set; } = 1;
         public int? ReviewsNumber { get; set; }
 
         // Reviews written by the tourist

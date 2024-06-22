@@ -134,9 +134,6 @@ namespace Persistence.Migrations
                     b.Property<int?>("TourGuideId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TourHourId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TouristId")
                         .HasColumnType("int");
 
@@ -161,8 +158,6 @@ namespace Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("TourHourId");
 
                     b.HasIndex("UserName")
                         .IsUnique()
@@ -285,12 +280,9 @@ namespace Persistence.Migrations
                     b.Property<TimeOnly>("SelectedTime")
                         .HasColumnType("time");
 
-                    b.Property<int?>("TourId")
-                        .HasColumnType("int");
-
                     b.Property<string>("TourName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("TourguideId")
                         .IsRequired()
@@ -306,7 +298,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("ApplicationUserId1");
 
-                    b.HasIndex("TourId");
+                    b.HasIndex("TourName");
 
                     b.HasIndex("TourguideId");
 
@@ -317,6 +309,43 @@ namespace Persistence.Migrations
                 });
 
             modelBuilder.Entity("Domain.Entities.Tour", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("Tours");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TourBlog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -340,45 +369,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("Tour");
-                });
-
-            modelBuilder.Entity("Domain.Entities.TourHour", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tourHours");
+                    b.ToTable("TourBlog");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -520,13 +511,7 @@ namespace Persistence.Migrations
                         .WithMany("TouristsAndTourGuides")
                         .HasForeignKey("BlogId");
 
-                    b.HasOne("Domain.Entities.TourHour", "TourHour")
-                        .WithMany()
-                        .HasForeignKey("TourHourId");
-
                     b.Navigation("Blog");
-
-                    b.Navigation("TourHour");
                 });
 
             modelBuilder.Entity("Domain.Entities.Review", b =>
@@ -549,9 +534,11 @@ namespace Persistence.Migrations
                         .WithMany("Tourists")
                         .HasForeignKey("ApplicationUserId1");
 
-                    b.HasOne("Domain.Entities.TourHour", "Tour")
+                    b.HasOne("Domain.Entities.Tour", "Tour")
                         .WithMany("SelectedTourGuides")
-                        .HasForeignKey("TourId");
+                        .HasForeignKey("TourName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.ApplicationUser", "Tourguide")
                         .WithMany()
@@ -572,7 +559,7 @@ namespace Persistence.Migrations
                     b.Navigation("Tourist");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Tour", b =>
+            modelBuilder.Entity("Domain.Entities.TourBlog", b =>
                 {
                     b.HasOne("Domain.Entities.Blog", "Blog")
                         .WithMany("Tours")
@@ -648,7 +635,7 @@ namespace Persistence.Migrations
                     b.Navigation("Tours");
                 });
 
-            modelBuilder.Entity("Domain.Entities.TourHour", b =>
+            modelBuilder.Entity("Domain.Entities.Tour", b =>
                 {
                     b.Navigation("SelectedTourGuides");
                 });

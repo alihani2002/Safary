@@ -25,7 +25,6 @@ namespace Domain.Entities
 		public int Adults { get; set; } = 1;
 		public bool IsConfirmed { get; set; } = false;
         public string TourName { get; set; }
-        public int? TourId { get; set; }
-        public TourHour? Tour { get; set; }
+        public Tour? Tour { get; set; }
     }
 }

@@ -1,24 +1,23 @@
 ﻿using Domain.Consts;
 using Domain.Filters;
 using Sieve.Attributes;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-	public class Tour
-	{
-		public int Id { get; set; }
-
+	public class Tour : BaseModel
+    {
+        public int Id { get; set; }
         [Sieve(CanFilter = true, CanSort = true)]
         [MaxLength(150, ErrorMessage = Errors.MaxLength)]
-		public string Name { get; set; } = null!;
-		public string Description { get; set; } = null!;
-		public int? BlogId { get; set; }
-		public Blog? Blog { get; set; }
-	}
+        [Key]
+        public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        [Sieve(CanFilter = true, CanSort = true)]
+        public string Location { get; set; } = null!;
+        [Range(1, 23, ErrorMessage = Errors.MaxHourDuration)]
+        public int Duration { get; set; }
+        public ICollection<SelectedTourGuide>? SelectedTourGuides { get; set; }
+        public ICollection<TourImage>? TourImages { get; set; }
+    }
 }

@@ -6,7 +6,7 @@ using Service.Abstractions;
 
 namespace Safary.Repository
 {
-	public class TourRepository:BaseRepository<TourHour>, ITourRepository
+	public class TourRepository : BaseRepository<Tour>, ITourRepository
 	{
 		public TourRepository(ApplicationDbContext context) : base(context)
 		{
@@ -16,7 +16,7 @@ namespace Safary.Repository
 
 		public async Task<bool> SelectTourAsync(string userId, string tourName)
 		{
-			var tour = await _context.tourHours.FirstOrDefaultAsync(t => t.Name == tourName);
+			var tour = await _context.Tours.FirstOrDefaultAsync(t => t.Name == tourName);
 
 			if (tour == null)
 			{

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Service.Abstractions
 {
-	public interface ITourRepository : IBaseRepository<TourHour>
+	public interface ITourRepository : IBaseRepository<Tour>
 	{
 		 Task<bool> SelectTourAsync(string userId, string tourName);
 	}

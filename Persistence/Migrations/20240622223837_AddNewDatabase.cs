@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitCreateTablesInDb : Migration
+    public partial class AddNewDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,19 +48,22 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Countries",
+                name: "Tours",
                 columns: table => new
                 {
+                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Countries", x => x.Id);
+                    table.PrimaryKey("PK_Tours", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -85,106 +88,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tour",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BlogId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tour", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tour_Blogs_BlogId",
-                        column: x => x.BlogId,
-                        principalTable: "Blogs",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Cities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Cities_Countries_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Countries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TourDays",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Duration = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PersonId = table.Column<int>(type: "int", nullable: true),
-                    CityId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TourDays", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TourDays_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tourHours",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Duration = table.Column<int>(type: "int", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PersonId = table.Column<int>(type: "int", nullable: true),
-                    CityId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tourHours", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tourHours_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -192,14 +95,12 @@ namespace Persistence.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordConfirm = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AdminAccepted = table.Column<bool>(type: "bit", nullable: false),
                     CvUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Rate = table.Column<double>(type: "float", nullable: false),
                     DayPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -207,15 +108,14 @@ namespace Persistence.Migrations
                     Age = table.Column<int>(type: "int", nullable: false),
                     Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LanguageSpoken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TourGuideId = table.Column<int>(type: "int", nullable: true),
                     TouristId = table.Column<int>(type: "int", nullable: true),
-                    BlogId = table.Column<int>(type: "int", nullable: false),
-                    TourDayId = table.Column<int>(type: "int", nullable: false),
-                    TourHourId = table.Column<int>(type: "int", nullable: false),
+                    BlogId = table.Column<int>(type: "int", nullable: true),
+                    HasCar = table.Column<bool>(type: "bit", nullable: false),
+                    ReviewsNumber = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -231,67 +131,31 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.UniqueConstraint("AK_AspNetUsers_Email", x => x.Email);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Blogs_BlogId",
                         column: x => x.BlogId,
                         principalTable: "Blogs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_TourDays_TourDayId",
-                        column: x => x.TourDayId,
-                        principalTable: "TourDays",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_tourHours_TourHourId",
-                        column: x => x.TourHourId,
-                        principalTable: "tourHours",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Places",
+                name: "TourBlog",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CityId = table.Column<int>(type: "int", nullable: true),
-                    TourDayId = table.Column<int>(type: "int", nullable: true),
-                    TourHourId = table.Column<int>(type: "int", nullable: true),
-                    TourId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    BlogId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Places", x => x.Id);
+                    table.PrimaryKey("PK_TourBlog", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Places_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Places_TourDays_TourDayId",
-                        column: x => x.TourDayId,
-                        principalTable: "TourDays",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Places_Tour_TourId",
-                        column: x => x.TourId,
-                        principalTable: "Tour",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Places_tourHours_TourHourId",
-                        column: x => x.TourHourId,
-                        principalTable: "tourHours",
+                        name: "FK_TourBlog_Blogs_BlogId",
+                        column: x => x.BlogId,
+                        principalTable: "Blogs",
                         principalColumn: "Id");
                 });
 
@@ -380,6 +244,79 @@ namespace Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Rating = table.Column<double>(type: "float", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    ReviewerName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    UserEmail = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_AspNetUsers_UserEmail",
+                        column: x => x.UserEmail,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Email");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SelectedTourGuides",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TouristId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TourguideId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SelectedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SelectedTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    Adults = table.Column<int>(type: "int", nullable: false),
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TourName = table.Column<string>(type: "nvarchar(150)", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ApplicationUserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SelectedTourGuides", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SelectedTourGuides_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SelectedTourGuides_AspNetUsers_ApplicationUserId1",
+                        column: x => x.ApplicationUserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SelectedTourGuides_AspNetUsers_TourguideId",
+                        column: x => x.TourguideId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SelectedTourGuides_AspNetUsers_TouristId",
+                        column: x => x.TouristId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SelectedTourGuides_Tours_TourName",
+                        column: x => x.TourName,
+                        principalTable: "Tours",
+                        principalColumn: "Name",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -421,19 +358,6 @@ namespace Persistence.Migrations
                 name: "IX_AspNetUsers_Email",
                 table: "AspNetUsers",
                 column: "Email",
-                unique: true,
-                filter: "[Email] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_TourDayId",
-                table: "AspNetUsers",
-                column: "TourDayId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_TourHourId",
-                table: "AspNetUsers",
-                column: "TourHourId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -451,44 +375,40 @@ namespace Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cities_CountryId",
-                table: "Cities",
-                column: "CountryId");
+                name: "IX_Reviews_UserEmail",
+                table: "Reviews",
+                column: "UserEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Places_CityId",
-                table: "Places",
-                column: "CityId");
+                name: "IX_SelectedTourGuides_ApplicationUserId",
+                table: "SelectedTourGuides",
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Places_TourDayId",
-                table: "Places",
-                column: "TourDayId");
+                name: "IX_SelectedTourGuides_ApplicationUserId1",
+                table: "SelectedTourGuides",
+                column: "ApplicationUserId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Places_TourHourId",
-                table: "Places",
-                column: "TourHourId");
+                name: "IX_SelectedTourGuides_TourguideId",
+                table: "SelectedTourGuides",
+                column: "TourguideId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Places_TourId",
-                table: "Places",
-                column: "TourId");
+                name: "IX_SelectedTourGuides_TouristId_TourguideId_SelectedDate",
+                table: "SelectedTourGuides",
+                columns: new[] { "TouristId", "TourguideId", "SelectedDate" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tour_BlogId",
-                table: "Tour",
+                name: "IX_SelectedTourGuides_TourName",
+                table: "SelectedTourGuides",
+                column: "TourName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TourBlog_BlogId",
+                table: "TourBlog",
                 column: "BlogId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TourDays_CityId",
-                table: "TourDays",
-                column: "CityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tourHours_CityId",
-                table: "tourHours",
-                column: "CityId");
         }
 
         /// <inheritdoc />
@@ -510,7 +430,13 @@ namespace Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Places");
+                name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "SelectedTourGuides");
+
+            migrationBuilder.DropTable(
+                name: "TourBlog");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -519,22 +445,10 @@ namespace Persistence.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Tour");
-
-            migrationBuilder.DropTable(
-                name: "TourDays");
-
-            migrationBuilder.DropTable(
-                name: "tourHours");
+                name: "Tours");
 
             migrationBuilder.DropTable(
                 name: "Blogs");
-
-            migrationBuilder.DropTable(
-                name: "Cities");
-
-            migrationBuilder.DropTable(
-                name: "Countries");
         }
     }
 }

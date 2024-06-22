@@ -23,7 +23,7 @@ namespace Persistence.Configurations
             //   .WithOne(s => s.Blog)
             //   .OnDelete(DeleteBehavior.SetNull);
 
-            //builder.HasMany(a => a.TourHours)
+            //builder.HasMany(a => a.Tours)
             //   .WithOne(s => s.Blog)
             //   .OnDelete(DeleteBehavior.SetNull);
 

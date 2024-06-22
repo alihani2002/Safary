@@ -25,18 +25,18 @@ namespace Persistence.Configurations
                   .CanSort();
 
             // Tour
-            mapper.Property<Tour>(p => p.Name)
+            mapper.Property<TourBlog>(p => p.Name)
                   .CanFilter()
                   .CanSort();
-            mapper.Property<Tour>(p => p.Description)
+            mapper.Property<TourBlog>(p => p.Description)
                   .CanFilter()
                   .CanSort();
 
             // Tour Hour 
-            mapper.Property<TourHour>(p => p.Name)
+            mapper.Property<Tour>(p => p.Name)
                  .CanFilter()
                  .CanSort();
-            mapper.Property<TourHour>(p => p.Location)
+            mapper.Property<Tour>(p => p.Location)
                  .CanFilter()
                  .CanSort();
 

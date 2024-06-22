@@ -12,8 +12,8 @@ using Persistence.Data;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240621205431_deleteUserIdInSelectedTourGuideTable")]
-    partial class deleteUserIdInSelectedTourGuideTable
+    [Migration("20240622223837_AddNewDatabase")]
+    partial class AddNewDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -134,13 +134,7 @@ namespace Persistence.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TourDayId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TourGuideId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TourHourId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TouristId")
@@ -167,14 +161,6 @@ namespace Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("TourDayId")
-                        .IsUnique()
-                        .HasFilter("[TourDayId] IS NOT NULL");
-
-                    b.HasIndex("TourHourId")
-                        .IsUnique()
-                        .HasFilter("[TourHourId] IS NOT NULL");
 
                     b.HasIndex("UserName")
                         .IsUnique()
@@ -229,121 +215,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Blogs");
-                });
-
-            modelBuilder.Entity("Domain.Entities.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Country", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Countries");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Place", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<int?>("TourDayId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TourHourId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TourId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("TourDayId");
-
-                    b.HasIndex("TourHourId");
-
-                    b.HasIndex("TourId");
-
-                    b.ToTable("Places");
                 });
 
             modelBuilder.Entity("Domain.Entities.Review", b =>
@@ -412,6 +283,10 @@ namespace Persistence.Migrations
                     b.Property<TimeOnly>("SelectedTime")
                         .HasColumnType("time");
 
+                    b.Property<string>("TourName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(150)");
+
                     b.Property<string>("TourguideId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -426,6 +301,8 @@ namespace Persistence.Migrations
 
                     b.HasIndex("ApplicationUserId1");
 
+                    b.HasIndex("TourName");
+
                     b.HasIndex("TourguideId");
 
                     b.HasIndex("TouristId", "TourguideId", "SelectedDate")
@@ -435,6 +312,43 @@ namespace Persistence.Migrations
                 });
 
             modelBuilder.Entity("Domain.Entities.Tour", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("Tours");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TourBlog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -458,117 +372,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("Tour");
-                });
-
-            modelBuilder.Entity("Domain.Entities.TourDay", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<int?>("PersonId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.ToTable("TourDays");
-                });
-
-            modelBuilder.Entity("Domain.Entities.TourHour", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<int?>("PersonId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.ToTable("tourHours");
+                    b.ToTable("TourBlog");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -710,51 +514,7 @@ namespace Persistence.Migrations
                         .WithMany("TouristsAndTourGuides")
                         .HasForeignKey("BlogId");
 
-                    b.HasOne("Domain.Entities.TourDay", "TourDay")
-                        .WithOne("Person")
-                        .HasForeignKey("Domain.Entities.ApplicationUser", "TourDayId");
-
-                    b.HasOne("Domain.Entities.TourHour", "TourHour")
-                        .WithOne("Person")
-                        .HasForeignKey("Domain.Entities.ApplicationUser", "TourHourId");
-
                     b.Navigation("Blog");
-
-                    b.Navigation("TourDay");
-
-                    b.Navigation("TourHour");
-                });
-
-            modelBuilder.Entity("Domain.Entities.City", b =>
-                {
-                    b.HasOne("Domain.Entities.Country", "Country")
-                        .WithMany("Cities")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Country");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Place", b =>
-                {
-                    b.HasOne("Domain.Entities.City", "City")
-                        .WithMany("Places")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Domain.Entities.TourDay", null)
-                        .WithMany("Places")
-                        .HasForeignKey("TourDayId");
-
-                    b.HasOne("Domain.Entities.TourHour", null)
-                        .WithMany("Places")
-                        .HasForeignKey("TourHourId");
-
-                    b.HasOne("Domain.Entities.Tour", null)
-                        .WithMany("Places")
-                        .HasForeignKey("TourId");
-
-                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("Domain.Entities.Review", b =>
@@ -777,6 +537,12 @@ namespace Persistence.Migrations
                         .WithMany("Tourists")
                         .HasForeignKey("ApplicationUserId1");
 
+                    b.HasOne("Domain.Entities.Tour", "Tour")
+                        .WithMany("SelectedTourGuides")
+                        .HasForeignKey("TourName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.ApplicationUser", "Tourguide")
                         .WithMany()
                         .HasForeignKey("TourguideId")
@@ -789,36 +555,20 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Tour");
+
                     b.Navigation("Tourguide");
 
                     b.Navigation("Tourist");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Tour", b =>
+            modelBuilder.Entity("Domain.Entities.TourBlog", b =>
                 {
                     b.HasOne("Domain.Entities.Blog", "Blog")
                         .WithMany("Tours")
                         .HasForeignKey("BlogId");
 
                     b.Navigation("Blog");
-                });
-
-            modelBuilder.Entity("Domain.Entities.TourDay", b =>
-                {
-                    b.HasOne("Domain.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
-
-                    b.Navigation("City");
-                });
-
-            modelBuilder.Entity("Domain.Entities.TourHour", b =>
-                {
-                    b.HasOne("Domain.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
-
-                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -888,33 +638,9 @@ namespace Persistence.Migrations
                     b.Navigation("Tours");
                 });
 
-            modelBuilder.Entity("Domain.Entities.City", b =>
-                {
-                    b.Navigation("Places");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Country", b =>
-                {
-                    b.Navigation("Cities");
-                });
-
             modelBuilder.Entity("Domain.Entities.Tour", b =>
                 {
-                    b.Navigation("Places");
-                });
-
-            modelBuilder.Entity("Domain.Entities.TourDay", b =>
-                {
-                    b.Navigation("Person");
-
-                    b.Navigation("Places");
-                });
-
-            modelBuilder.Entity("Domain.Entities.TourHour", b =>
-                {
-                    b.Navigation("Person");
-
-                    b.Navigation("Places");
+                    b.Navigation("SelectedTourGuides");
                 });
 #pragma warning restore 612, 618
         }
