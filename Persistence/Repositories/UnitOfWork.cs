@@ -18,6 +18,7 @@ namespace Persistence.Repositories
 			_context = context;
 		}
         public IBaseRepository<ApplicationUser> ApplicationUsers => new BaseRepository<ApplicationUser>(_context);
+        public IBaseRepository<SelectedTourGuide> SelectedTourGuides => new BaseRepository<SelectedTourGuide>(_context);
 
         public IBaseRepository<Blog> Blogs => new BaseRepository<Blog>(_context);
 
@@ -35,7 +36,7 @@ namespace Persistence.Repositories
         public IBaseRepository<Review> Reviews => new BaseRepository<Review>(_context);
 
 
-        public int Complete()
+		public int Complete()
 		{
 			return _context.SaveChanges();
 		}

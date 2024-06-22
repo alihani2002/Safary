@@ -26,7 +26,26 @@ namespace Persistence.Data
         {
 			modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            base.OnModelCreating(modelBuilder);
+			modelBuilder.Entity<SelectedTourGuide>()
+			.HasKey(st => st.Id);
+
+			modelBuilder.Entity<SelectedTourGuide>()
+				.HasOne(st => st.Tourist)
+				.WithMany()
+				.HasForeignKey(st => st.TouristId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<SelectedTourGuide>()
+				.HasOne(st => st.Tourguide)
+				.WithMany()
+				.HasForeignKey(st => st.TourguideId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<SelectedTourGuide>()
+		   .HasIndex(st => new { st.TouristId, st.TourguideId, st.SelectedDate })
+		   .IsUnique(); // Ensures a tourist can select only one tour time per day
+
+			base.OnModelCreating(modelBuilder);
 
         }
     }

@@ -52,15 +52,14 @@ namespace Domain.Entities
         public int? TourHourId { get; set; }
         public TourHour? TourHour { get; set; }
         public bool HasCar { get; set; } = false;
-        public DateTime? SelectedDate { get; set; }
-        public TimeSpan? SelectedTime { get; set; }
-        public int Adults { get; set; } = 1;
+        //public DateTime? SelectedDate { get; set; }
+        //public TimeOnly? SelectedTime { get; set; }
+        //public int Adults { get; set; } = 1;
         public int? ReviewsNumber { get; set; }
 
         // Reviews written by the tourist
         public ICollection<Review>? Reviews { get; set; }
-
-        public SelectedTourGuide? SelectedTourGuide { get; set; }
-
-    }
+		public ICollection<SelectedTourGuide>? Tourists { get; set; }
+		public ICollection<SelectedTourGuide>? Tourguides { get; set; }
+	}
 }

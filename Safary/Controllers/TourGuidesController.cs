@@ -2,9 +2,12 @@
 using Domain.Consts;
 using Domain.Entities;
 using Domain.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop.Infrastructure;
+using Service.Abstractions;
 using Shared.DTOs;
 using System.Globalization;
 using System.Security.Claims;
@@ -40,15 +43,19 @@ namespace Safary.Controllers
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ITourGuideRepository _tourGuideRepository;
 
-        public TourGuidesController(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+		public TourGuidesController(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, ITourGuideRepository tourGuideRepository)
+		{
+			_unitOfWork = unitOfWork;
+			_mapper = mapper;
+			_httpContextAccessor = httpContextAccessor;
+			_tourGuideRepository = tourGuideRepository;
+		}
 
-        // GET: api/Tourists
-        [HttpGet("GetAll")]
+		// GET: api/Tourists
+		[HttpGet("GetAll")]
         public async Task<ActionResult> GetAllTourGiudes()
         {
             var tourGuides = await _unitOfWork.ApplicationUsers.FindAll(r => r.CvUrl != null, 0);
@@ -56,8 +63,8 @@ namespace Safary.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("Details")]
-        public async Task<ActionResult> GetDetails(string id)
+        [HttpGet("GetDetails")]
+        public async Task<ActionResult> Details(string id)
         {
             var tourGuide = await _unitOfWork.ApplicationUsers.Find(g => g.Id == id);
 
@@ -67,17 +74,21 @@ namespace Safary.Controllers
             return Ok(dto);
         }
 
-        [HttpPost("TourGuideSelected")]
-        public async Task<IActionResult> PostTour(TourGuideSelectedDTO dto)
+        [HttpPost("AddTourGuideSelected")]
+        [Authorize("UserPolicy")]
+        public async Task<IActionResult> TourGuideSelected([FromForm] TourGuideSelectedDTO dto)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var selectTourGuide = _mapper.Map<SelectedTourGuide>(dto);
-            selectTourGuide.TourGuideId = dto.Id!;
-            selectTourGuide.UserId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            return Ok(selectTourGuide);
+			var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue("uid")!;
+
+            await _tourGuideRepository.AddSelectTourGuide(userId,dto.TourGuideId,dto.SelectedDate,dto.TimeToCast,dto.Adults);
+
+            return Ok("Successfully save in db");
 		}
+
+
 
         // POST: api/Tourists
         [HttpPost]

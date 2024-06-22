@@ -12,8 +12,8 @@ using Persistence.Data;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240619002028_addSelectedTourGuideTableInDb")]
-    partial class addSelectedTourGuideTableInDb
+    [Migration("20240621205431_deleteUserIdInSelectedTourGuideTable")]
+    partial class deleteUserIdInSelectedTourGuideTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,9 +39,6 @@ namespace Persistence.Migrations
 
                     b.Property<bool>("AdminAccepted")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Adults")
-                        .HasColumnType("int");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -136,12 +133,6 @@ namespace Persistence.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("SelectedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<TimeSpan?>("SelectedTime")
-                        .HasColumnType("time");
 
                     b.Property<int?>("TourDayId")
                         .HasColumnType("int");
@@ -368,6 +359,15 @@ namespace Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<double>("Rating")
                         .HasColumnType("float");
 
@@ -397,23 +397,38 @@ namespace Persistence.Migrations
                     b.Property<int>("Adults")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("SelectedDate")
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("SelectedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan?>("SelectedTime")
+                    b.Property<TimeOnly>("SelectedTime")
                         .HasColumnType("time");
 
-                    b.Property<string>("TourGuideId")
+                    b.Property<string>("TourguideId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("TouristId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TourGuideId")
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ApplicationUserId1");
+
+                    b.HasIndex("TourguideId");
+
+                    b.HasIndex("TouristId", "TourguideId", "SelectedDate")
                         .IsUnique();
 
                     b.ToTable("SelectedTourGuides");
@@ -754,13 +769,29 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.SelectedTourGuide", b =>
                 {
-                    b.HasOne("Domain.Entities.ApplicationUser", "ApplicationUser")
-                        .WithOne("SelectedTourGuide")
-                        .HasForeignKey("Domain.Entities.SelectedTourGuide", "TourGuideId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany("Tourguides")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                        .WithMany("Tourists")
+                        .HasForeignKey("ApplicationUserId1");
+
+                    b.HasOne("Domain.Entities.ApplicationUser", "Tourguide")
+                        .WithMany()
+                        .HasForeignKey("TourguideId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("ApplicationUser");
+                    b.HasOne("Domain.Entities.ApplicationUser", "Tourist")
+                        .WithMany()
+                        .HasForeignKey("TouristId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tourguide");
+
+                    b.Navigation("Tourist");
                 });
 
             modelBuilder.Entity("Domain.Entities.Tour", b =>
@@ -845,7 +876,9 @@ namespace Persistence.Migrations
                 {
                     b.Navigation("Reviews");
 
-                    b.Navigation("SelectedTourGuide");
+                    b.Navigation("Tourguides");
+
+                    b.Navigation("Tourists");
                 });
 
             modelBuilder.Entity("Domain.Entities.Blog", b =>

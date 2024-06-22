@@ -125,17 +125,17 @@ namespace Safary.Repository
             var roles = await _userManager.GetRolesAsync(user);
             var roleClaims = new List<Claim>();
             foreach (var role in roles)
-                roleClaims.Add(new Claim("roles", role));
+                roleClaims.Add(new Claim("Role", role));
 
-            var claims = new[]
+			var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email!),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
                 new Claim(JwtRegisteredClaimNames.Name, user.LastName),
-
-                new Claim("uid", user.Id)
+			
+				new Claim("uid", user.Id)
             }
             .Union(userClaims)
             .Union(roleClaims);

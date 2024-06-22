@@ -18,7 +18,8 @@ namespace Domain.Repositories
 		IBaseRepository<Tour> Tours { get; }	
 		IBaseRepository<City> Cities { get; }
         IBaseRepository<Review> Reviews { get; }
+        IBaseRepository<SelectedTourGuide> SelectedTourGuides { get; }
 
-        int Complete();
+		int Complete();
 	}
 }

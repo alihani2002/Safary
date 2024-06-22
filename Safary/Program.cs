@@ -18,6 +18,7 @@ using Persistence.Configurations;
 using Sieve.Services;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Domain.Consts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<ISieveProcessor, SieveProcessor>();
 builder.Services.AddScoped<ISieveConfiguration, SieveConfiguration>();
+builder.Services.AddScoped<ITourGuideRepository, TourGuideRepository>();
 
 builder.Services.AddAuthentication(option =>
 {
@@ -66,6 +68,16 @@ builder.Services.AddAuthentication(option =>
 		ValidAudience = builder.Configuration["JWT:ValidAudiance"],
 		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
 	};
+});
+
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("AdminPolicy", policy =>
+		policy.RequireClaim("Role", AppRoles.Admin));
+	options.AddPolicy("TourGuidePolicy", policy =>
+		policy.RequireClaim("Role", AppRoles.TourGuide));
+	options.AddPolicy("UserPolicy", policy =>
+		policy.RequireClaim("Role", AppRoles.User));
 });
 
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();

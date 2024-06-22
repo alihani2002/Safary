@@ -8,9 +8,9 @@ namespace Shared.DTOs
 {
 	public class TourGuideSelectedDTO
 	{
-		public string? Id { get; set; }
-		public DateTime? SelectedDate { get; set; }
-		public TimeSpan? SelectedTime { get; set; }
-		public int Adults { get; set; } = 1;
+		public string TourGuideId { get; set; }
+		public DateTime SelectedDate { get; set; }
+        public string TimeToCast { get; set; }
+        public int Adults { get; set; } = 1;
 	}
 }

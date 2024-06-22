@@ -56,6 +56,12 @@ namespace Presentations.Controllers
             return Ok(TourHour);
         }
 
+        //[HttpGet("TourGuideId")]
+        //public async Task<IActionResult> ToursByTourGuideId(string email)
+        //{
+        //    var tours = await _unitOfWork.TourHours.FindAll(s => s.)
+        //}
+
         [HttpPost]
         public async Task<IActionResult> AddTourHour(TourHourPostDTO model)
         {

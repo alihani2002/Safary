@@ -11,5 +11,6 @@ namespace Service.Abstractions
 	public interface ITourGuideRepository: IBaseRepository<ApplicationUser>
 	{
 		//IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to);
+		Task<bool> AddSelectTourGuide(string touristId, string tourGuideId, DateTime tourTime, string timeToCast, int adults);
 	}
 }
