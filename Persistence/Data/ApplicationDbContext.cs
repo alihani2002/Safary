@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Xml;
 
 namespace Persistence.Data
 {
@@ -36,6 +37,7 @@ namespace Persistence.Data
 				.WithMany()
 				.HasForeignKey(st => st.TourguideId)
 				.OnDelete(DeleteBehavior.Restrict);
+
 
 			modelBuilder.Entity<SelectedTourGuide>()
 		   .HasIndex(st => new { st.TouristId, st.TourguideId, st.SelectedDate })

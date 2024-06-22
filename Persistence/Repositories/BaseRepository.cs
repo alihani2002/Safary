@@ -202,5 +202,6 @@ namespace Persistence.Repositories
 
 		public int Max(Expression<Func<T, bool>> predicate, Expression<Func<T, int>> field) =>
 			_context.Set<T>().Any(predicate) ? _context.Set<T>().Where(predicate).Max(field) : 0;
+
 	}
 }

@@ -13,17 +13,10 @@ namespace Domain.Entities
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         [Sieve(CanFilter = true, CanSort = true)]
-        public decimal Price { get; set; }
-        [Sieve(CanFilter = true, CanSort = true)]
         public string Location { get; set; } = null!;
         [Range(1, 23, ErrorMessage = Errors.MaxHourDuration)]
         public int Duration { get; set; }
-        public string ImageUrl { get; set; } = null!;
-        public DateTime StartDate { get; set; }
-        [DateGreaterThan("StartDate")]
-        public DateTime EndDate { get; set; }
-        public int? PersonId { get; set; }
-        public ApplicationUser? Person { get; set; }
+        public ICollection<SelectedTourGuide>? SelectedTourGuides { get; set; }
 
     }
 }

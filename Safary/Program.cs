@@ -50,6 +50,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<ISieveProcessor, SieveProcessor>();
 builder.Services.AddScoped<ISieveConfiguration, SieveConfiguration>();
 builder.Services.AddScoped<ITourGuideRepository, TourGuideRepository>();
+builder.Services.AddScoped<ITourRepository, TourRepository>();
 
 builder.Services.AddAuthentication(option =>
 {

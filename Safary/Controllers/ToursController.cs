@@ -1,31 +1,35 @@
 ﻿using AutoMapper;
 using Domain.Entities;
 using Domain.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Service.Abstractions;
 using Shared.DTOs;
 using Sieve.Models;
 using Sieve.Services;
+using System.Security.Claims;
 
 namespace Safary.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TourController : ControllerBase
+    public class ToursController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ISieveProcessor _sieveProcessor;
 
 
-        public TourController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor)
-        {
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
-            _sieveProcessor = sieveProcessor;
-        }
-        [HttpGet("GetFilterdAndSorted")]
+
+		public ToursController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor)
+		{
+			_mapper = mapper;
+			_unitOfWork = unitOfWork;
+			_sieveProcessor = sieveProcessor;
+		}
+		[HttpGet("GetFilterdAndSorted")]
         public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
         {
             var tours = _unitOfWork.Tours.FilterFindAll(s => s.Id > 0);
@@ -101,5 +105,10 @@ namespace Safary.Controllers
 
             return Ok(existingTour);
         }
-    }
+
+		
+
+	}
+
+
 }

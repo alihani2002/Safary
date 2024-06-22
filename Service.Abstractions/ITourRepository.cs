@@ -1,0 +1,15 @@
+﻿using Domain.Entities;
+using Domain.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Service.Abstractions
+{
+	public interface ITourRepository : IBaseRepository<TourHour>
+	{
+		 Task<bool> SelectTourAsync(string userId, string tourName);
+	}
+}

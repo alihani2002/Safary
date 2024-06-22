@@ -28,7 +28,6 @@ namespace Persistence.Repositories
 
         public IBaseRepository<Review> Reviews => new BaseRepository<Review>(_context);
 
-
 		public int Complete()
 		{
 			return _context.SaveChanges();

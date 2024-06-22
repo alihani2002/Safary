@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,5 +24,8 @@ namespace Domain.Entities
 		public TimeOnly SelectedTime { get; set; }
 		public int Adults { get; set; } = 1;
 		public bool IsConfirmed { get; set; } = false;
+        public string TourName { get; set; }
+        public int? TourId { get; set; }
+        public TourHour? Tour { get; set; }
     }
 }
