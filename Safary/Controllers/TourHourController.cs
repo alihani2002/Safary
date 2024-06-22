@@ -30,7 +30,7 @@ namespace Presentations.Controllers
         [HttpGet("GetFilterdAndSorted")]
         public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
         {
-            var tourHours = _unitOfWork.TourHours.FilterFindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
+            var tourHours = _unitOfWork.TourHours.FilterFindAll(s => s.Id > 0);
 
             // Apply Sieve to the queryable collection
             var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, tourHours);
@@ -40,7 +40,7 @@ namespace Presentations.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult> GetTourHours()
         {
-            var TourHours = await _unitOfWork.TourHours.FindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
+            var TourHours = await _unitOfWork.TourHours.GetAll();
             var dto = _mapper.Map<IEnumerable<TourHourDTO>>(TourHours);
             return Ok(dto);
         }

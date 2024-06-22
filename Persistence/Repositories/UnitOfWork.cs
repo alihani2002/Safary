@@ -22,17 +22,10 @@ namespace Persistence.Repositories
 
         public IBaseRepository<Blog> Blogs => new BaseRepository<Blog>(_context);
 
-		public IBaseRepository<TourDay> TourDays =>  new BaseRepository<TourDay>(_context);
-
 		public IBaseRepository<TourHour> TourHours =>  new BaseRepository<TourHour>(_context);
-
-		public IBaseRepository<Place> Places =>  new BaseRepository<Place>(_context);
-
-		public IBaseRepository<Country> Countries =>  new BaseRepository<Country>(_context);
 
 		public IBaseRepository<Tour> Tours =>  new BaseRepository<Tour>(_context);
 
-		public IBaseRepository<City> Cities =>  new BaseRepository<City>(_context);
         public IBaseRepository<Review> Reviews => new BaseRepository<Review>(_context);
 
 

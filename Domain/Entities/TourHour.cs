@@ -22,11 +22,8 @@ namespace Domain.Entities
         public DateTime StartDate { get; set; }
         [DateGreaterThan("StartDate")]
         public DateTime EndDate { get; set; }
-        public ICollection<Place>? Places { get; set; }
         public int? PersonId { get; set; }
         public ApplicationUser? Person { get; set; }
-        public int? CityId { get; set; }
-        public City? City { get; set; }
 
     }
 }

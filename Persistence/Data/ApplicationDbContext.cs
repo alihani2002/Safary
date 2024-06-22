@@ -14,11 +14,7 @@ namespace Persistence.Data
         }
 
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<TourDay> TourDays { get; set; }
         public DbSet<TourHour> tourHours { get; set; }
-        public DbSet<Place> Places { get; set; }
-        public DbSet<Country> Countries { get; set; }
-        public DbSet<City> Cities { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<SelectedTourGuide> SelectedTourGuides { get; set; }
 

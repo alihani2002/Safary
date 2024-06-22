@@ -32,27 +32,6 @@ namespace Persistence.Configurations
                   .CanFilter()
                   .CanSort();
 
-            // City 
-            mapper.Property<City>(p => p.Name)
-                  .CanFilter()
-                  .CanSort();
-            mapper.Property<City>(p => p.Location)
-                  .CanFilter()
-                  .CanSort();
-
-            // Country 
-            mapper.Property<Country>(p => p.Name)
-                 .CanFilter()
-                 .CanSort();
-
-            //Places
-            mapper.Property<Place>(p => p.Name)
-                 .CanFilter()
-                 .CanSort();
-            mapper.Property<Place>(p => p.Location)
-                 .CanFilter()
-                 .CanSort();
-
             // Tour Hour 
             mapper.Property<TourHour>(p => p.Name)
                  .CanFilter()

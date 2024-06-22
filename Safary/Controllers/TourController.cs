@@ -28,7 +28,7 @@ namespace Safary.Controllers
         [HttpGet("GetFilterdAndSorted")]
         public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
         {
-            var tours = _unitOfWork.Tours.FilterFindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
+            var tours = _unitOfWork.Tours.FilterFindAll(s => s.Id > 0);
 
             // Apply Sieve to the queryable collection
             var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, tours);
@@ -38,7 +38,7 @@ namespace Safary.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult> GetTours()
         {
-            var Tours = await _unitOfWork.Tours.FindAll(s => s.Id > 0, include: s => s.Include(x => x.Places));
+            var Tours = await _unitOfWork.Tours.FindAll(s => s.Id > 0,0);
             var dto = _mapper.Map<IEnumerable<TourDTO>>(Tours);
             return Ok(dto);
         }

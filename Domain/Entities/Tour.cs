@@ -18,8 +18,6 @@ namespace Domain.Entities
         [MaxLength(150, ErrorMessage = Errors.MaxLength)]
 		public string Name { get; set; } = null!;
 		public string Description { get; set; } = null!;
-
-		public ICollection<Place>? Places { get; set; }
 		public int? BlogId { get; set; }
 		public Blog? Blog { get; set; }
 	}

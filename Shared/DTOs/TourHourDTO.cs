@@ -20,7 +20,6 @@ namespace Shared.DTOs
         public string ImageUrl { get; set; } = null!;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public ICollection<Place>? Places { get; set; }
         //public int? TourGuideId { get; set; }
         //public ApplicationUser? TourGuide { get; set; }
   

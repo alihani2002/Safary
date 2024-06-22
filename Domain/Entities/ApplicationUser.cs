@@ -47,8 +47,6 @@ namespace Domain.Entities
         public int? TouristId { get; set; }
         public int? BlogId { get; set; }    
         public Blog? Blog { get; set; }
-        public int? TourDayId { get; set; }
-        public TourDay? TourDay { get; set; }
         public int? TourHourId { get; set; }
         public TourHour? TourHour { get; set; }
         public bool HasCar { get; set; } = false;
