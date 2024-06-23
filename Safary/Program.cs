@@ -19,6 +19,7 @@ using Sieve.Services;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Domain.Consts;
+using Service.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
