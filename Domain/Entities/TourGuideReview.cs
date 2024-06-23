@@ -8,16 +8,19 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Review : BaseModel
+    public class TourGuideReview : BaseModel
     {
         [Key]
         public int Id { get; set; }
         public double Rating { get; set; }
         public string Comment { get; set; }
-        public string ReviewerName { get; set; } = null!;
 
-        [ForeignKey("User")]
-        public string? UserEmail { get; set; } // Foreign key to ApplicationUser (Tourist)
-        public ApplicationUser? User { get; set; }
+        [ForeignKey("TourGuide")]
+        public string TourGuideId { get; set; }
+        public ApplicationUser? TourGuide { get; set; }
+
+        [ForeignKey("Tourist")]
+        public string TouristId { get; set; }
+        public ApplicationUser? Tourist { get; set; }
     }
 }

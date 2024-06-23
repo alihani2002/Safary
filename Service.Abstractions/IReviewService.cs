@@ -10,12 +10,19 @@ namespace Service.Abstractions
 {
     public interface IReviewService
     {
-        Task<IEnumerable<ReviewDTO>> GetAllReviewsAsync();
-        Task<ReviewDTO> GetReviewByIdAsync(int id);
-        Task<ReviewDTO> AddReviewAsync(ReviewPostDto reviewPostDto);
-        Task<bool> DeleteReviewAsync(int id);
-        Task<double?> GetAverageRatingForTourGuideAsync(string tourGuideEmail);
+        public interface IReviewService
+        {
+            // Methods for TourReview
+            Task<IEnumerable<ReviewDTO>> GetAllTourReviewsAsync();
+            Task<ReviewDTO> GetTourReviewByIdAsync(int id);
+            Task<ReviewDTO> AddTourReviewAsync(ReviewPostDto reviewPostDto);
+            Task<bool> DeleteTourReviewAsync(int id);
 
-
+            // Methods for TourGuideReview
+            Task<IEnumerable<ReviewDTO>> GetAllTourGuideReviewsAsync();
+            Task<ReviewDTO> GetTourGuideReviewByIdAsync(int id);
+            Task<ReviewDTO> AddTourGuideReviewAsync(ReviewPostDto reviewPostDto);
+            Task<bool> DeleteTourGuideReviewAsync(int id);
+        }
     }
 }

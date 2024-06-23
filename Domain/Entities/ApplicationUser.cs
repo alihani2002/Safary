@@ -51,8 +51,13 @@ namespace Domain.Entities
         public int? ReviewsNumber { get; set; }
 
         // Reviews written by the tourist
-        public ICollection<Review>? Reviews { get; set; }
-		public ICollection<SelectedTourGuide>? Tourists { get; set; }
+        public ICollection<TourReview>? TourReviews { get; set; }
+        // Reviews written by the tourist for tour guides
+        public ICollection<TourGuideReview>? TourGuideTouristReviews { get; set; }
+        public ICollection<TourGuideReview>? TourGuideReviews { get; set; }
+
+        // Reviews received by the tour guide
+        public ICollection<SelectedTourGuide>? Tourists { get; set; }
 		public ICollection<SelectedTourGuide>? Tourguides { get; set; }
 	}
 }

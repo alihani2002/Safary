@@ -19,5 +19,7 @@ namespace Domain.Entities
         public int Duration { get; set; }
         public ICollection<SelectedTourGuide>? SelectedTourGuides { get; set; }
         public ICollection<TourImage>? TourImages { get; set; }
+        public ICollection<TourReview>? Reviews { get; set; }
+
     }
 }

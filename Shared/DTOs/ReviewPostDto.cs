@@ -11,7 +11,8 @@ namespace Shared.DTOs
     {
         public double Rating { get; set; }
         public string Comment { get; set; }
-        public string ReviewerName { get; set; } // email toursit
-        public string UserEmail { get; set; } // email tourguide
+        public string TourGuideId { get; set; }
+        public string TouristId { get; set; }
+        public int? TourId { get; set; }
     }
 }

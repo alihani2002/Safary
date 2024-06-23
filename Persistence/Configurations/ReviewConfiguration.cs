@@ -9,27 +9,11 @@ using System.Threading.Tasks;
 
 namespace Persistence.Configurations
 {
-    public class ReviewConfiguration : IEntityTypeConfiguration<Review>
+    public class ReviewConfiguration : IEntityTypeConfiguration<TourGuideReview>
     {
-        public void Configure(EntityTypeBuilder<Review> builder)
+        public void Configure(EntityTypeBuilder<TourGuideReview> builder)
         {
-            builder.HasKey(r => r.Id);
-
-            builder.Property(r => r.Rating)
-                .IsRequired();
-
-            builder.Property(r => r.Comment)
-                .IsRequired()
-                .HasMaxLength(500);
-
-            builder.Property(r => r.ReviewerName)
-                .IsRequired()
-                .HasMaxLength(150);
-
-            builder.HasOne(r => r.User)
-                .WithMany(u => u.Reviews)
-                .HasForeignKey(r => r.UserEmail)
-                .HasPrincipalKey(u => u.Email);
+           
         }
     }
 }

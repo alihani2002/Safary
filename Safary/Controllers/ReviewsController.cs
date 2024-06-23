@@ -1,12 +1,7 @@
-﻿using AutoMapper;
-using Domain.Entities;
-using Domain.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Safary.Repository;
 using Service.Abstractions;
 using Shared.DTOs;
-using Sieve.Services;
 
 namespace Safary.Controllers
 {
@@ -14,69 +9,112 @@ namespace Safary.Controllers
     [ApiController]
     public class ReviewsController : ControllerBase
     {
-        private readonly IReviewService _reviewService;
+        private readonly ReviewService _reviewService;
 
-        public ReviewsController(IReviewService reviewService)
+        public ReviewsController(ReviewService reviewService)
         {
             _reviewService = reviewService;
         }
 
-        // GET: api/Reviews
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetReviews()
+        // CRUD operations for TourReview
+
+        // GET: api/Reviews/tour
+        [HttpGet("tour")]
+        public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetTourReviews()
         {
-            var reviews = await _reviewService.GetAllReviewsAsync();
+            var reviews = await _reviewService.GetAllTourReviewsAsync();
             return Ok(reviews);
         }
 
-        // GET: api/Reviews/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ReviewDTO>> GetReview(int id)
+        // GET: api/Reviews/tour/5
+        [HttpGet("tour/{id}")]
+        public async Task<ActionResult<ReviewDTO>> GetTourReview(int id)
         {
-            var review = await _reviewService.GetReviewByIdAsync(id);
+            var review = await _reviewService.GetTourReviewByIdAsync(id);
 
             if (review == null)
             {
-                return NotFound();
+                return NotFound($"Tour review with ID {id} not found");
             }
 
             return Ok(review);
         }
 
-        [HttpGet("average-rating/{tourGuideEmail}")]
-        public async Task<ActionResult<double?>> GetAverageRatingForTourGuide(string tourGuideEmail)
-        {
-            var averageRating = await _reviewService.GetAverageRatingForTourGuideAsync(tourGuideEmail);
-            if (averageRating == null)
-            {
-                return NotFound($"No reviews found for tour guide with email {tourGuideEmail}");
-            }
-            return Ok(averageRating);
-        }
-
-        // POST: api/Reviews
-        [HttpPost]
-        public async Task<ActionResult<ReviewDTO>> PostReview(ReviewPostDto reviewPostDto)
+        // POST: api/Reviews/tour
+        [HttpPost("tour")]
+        public async Task<ActionResult<ReviewDTO>> PostTourReview(ReviewPostDto reviewPostDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var review = await _reviewService.AddReviewAsync(reviewPostDto);
+            var review = await _reviewService.AddTourReviewAsync(reviewPostDto);
 
-            return CreatedAtAction(nameof(GetReview), new { id = review.Id }, review);
+            return Ok(review);
         }
 
-        // DELETE: api/Reviews/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReview(int id)
+        // DELETE: api/Reviews/tour/5
+        [HttpDelete("tour/{id}")]
+        public async Task<IActionResult> DeleteTourReview(int id)
         {
-            var success = await _reviewService.DeleteReviewAsync(id);
+            var success = await _reviewService.DeleteTourReviewAsync(id);
 
             if (!success)
             {
-                return NotFound();
+                return NotFound($"Tour review with ID {id} not found");
+            }
+
+            return NoContent();
+        }
+
+        // CRUD operations for TourGuideReview
+
+        // GET: api/Reviews/tourguide
+        [HttpGet("tourguide")]
+        public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetTourGuideReviews()
+        {
+            var reviews = await _reviewService.GetAllTourGuideReviewsAsync();
+            return Ok(reviews);
+        }
+
+        // GET: api/Reviews/tourguide/5
+        [HttpGet("tourguide/{id}")]
+        public async Task<ActionResult<ReviewDTO>> GetTourGuideReview(int id)
+        {
+            var review = await _reviewService.GetTourGuideReviewByIdAsync(id);
+
+            if (review == null)
+            {
+                return NotFound($"Tour guide review with ID {id} not found");
+            }
+
+            return Ok(review);
+        }
+
+        // POST: api/Reviews/tourguide
+        [HttpPost("tourguide")]
+        public async Task<ActionResult<ReviewDTO>> PostTourGuideReview(ReviewPostDto reviewPostDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var review = await _reviewService.AddTourGuideReviewAsync(reviewPostDto);
+
+            return Ok(review);
+        }
+
+        // DELETE: api/Reviews/tourguide/5
+        [HttpDelete("tourguide/{id}")]
+        public async Task<IActionResult> DeleteTourGuideReview(int id)
+        {
+            var success = await _reviewService.DeleteTourGuideReviewAsync(id);
+
+            if (!success)
+            {
+                return NotFound($"Tour guide review with ID {id} not found");
             }
 
             return NoContent();

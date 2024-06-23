@@ -13,9 +13,9 @@ namespace Persistence.Data
             : base(options)
         {
         }
-
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Review> Reviews { get; set; }
+        public DbSet<TourReview> TourReviews { get; set; }
+        public DbSet<TourGuideReview> TourGuideReviews { get; set; }
         public DbSet<SelectedTourGuide> SelectedTourGuides { get; set; }
         public DbSet<Tour> Tours { get; set; }
         public DbSet<TourImage> TourImages { get; set; }  
@@ -48,6 +48,34 @@ namespace Persistence.Data
             modelBuilder.Entity<Tour>()
             .Property(t => t.Id)
             .UseIdentityColumn();
+
+
+               // Configure TourReview relationships
+            modelBuilder.Entity<TourReview>()
+                .HasOne(r => r.Tour)
+                .WithMany(t => t.Reviews)
+                .HasForeignKey(r => r.TourId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TourReview>()
+                .HasOne(r => r.Tourist)
+                .WithMany(u => u.TourReviews)
+                .HasForeignKey(r => r.TouristId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure TourGuideReview relationships
+            modelBuilder.Entity<TourGuideReview>()
+                .HasOne(r => r.TourGuide)
+                .WithMany(u => u.TourGuideReviews)
+                .HasForeignKey(r => r.TourGuideId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TourGuideReview>()
+                .HasOne(r => r.Tourist)
+                .WithMany(u => u.TourGuideTouristReviews)
+                .HasForeignKey(r => r.TouristId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
 
             modelBuilder.Entity<SelectedTourGuide>()

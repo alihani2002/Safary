@@ -26,9 +26,12 @@ namespace Persistence.Repositories
         public IBaseRepository<TourImage> TourImages => new BaseRepository<TourImage>(_context);
         public IBaseRepository<TourBlog> TourBlogs =>  new BaseRepository<TourBlog>(_context);
 
-        public IBaseRepository<Review> Reviews => new BaseRepository<Review>(_context);
 
-		public int Complete()
+        public IBaseRepository<TourGuideReview> TourGuideReviews => new BaseRepository<TourGuideReview>(_context);
+
+        public IBaseRepository<TourReview> TourReviews => new BaseRepository<TourReview>(_context);
+
+        public int Complete()
 		{
 			return _context.SaveChanges();
 		}
