@@ -18,10 +18,9 @@ namespace Shared.DTOs
         public string Location { get; set; } = null!;
         public int Duration { get; set; }
         public string ImageUrl { get; set; } = null!;
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        //public int? TourGuideId { get; set; }
-        //public ApplicationUser? TourGuide { get; set; }
-  
+        //public DateTime StartDate { get; set; }
+
+        //public DateTime EndDate { get; set; }
+
     }
 }
