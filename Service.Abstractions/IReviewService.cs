@@ -8,21 +8,20 @@ using System.Threading.Tasks;
 
 namespace Service.Abstractions
 {
+
     public interface IReviewService
     {
-        public interface IReviewService
-        {
-            // Methods for TourReview
-            Task<IEnumerable<ReviewDTO>> GetAllTourReviewsAsync();
-            Task<ReviewDTO> GetTourReviewByIdAsync(int id);
-            Task<ReviewDTO> AddTourReviewAsync(ReviewPostDto reviewPostDto);
-            Task<bool> DeleteTourReviewAsync(int id);
+        // Tour Reviews Methods
+        Task<IEnumerable<TourReviewDTO>> GetAllTourReviewsAsync();
+        Task<TourReviewDTO> GetTourReviewByIdAsync(int id);
+        Task<TourReviewDTO> AddTourReviewAsync(TourReviewPostDTO reviewPostDto);
+        Task<bool> DeleteTourReviewAsync(int id);
 
-            // Methods for TourGuideReview
-            Task<IEnumerable<ReviewDTO>> GetAllTourGuideReviewsAsync();
-            Task<ReviewDTO> GetTourGuideReviewByIdAsync(int id);
-            Task<ReviewDTO> AddTourGuideReviewAsync(ReviewPostDto reviewPostDto);
-            Task<bool> DeleteTourGuideReviewAsync(int id);
-        }
+        // Tour Guide Reviews Methods
+        Task<IEnumerable<TourGuideReviewDTO>> GetAllTourGuideReviewsAsync();
+        Task<TourGuideReviewDTO> GetTourGuideReviewByIdAsync(int id);
+        Task<TourGuideReviewDTO> AddTourGuideReviewAsync(TourGuideReviewPostDto reviewPostDto);
+        Task<bool> DeleteTourGuideReviewAsync(int id);
     }
 }
+
