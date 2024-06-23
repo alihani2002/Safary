@@ -37,14 +37,11 @@ namespace Domain.Entities
         public string? Description { get; set; }
         [Sieve(CanFilter = true, CanSort = true)]
         public double Rate { get; set; }
-        public decimal DayPrice { get; set; }
         [Sieve(CanFilter = true, CanSort = true)]
         public decimal HourPrice { get; set; }
         public int Age { get; set; }
         public string? Bio { get; set; }
         public List<string>? LanguageSpoken { get; set; } = new List<string>();
-        public int? TourGuideId { get; set; }
-        public int? TouristId { get; set; }
         public int? BlogId { get; set; }    
         public Blog? Blog { get; set; }
         public bool HasCar { get; set; } = false;

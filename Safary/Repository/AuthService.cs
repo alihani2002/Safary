@@ -25,10 +25,13 @@ namespace Safary.Repository
         private JWT _jwt;
         private IMapper _mapper;
 
-        private List<string> _allowedExtensions = new() { ".pdf", ".docx" };
-        private int _maxAllowedSize = 5242880;
+        private List<string> _allowedFileExtensions = new() { ".pdf", ".docx" };
+        private int _maxAllowedSizeFile = 5242880;
 
-        public AuthService(UserManager<ApplicationUser> userManager,
+		private List<string> _allowedImageExtensions = new() { ".jpg", ".jpeg", ".png" };
+		private int _maxAllowedSizeImage = 2097152;
+
+		public AuthService(UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IUnitOfWork unitOfWork, IOptions<JWT> jwt,
             IMapper mapper, IWebHostEnvironment webHostEnvironment)
@@ -53,10 +56,10 @@ namespace Safary.Repository
 
             var extension = Path.GetExtension(model.CV.FileName);
 
-            if (!_allowedExtensions.Contains(extension))
+            if (!_allowedFileExtensions.Contains(extension))
                 return new TourGuideDTO { Message = "Only .pdf, .docx files are allowed!" };
 
-            if (model.CV.Length > _maxAllowedSize)
+            if (model.CV.Length > _maxAllowedSizeFile)
                 return new TourGuideDTO { Message = "File cannot be more than 5 MB!" };
 
             var fileName = $"{Guid.NewGuid()}{extension}";
@@ -67,7 +70,23 @@ namespace Safary.Repository
 
             tourGuide.CvUrl = fileName;
 
-            var result = await _userManager.CreateAsync(tourGuide, model.Password);
+			var extensionImage = Path.GetExtension(model.Image.FileName);
+
+			if (!_allowedImageExtensions.Contains(extensionImage))
+				return new TourGuideDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
+
+			if (model.CV.Length > _maxAllowedSizeImage)
+				return new TourGuideDTO { Message = "Image cannot be more than 2 MB!" };
+
+			var imageName = $"{Guid.NewGuid()}{extensionImage}";
+
+			var pathImage = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/tourguides", imageName);
+			using var streamImage = File.Create(pathImage);
+			model.Image.CopyTo(streamImage);
+
+			tourGuide.ImageUrl = imageName;
+
+			var result = await _userManager.CreateAsync(tourGuide, model.Password);
             if (!result.Succeeded)
             {
                 var errors = string.Empty;
@@ -119,7 +138,38 @@ namespace Safary.Repository
             return returnModel;
         }
 
-        private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
+		public async Task<UserDTO> RegisterAsAdminAsync(RegisterDTO model)
+		{
+			if (await _userManager.FindByEmailAsync(model.Email) != null)
+				return new UserDTO { Message = "Email is already registed!" };
+
+			if (await _userManager.FindByNameAsync(model.UserName) != null)
+				return new UserDTO { Message = "UserName is already registed!" };
+
+			var user = _mapper.Map<ApplicationUser>(model);
+
+			var result = await _userManager.CreateAsync(user, model.Password);
+			if (!result.Succeeded)
+			{
+				var errors = string.Empty;
+				foreach (var item in result.Errors)
+				{
+					errors += $"{item.Description},";
+				}
+				return new UserDTO { Message = errors };
+			}
+			await _userManager.AddToRoleAsync(user, AppRoles.Admin);
+
+			var JwtSecurityToken = await CreateJwtToken(user);
+			var returnModel = _mapper.Map<UserDTO>(user);
+			returnModel.ExpiredOn = JwtSecurityToken.ValidTo;
+			returnModel.IsAuthenticated = true;
+			returnModel.Roles = [AppRoles.Admin];
+			returnModel.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
+			return returnModel;
+		}
+
+		private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
@@ -243,5 +293,6 @@ namespace Safary.Repository
             }
             return false;
         }
-    }
+
+	}
 }

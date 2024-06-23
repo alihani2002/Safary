@@ -71,7 +71,7 @@ namespace Presentations.Controllers
         //}
 
         [HttpPost]
-        public async Task<IActionResult> AddTourHour(TourHourPostDTO model)
+        public async Task<IActionResult> AddTour(TourHourPostDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -148,9 +148,37 @@ namespace Presentations.Controllers
 			}
 		}
 
+		[HttpPost("ConfirmTour")]
+		[Authorize("UserPolicy")]
+		public async Task<IActionResult> ConfirmTour()
+		{
+			var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue("uid");
+
+			if (userId == null)
+				return Unauthorized("User not authorized.");
+
+			try
+			{
+				var selected = await _tourRepository.ConfirmedTourAsync(userId);
+
+				if (selected)
+				{
+					return Ok("Your Tour is confirmed");
+				}
+				else
+				{
+					return NotFound("Something went wrong!");
+				}
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Failed to select tour: {ex.Message}");
+			}
+		}
 
 
-        [HttpPost("AddTourImages")]
+
+		[HttpPost("AddTourImages")]
         [Authorize("UserPolicy")]
         public async Task<IActionResult> AddTourImages([FromBody] TourImagesDTO dto)
         {

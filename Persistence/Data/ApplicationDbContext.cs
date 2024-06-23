@@ -45,6 +45,8 @@ namespace Persistence.Data
             .HasForeignKey(st => st.TourName)
             .HasPrincipalKey(t => t.Name);
 
+            
+
             modelBuilder.Entity<Tour>()
             .Property(t => t.Id)
             .UseIdentityColumn();

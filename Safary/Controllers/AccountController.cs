@@ -60,6 +60,24 @@ public class AccountController : ControllerBase
         result.Message = "Please Look in your email box";
         return Ok(result);
     }
+
+	[HttpPost("Register-As-Admin")]
+	public async Task<IActionResult> RegisterAsAdminAsync([FromForm] RegisterDTO model)
+	{
+		if (!ModelState.IsValid)
+			return BadRequest(ModelState);
+		var result = await _authService.RegisterAsAdminAsync(model);
+
+		if (!result.IsAuthenticated)
+			return BadRequest(result.Message);
+		var admin = await _userManager.FindByEmailAsync(result.Email);
+		if (admin == null)
+			return BadRequest(ModelState);
+		result.Message = "Welcome new admin";
+		return Ok(result);
+	}
+
+
 	[HttpPost("Register-As-TourGuide")]
 	public async Task<IActionResult> RegisterAsTourGuideAsync([FromForm] RegisterTourGuideDTO model)
 	{
@@ -74,9 +92,7 @@ public class AccountController : ControllerBase
 		if (user == null)
 			return BadRequest(ModelState);
 
-		//// Confirm email
-		//await ConfirmAndSendEmailAsync(user);
-		//result.Message = "Please Look in your email box";
+		result.Message = "added Successfully";
 		return Ok(result);
 	}
 

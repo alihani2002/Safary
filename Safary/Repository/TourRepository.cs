@@ -13,6 +13,26 @@ namespace Safary.Repository
 
 		}
 
+		public async Task<bool> ConfirmedTourAsync(string userId)
+		{
+
+			var selectedTourGuide = await _context.SelectedTourGuides
+						.Where(stg => stg.TouristId == userId)
+						.OrderByDescending(stg => stg.Id)
+						.FirstOrDefaultAsync();
+
+			if (selectedTourGuide == null)
+			{
+				// Handle if no existing selected tour guide is found
+				return false;
+			}
+
+			selectedTourGuide.IsConfirmed = true;
+
+			await _context.SaveChangesAsync();
+
+			return true;
+		}
 
 		public async Task<bool> SelectTourAsync(string userId, string tourName)
 		{
@@ -24,8 +44,11 @@ namespace Safary.Repository
 				return false;
 			}
 
+
 			var selectedTourGuide = await _context.SelectedTourGuides
-				.FirstOrDefaultAsync(st => st.TouristId == userId);
+						.Where(stg => stg.TouristId == userId)
+						.OrderByDescending(stg => stg.Id)
+						.FirstOrDefaultAsync();
 
 			if (selectedTourGuide == null)
 			{

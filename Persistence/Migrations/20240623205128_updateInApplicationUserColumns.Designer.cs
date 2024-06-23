@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Data;
 
@@ -11,9 +12,11 @@ using Persistence.Data;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240623205128_updateInApplicationUserColumns")]
+    partial class updateInApplicationUserColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,7 +205,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Blogs", (string)null);
+                    b.ToTable("Blogs");
                 });
 
             modelBuilder.Entity("Domain.Entities.SelectedTourGuide", b =>
@@ -255,7 +258,7 @@ namespace Persistence.Migrations
                     b.HasIndex("TouristId", "TourguideId", "SelectedDate")
                         .IsUnique();
 
-                    b.ToTable("SelectedTourGuides", (string)null);
+                    b.ToTable("SelectedTourGuides");
                 });
 
             modelBuilder.Entity("Domain.Entities.Tour", b =>
@@ -292,7 +295,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Tours", (string)null);
+                    b.ToTable("Tours");
                 });
 
             modelBuilder.Entity("Domain.Entities.TourBlog", b =>
@@ -319,7 +322,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("TourBlog", (string)null);
+                    b.ToTable("TourBlog");
                 });
 
             modelBuilder.Entity("Domain.Entities.TourGuideReview", b =>
@@ -360,7 +363,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TouristId");
 
-                    b.ToTable("TourGuideReviews", (string)null);
+                    b.ToTable("TourGuideReviews");
                 });
 
             modelBuilder.Entity("Domain.Entities.TourImage", b =>
@@ -386,7 +389,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TourName");
 
-                    b.ToTable("TourImages", (string)null);
+                    b.ToTable("TourImages");
                 });
 
             modelBuilder.Entity("Domain.Entities.TourReview", b =>
@@ -427,7 +430,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TouristId");
 
-                    b.ToTable("TourReviews", (string)null);
+                    b.ToTable("TourReviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

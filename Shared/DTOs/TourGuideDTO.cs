@@ -9,5 +9,6 @@ namespace Shared.DTOs
     public class TourGuideDTO: UserDTO
     {
         public string CVUrl { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

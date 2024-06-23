@@ -11,5 +11,7 @@ namespace Service.Abstractions
 	public interface ITourRepository : IBaseRepository<Tour>
 	{
 		 Task<bool> SelectTourAsync(string userId, string tourName);
+		 Task<bool> ConfirmedTourAsync(string userId);
+
 	}
 }
