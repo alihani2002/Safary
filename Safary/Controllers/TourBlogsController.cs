@@ -32,7 +32,7 @@ namespace Safary.Controllers
 		[HttpGet("GetFilterdAndSorted")]
         public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
         {
-            var tours = _unitOfWork.Tours.FilterFindAll(s => s.Id > 0);
+            var tours = _unitOfWork.TourBlogs.FilterFindAll(s => s.Id > 0);
 
             // Apply Sieve to the queryable collection
             var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, tours);
@@ -42,7 +42,7 @@ namespace Safary.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult> GetTours()
         {
-            var Tours = await _unitOfWork.Tours.FindAll(s => s.Id > 0,0);
+            var Tours = await _unitOfWork.TourBlogs.FindAll(s => s.Id > 0,0);
             var dto = _mapper.Map<IEnumerable<TourDTO>>(Tours);
             return Ok(dto);
         }
@@ -50,7 +50,7 @@ namespace Safary.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetTourById(int id)
         {
-            var Tour = await _unitOfWork.Tours.GetById(id);
+            var Tour = await _unitOfWork.TourBlogs.GetById(id);
 
             if (Tour is null)
                 return NotFound();
@@ -79,14 +79,14 @@ namespace Safary.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingTour = await _unitOfWork.Tours.GetById(id);
+            var existingTour = await _unitOfWork.TourBlogs.GetById(id);
 
             if (existingTour == null)
                 return NotFound();
 
             _mapper.Map(dto, existingTour);
 
-            _unitOfWork.Tours.Update(existingTour);
+            _unitOfWork.TourBlogs.Update(existingTour);
             _unitOfWork.Complete();
 
             return Ok(existingTour);
@@ -95,12 +95,12 @@ namespace Safary.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTour(int id)
         {
-            var existingTour = await _unitOfWork.Tours.GetById(id);
+            var existingTour = await _unitOfWork.TourBlogs.GetById(id);
 
             if (existingTour == null)
                 return NotFound();
 
-            _unitOfWork.Tours.Remove(existingTour);
+            _unitOfWork.TourBlogs.Remove(existingTour);
             _unitOfWork.Complete();
 
             return Ok(existingTour);
