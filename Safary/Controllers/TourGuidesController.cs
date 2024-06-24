@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
-using Domain.Consts;
 using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.JSInterop.Infrastructure;
 using Service.Abstractions;
 using Shared.DTOs;
-using System.Globalization;
 using System.Security.Claims;
 
 namespace Safary.Controllers
@@ -70,7 +65,17 @@ namespace Safary.Controllers
 
             if (tourGuide is null) return NotFound();
 
+            // Fetch reviews
+            var reviews = await _unitOfWork.TourGuideReviews.FindAll(r => r.TourGuideId == id , 0);
+            var reviewDtos = _mapper.Map<IEnumerable<TourGuideReviewDetailsDTO>>(reviews);
+
+            // Calculate average rating
+            double averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0.0;
+
             var dto = _mapper.Map<TourGuideDetailsDTO>(tourGuide);
+            dto.Reviews = reviewDtos.ToList();
+            dto.AverageRating = averageRating; // Set the average rating
+
             return Ok(dto);
         }
 

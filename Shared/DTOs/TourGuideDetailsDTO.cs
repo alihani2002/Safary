@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shared.DTOs
+﻿namespace Shared.DTOs
 {
-	public class TourGuideDetailsDTO
+    public class TourGuideDetailsDTO
 	{
         public string FullName { get; set; }
 		public string? ImageUrl { get; set; }
@@ -19,6 +13,10 @@ namespace Shared.DTOs
 		public bool HasCar { get; set; } = false;		
 		public int? ReviewsNumber { get; set; }
         public TourGuideSelectedDTO TourGuideSelectedDTO { get; set; }
+        public List<TourGuideReviewDetailsDTO> Reviews { get; set; } = new List<TourGuideReviewDetailsDTO>(); // Add this property
+        public double AverageRating { get; set; } // Add this property
+
+
 
     }
 }

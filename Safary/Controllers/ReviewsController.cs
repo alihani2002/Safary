@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
 using Shared.DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Safary.Controllers
 {
@@ -28,7 +26,7 @@ namespace Safary.Controllers
 
         // GET: api/Reviews/TourReviews/5
         [HttpGet("TourReviews/{id}")]
-        public async Task<ActionResult> GetTourReview(string id)
+        public async Task<ActionResult> GetTourReview(int id)
         {
             var review = await _reviewService.GetTourReviewByIdAsync(id);
             if (review == null)
@@ -52,7 +50,7 @@ namespace Safary.Controllers
 
         // DELETE: api/Reviews/TourReviews/5
         [HttpDelete("TourReviews/{id}")]
-        public async Task<IActionResult> DeleteTourReview(string id)
+        public async Task<IActionResult> DeleteTourReview(int id)
         {
             var success = await _reviewService.DeleteTourReviewAsync(id);
             if (!success)
@@ -69,9 +67,10 @@ namespace Safary.Controllers
             return Ok(reviews);
         }
 
+
         // GET: api/Reviews/TourGuideReviews/5
         [HttpGet("TourGuideReviews/{id}")]
-        public async Task<ActionResult> GetTourGuideReview(string id)
+        public async Task<ActionResult> GetTourGuideReview(int id)
         {
             var review = await _reviewService.GetTourGuideReviewByIdAsync(id);
             if (review == null)
@@ -95,7 +94,7 @@ namespace Safary.Controllers
 
         // DELETE: api/Reviews/TourGuideReviews/5
         [HttpDelete("TourGuideReviews/{id}")]
-        public async Task<IActionResult> DeleteTourGuideReview(string id)
+        public async Task<IActionResult> DeleteTourGuideReview(int id)
         {
             var success = await _reviewService.DeleteTourGuideReviewAsync(id);
             if (!success)

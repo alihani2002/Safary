@@ -1,14 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sieve.Attributes;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UoN.ExpressiveAnnotations.NetCore.Attributes;
 
 namespace Domain.Entities
 {
@@ -51,6 +44,7 @@ namespace Domain.Entities
         public ICollection<TourReview>? TourReviews { get; set; }
         // Reviews written by the tourist for tour guides
         public ICollection<TourGuideReview>? TourGuideTouristReviews { get; set; }
+        // Reviews received by the tour guide
         public ICollection<TourGuideReview>? TourGuideReviews { get; set; }
 
         // Reviews received by the tour guide

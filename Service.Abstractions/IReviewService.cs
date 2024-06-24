@@ -12,15 +12,18 @@ namespace Service.Abstractions
     {
         // Tour Reviews Methods
         Task<IEnumerable<TourReviewDTO>> GetAllTourReviewsAsync();
-        Task<TourReviewDTO> GetTourReviewByIdAsync(string id);
+        //Task<IEnumerable<TourWithReviewsDTO>> GetTourReviewsByTourNameAsync(string tourName);
+        Task<TourReviewDTO> GetTourReviewByIdAsync(int id);
         Task<TourReviewDTO> AddTourReviewAsync(TourReviewPostDTO reviewPostDto);
-        Task<bool> DeleteTourReviewAsync(string id);
+        Task<bool> DeleteTourReviewAsync(int id);
+
 
         // Tour Guide Reviews Methods
         Task<IEnumerable<TourGuideReviewDTO>> GetAllTourGuideReviewsAsync();
-        Task<TourGuideReviewDTO> GetTourGuideReviewByIdAsync(string id);
+        //Task<TourGuideWithReviewsDTO> GetTourGuideReviewsByGuideIdAsync(string guideId);
+        Task<TourGuideReviewDTO> GetTourGuideReviewByIdAsync(int id);
         Task<TourGuideReviewDTO> AddTourGuideReviewAsync(TourGuideReviewPostDto reviewPostDto);
-        Task<bool> DeleteTourGuideReviewAsync(string id);
+        Task<bool> DeleteTourGuideReviewAsync(int id);
     }
 }
 
