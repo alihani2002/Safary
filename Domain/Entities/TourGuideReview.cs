@@ -16,11 +16,11 @@ namespace Domain.Entities
         public string Comment { get; set; }
 
         [ForeignKey("TourGuide")]
-        public string TourGuideId { get; set; }
+        public string? TourGuideId { get; set; }
         public ApplicationUser? TourGuide { get; set; }
 
         [ForeignKey("Tourist")]
-        public string TouristId { get; set; }
+        public string? TouristId { get; set; }
         public ApplicationUser? Tourist { get; set; }
     }
 }

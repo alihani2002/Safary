@@ -16,6 +16,6 @@ namespace Shared.DTOs
         public string Comment { get; set; }
 
         [Required]
-        public int TourId { get; set; }
+        public string TourName { get; set; }
     }
 }

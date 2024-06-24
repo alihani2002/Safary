@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Data;
 
@@ -11,9 +12,11 @@ using Persistence.Data;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240623231649_NewReviews")]
+    partial class NewReviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -411,7 +414,7 @@ namespace Persistence.Migrations
                     b.Property<double>("Rating")
                         .HasColumnType("float");
 
-                    b.Property<string>("TourName")
+                    b.Property<string>("TourId")
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("TouristId")
@@ -419,7 +422,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TourName");
+                    b.HasIndex("TourId");
 
                     b.HasIndex("TouristId");
 
@@ -640,7 +643,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Tour", "Tour")
                         .WithMany("Reviews")
-                        .HasForeignKey("TourName");
+                        .HasForeignKey("TourId");
 
                     b.HasOne("Domain.Entities.ApplicationUser", "Tourist")
                         .WithMany("TourReviews")

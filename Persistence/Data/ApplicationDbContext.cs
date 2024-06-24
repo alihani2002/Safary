@@ -52,33 +52,6 @@ namespace Persistence.Data
             .UseIdentityColumn();
 
 
-               // Configure TourReview relationships
-            modelBuilder.Entity<TourReview>()
-                .HasOne(r => r.Tour)
-                .WithMany(t => t.Reviews)
-                .HasForeignKey(r => r.TourId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<TourReview>()
-                .HasOne(r => r.Tourist)
-                .WithMany(u => u.TourReviews)
-                .HasForeignKey(r => r.TouristId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // Configure TourGuideReview relationships
-            modelBuilder.Entity<TourGuideReview>()
-                .HasOne(r => r.TourGuide)
-                .WithMany(u => u.TourGuideReviews)
-                .HasForeignKey(r => r.TourGuideId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<TourGuideReview>()
-                .HasOne(r => r.Tourist)
-                .WithMany(u => u.TourGuideTouristReviews)
-                .HasForeignKey(r => r.TouristId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-
 
             modelBuilder.Entity<SelectedTourGuide>()
 		   .HasIndex(st => new { st.TouristId, st.TourguideId, st.SelectedDate })

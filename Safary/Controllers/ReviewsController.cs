@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Service.Abstractions;
 using Shared.DTOs;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Safary.Controllers
 
         // GET: api/Reviews/TourReviews
         [HttpGet("TourReviews")]
-        public async Task<ActionResult<IEnumerable<TourReviewDTO>>> GetTourReviews()
+        public async Task<ActionResult> GetTourReviews()
         {
             var reviews = await _reviewService.GetAllTourReviewsAsync();
             return Ok(reviews);
@@ -27,7 +28,7 @@ namespace Safary.Controllers
 
         // GET: api/Reviews/TourReviews/5
         [HttpGet("TourReviews/{id}")]
-        public async Task<ActionResult<TourReviewDTO>> GetTourReview(int id)
+        public async Task<ActionResult> GetTourReview(string id)
         {
             var review = await _reviewService.GetTourReviewByIdAsync(id);
             if (review == null)
@@ -37,19 +38,21 @@ namespace Safary.Controllers
         }
 
         // POST: api/Reviews/TourReviews
+
         [HttpPost("TourReviews")]
-        public async Task<ActionResult<TourReviewDTO>> PostTourReview(TourReviewPostDTO reviewPostDto)
+        [Authorize("UserPolicy")]
+        public async Task<ActionResult> PostTourReview(TourReviewPostDTO reviewPostDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var review = await _reviewService.AddTourReviewAsync(reviewPostDto);
-            return CreatedAtAction(nameof(GetTourReview), new { id = review.Id }, review);
+            return Ok(review);
         }
 
         // DELETE: api/Reviews/TourReviews/5
         [HttpDelete("TourReviews/{id}")]
-        public async Task<IActionResult> DeleteTourReview(int id)
+        public async Task<IActionResult> DeleteTourReview(string id)
         {
             var success = await _reviewService.DeleteTourReviewAsync(id);
             if (!success)
@@ -60,7 +63,7 @@ namespace Safary.Controllers
 
         // GET: api/Reviews/TourGuideReviews
         [HttpGet("TourGuideReviews")]
-        public async Task<ActionResult<IEnumerable<TourGuideReviewDTO>>> GetTourGuideReviews()
+        public async Task<ActionResult> GetTourGuideReviews()
         {
             var reviews = await _reviewService.GetAllTourGuideReviewsAsync();
             return Ok(reviews);
@@ -68,7 +71,7 @@ namespace Safary.Controllers
 
         // GET: api/Reviews/TourGuideReviews/5
         [HttpGet("TourGuideReviews/{id}")]
-        public async Task<ActionResult<TourGuideReviewDTO>> GetTourGuideReview(int id)
+        public async Task<ActionResult> GetTourGuideReview(string id)
         {
             var review = await _reviewService.GetTourGuideReviewByIdAsync(id);
             if (review == null)
@@ -79,18 +82,20 @@ namespace Safary.Controllers
 
         // POST: api/Reviews/TourGuideReviews
         [HttpPost("TourGuideReviews")]
-        public async Task<ActionResult<TourGuideReviewDTO>> PostTourGuideReview(TourGuideReviewPostDto reviewPostDto)
+        [Authorize("UserPolicy")]
+
+        public async Task<ActionResult> PostTourGuideReview(TourGuideReviewPostDto reviewPostDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var review = await _reviewService.AddTourGuideReviewAsync(reviewPostDto);
-            return CreatedAtAction(nameof(GetTourGuideReview), new { id = review.Id }, review);
+            return Ok(review);
         }
 
         // DELETE: api/Reviews/TourGuideReviews/5
         [HttpDelete("TourGuideReviews/{id}")]
-        public async Task<IActionResult> DeleteTourGuideReview(int id)
+        public async Task<IActionResult> DeleteTourGuideReview(string id)
         {
             var success = await _reviewService.DeleteTourGuideReviewAsync(id);
             if (!success)

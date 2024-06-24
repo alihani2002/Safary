@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Service.Abstractions;
 using Shared.DTOs;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -23,11 +24,7 @@ namespace Service.Implementations
             _httpContextAccessor = httpContextAccessor;
         }
 
-        private string GetCurrentUserId()
-        {
-            return _httpContextAccessor.HttpContext?.User.FindFirstValue("uid")!;
-        }
-
+       
         // Tour Reviews Methods
         public async Task<IEnumerable<TourReviewDTO>> GetAllTourReviewsAsync()
         {
@@ -35,7 +32,7 @@ namespace Service.Implementations
             return _mapper.Map<IEnumerable<TourReviewDTO>>(reviews);
         }
 
-        public async Task<TourReviewDTO> GetTourReviewByIdAsync(int id)
+        public async Task<TourReviewDTO> GetTourReviewByIdAsync(string id)
         {
             var review = await _unitOfWork.TourReviews.GetById(id);
             return _mapper.Map<TourReviewDTO>(review);
@@ -43,7 +40,7 @@ namespace Service.Implementations
 
         public async Task<TourReviewDTO> AddTourReviewAsync(TourReviewPostDTO reviewPostDto)
         {
-            var userId = GetCurrentUserId();
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue("uid")!;
             var review = _mapper.Map<TourReview>(reviewPostDto);
             review.TouristId = userId;
 
@@ -53,7 +50,7 @@ namespace Service.Implementations
             return _mapper.Map<TourReviewDTO>(review);
         }
 
-        public async Task<bool> DeleteTourReviewAsync(int id)
+        public async Task<bool> DeleteTourReviewAsync(string id)
         {
             var review = await _unitOfWork.TourReviews.GetById(id);
             if (review == null)
@@ -71,7 +68,7 @@ namespace Service.Implementations
             return _mapper.Map<IEnumerable<TourGuideReviewDTO>>(reviews);
         }
 
-        public async Task<TourGuideReviewDTO> GetTourGuideReviewByIdAsync(int id)
+        public async Task<TourGuideReviewDTO> GetTourGuideReviewByIdAsync(string id)
         {
             var review = await _unitOfWork.TourGuideReviews.GetById(id);
             return _mapper.Map<TourGuideReviewDTO>(review);
@@ -79,7 +76,7 @@ namespace Service.Implementations
 
         public async Task<TourGuideReviewDTO> AddTourGuideReviewAsync(TourGuideReviewPostDto reviewPostDto)
         {
-            var userId = GetCurrentUserId();
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue("uid")!;
             var review = _mapper.Map<TourGuideReview>(reviewPostDto);
             review.TouristId = userId;
 
@@ -89,14 +86,14 @@ namespace Service.Implementations
             return _mapper.Map<TourGuideReviewDTO>(review);
         }
 
-        public async Task<bool> DeleteTourGuideReviewAsync(int id)
+        public async Task<bool> DeleteTourGuideReviewAsync(string id)
         {
             var review = await _unitOfWork.TourGuideReviews.GetById(id);
             if (review == null)
                 return false;
 
             _unitOfWork.TourGuideReviews.Remove(review);
-            _unitOfWork.Complete();
+             _unitOfWork.Complete();
             return true;
         }
     }
