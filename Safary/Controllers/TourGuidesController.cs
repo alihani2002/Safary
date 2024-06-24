@@ -119,8 +119,8 @@ namespace Safary.Controllers
             if (tourgiude is null)
                 return NotFound(ModelState);
 
-            var touristDto = _mapper.Map<TouristDto>(tourgiude);
-            return Ok(touristDto);
+            var tourgiudeDto = _mapper.Map<TourgiudeDto>(tourgiude);
+            return Ok(tourgiudeDto);
         }
 
 		// PUT: api/Tourists/{id}
