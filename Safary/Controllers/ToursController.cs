@@ -53,16 +53,28 @@ namespace Presentations.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetTourHourById(int id)
+        [HttpGet("GetTourDetails")]
+        public async Task<ActionResult<TourDetailsDTO>> GetTourDetails(string id)
         {
-            var TourHour = await _unitOfWork.Tours.GetById(id);
+            var tour = await _unitOfWork.Tours.GetById(id);
 
-            if (TourHour is null)
-                return NotFound();
+            if (tour == null)
+                return NotFound($"Tour with ID '{id}' not found.");
 
-            return Ok(TourHour);
+            // Fetch reviews
+            var reviews = await _unitOfWork.TourReviews.FindAll(r => r.TourName == id , 0);
+            var reviewDtos = _mapper.Map<IEnumerable<TourReviewDetailsDTO>>(reviews);
+
+            // Calculate average rating
+            double averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0.0;
+
+            var tourDto = _mapper.Map<TourDetailsDTO>(tour);
+            tourDto.Reviews = reviewDtos.ToList();
+            tourDto.AverageRating = averageRating; // Set the average rating
+
+            return Ok(tourDto);
         }
+
 
         //[HttpGet("TourGuideId")]
         //public async Task<IActionResult> ToursByTourGuideId(string email)

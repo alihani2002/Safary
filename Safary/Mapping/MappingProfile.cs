@@ -73,6 +73,13 @@ namespace Safary.Mapping
                 .ForPath(dest => dest.TourGuideSelectedDTO.TourGuideId, opt => opt.MapFrom(src => src.Id));
 
 			CreateMap<SelectedTourGuide, TourGuideSelectedDTO>().ReverseMap();
-		}
+
+            //Tours
+            CreateMap<Tour, TourDetailsDTO>()
+               .ForMember(dest => dest.AverageRating, opt => opt.Ignore()) // Ignore during mapping from Tour to TourDetailsDTO
+               .ForMember(dest => dest.Reviews, opt => opt.Ignore()); // Ignore during mapping from Tour to TourDetailsDTO
+
+            CreateMap<TourReview, TourReviewDetailsDTO>();
+        }
     }
 }
