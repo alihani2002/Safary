@@ -72,10 +72,10 @@ namespace Presentations.Controllers
             var tourDto = _mapper.Map<TourDetailsDTO>(tour);
             tourDto.Reviews = reviewDtos.ToList();
             tourDto.AverageRating = averageRating; // Set the average rating
+            tourDto.NumberOfReviews = reviews.Count();
 
             return Ok(tourDto);
         }
-
 
         //[HttpGet("TourGuideId")]
         //public async Task<IActionResult> ToursByTourGuideId(string email)

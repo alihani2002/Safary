@@ -10,6 +10,9 @@ namespace Shared.DTOs
         public int Duration { get; set; }
         public double AverageRating { get; set; }
         public List<TourReviewDetailsDTO> Reviews { get; set; } = new List<TourReviewDetailsDTO>();
-        public ICollection<TourImageDTO>? TourImages { get; set; }
+        public ICollection<TourImagesDTO>? TourImages { get; set; }
+        public int NumberOfReviews { get; set; }
+
+
     }
 }
