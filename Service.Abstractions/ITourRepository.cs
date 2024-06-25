@@ -13,6 +13,7 @@ namespace Service.Abstractions
 		 Task<bool> SelectTourAsync(string userId, string tourName);
 		 Task<bool> ConfirmedTourAsync(string userId);
 		Task<IEnumerable<Tour>> GetAllToursWithImages();
+        Task<Tour> GetToursImagesWithName(string name);
 
-	}
+    }
 }
