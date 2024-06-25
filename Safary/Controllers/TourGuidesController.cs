@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Service.Abstractions;
 using Shared.DTOs;
+using Sieve.Models;
+using Sieve.Services;
 using System.Security.Claims;
 
 namespace Safary.Controllers
@@ -15,40 +17,24 @@ namespace Safary.Controllers
     public class TourGuidesController : ControllerBase
     {
 
-        //public IActionResult GetAll(string duration)
-        //{
-        //	// !(specificStartDate <= user.EndDate && specificEndDate >= user.StartDate)
-
-        //	if (!string.IsNullOrEmpty(duration))
-        //	{
-        //		if (!DateTime.TryParse(duration.Split(separator: " - ")[0], out DateTime from))
-        //		{
-        //			ModelState.AddModelError("Duration", Errors.InvalidStartDate);
-        //			return BadRequest(ModelState);
-        //		}
-
-        //		if (!DateTime.TryParse(duration.Split(" - ")[1], out DateTime to))
-        //		{
-        //			ModelState.AddModelError("Duration", Errors.InvalidEndDate);
-        //			return BadRequest(ModelState);
-        //		}
-
-        //	}
-
-        //}
-
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 		private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ITourGuideRepository _tourGuideRepository;
+        private readonly ISieveProcessor _sieveProcessor;
 
-		public TourGuidesController(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor, ITourGuideRepository tourGuideRepository)
-		{
-			_unitOfWork = unitOfWork;
-			_mapper = mapper;
-			_httpContextAccessor = httpContextAccessor;
-			_tourGuideRepository = tourGuideRepository;
-		}
+
+        public TourGuidesController(IUnitOfWork unitOfWork, IMapper mapper,
+            IHttpContextAccessor httpContextAccessor,
+            ITourGuideRepository tourGuideRepository,
+             ISieveProcessor sieveProcessor)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
+            _tourGuideRepository = tourGuideRepository;
+            _sieveProcessor = sieveProcessor;
+        }
 
 		// GET: api/Tourists
 		[HttpGet("GetAll")]
@@ -59,34 +45,50 @@ namespace Safary.Controllers
             return Ok(dto);
         }
 
+        [HttpGet("GetFilterdAndSorted")]
+        public async Task<IActionResult> GetFilteredAndSorted([FromQuery] SieveModel sieveModel)
+        {
+            var tourGuides = _unitOfWork.ApplicationUsers
+                .FilterFindAll(r => r.CvUrl != null);
+
+            // Apply Sieve to the queryable collection
+            var filteredSortedTourGuides = _sieveProcessor.Apply(sieveModel, tourGuides);
+            var dto = _mapper.Map<IEnumerable<CardTourGuideDTO>>(filteredSortedTourGuides);
+            return Ok(dto);
+        }
+
+
         [HttpGet("GetDetails")]
         public async Task<ActionResult> Details(string id)
         {
+            var tourGuide = await _unitOfWork.ApplicationUsers
+                .Find(g => g.Id == id);
+            if (tourGuide is null) return NotFound();
 
-			var tourGuide = await _unitOfWork.ApplicationUsers
-	         .Find(g => g.Id == id);
-			if (tourGuide is null) return NotFound();
+            var reviews = await _unitOfWork.TourGuideReviews
+                .FilterFindAll(r => r.TourGuideId == id, c => c.Include(x => x.Tourist))
+                .ToListAsync();
 
-			var reviews = await _unitOfWork.TourGuideReviews
-				.FilterFindAll(r => r.TourGuideId == id, c => c.Include(x => x.Tourist))
-				.ToListAsync();
+            var reviewDtos = reviews.Select(review => new TourGuideReviewDetailsDTO
+            {
+                Rating = review.Rating,
+                Comment = review.Comment,
+                TouristName = review.Tourist?.UserName,
+            }).ToList();
 
-			var reviewDtos = reviews.Select(review => new TourGuideReviewDetailsDTO
-			{
-				Rating = review.Rating,
-				Comment = review.Comment,
-				TouristName = review.Tourist?.UserName 
-			}).ToList();
+            double averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0.0;
 
-			double averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0.0;
+            // Set the ReviewsNumber property
+            tourGuide.ReviewsNumber = reviews.Count;
 
-			var dto = _mapper.Map<TourGuideDetailsDTO>(tourGuide);
+            var dto = _mapper.Map<TourGuideDetailsDTO>(tourGuide);
 
-			dto.Reviews = reviewDtos;
-			dto.AverageRating = averageRating; 
+            dto.Reviews = reviewDtos;
+            dto.AverageRating = averageRating;
 
-			return Ok(dto);
-		}
+            return Ok(dto);
+        }
+
 
         [HttpPost("AddTourGuideSelected")]
         [Authorize("UserPolicy")]

@@ -28,16 +28,18 @@ namespace Domain.Entities
 
         // TourGuide
         public string? Description { get; set; }
-        [Sieve(CanFilter = true, CanSort = true)]
+        [Sieve(CanSort = true)]
         public double Rate { get; set; }
-        [Sieve(CanFilter = true, CanSort = true)]
+        [Sieve(CanSort = true)]
         public decimal HourPrice { get; set; }
         public int Age { get; set; }
         public string? Bio { get; set; }
         public List<string>? LanguageSpoken { get; set; } = new List<string>();
         public int? BlogId { get; set; }    
         public Blog? Blog { get; set; }
+        [Sieve(CanFilter = true, CanSort = true)]
         public bool HasCar { get; set; } = false;
+        [Sieve(CanSort = true)]
         public int? ReviewsNumber { get; set; }
 
         // Reviews written by the tourist

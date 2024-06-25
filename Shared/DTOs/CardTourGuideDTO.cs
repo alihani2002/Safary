@@ -10,7 +10,9 @@ namespace Shared.DTOs
 	{
         public string? Id { get; set; }
         public string FullName { get; set; } = null!;
-		public double Rate { get; set; }
+        public string? ImageUrl { get; set; }
+
+        public double Rate { get; set; }
 		public decimal HourPrice { get; set; }
 		public List<string> LanguageSpoken { get; set; } = new List<string>();
         public bool HasCar { get; set; }

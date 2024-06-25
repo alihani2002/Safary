@@ -24,16 +24,7 @@ namespace Safary.Controllers
             return Ok(reviews);
         }
 
-        // GET: api/Reviews/TourReviews/5
-        [HttpGet("TourReviews/{id}")]
-        public async Task<ActionResult> GetTourReview(int id)
-        {
-            var review = await _reviewService.GetTourReviewByIdAsync(id);
-            if (review == null)
-                return NotFound();
 
-            return Ok(review);
-        }
 
         // POST: api/Reviews/TourReviews
 
@@ -68,16 +59,6 @@ namespace Safary.Controllers
         }
 
 
-        // GET: api/Reviews/TourGuideReviews/5
-        [HttpGet("TourGuideReviews/{id}")]
-        public async Task<ActionResult> GetTourGuideReview(int id)
-        {
-            var review = await _reviewService.GetTourGuideReviewByIdAsync(id);
-            if (review == null)
-                return NotFound();
-
-            return Ok(review);
-        }
 
         // POST: api/Reviews/TourGuideReviews
         [HttpPost("TourGuideReviews")]
