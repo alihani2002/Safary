@@ -55,15 +55,15 @@ namespace Presentations.Controllers
         }
 
         [HttpGet("GetTourDetails")]
-        public async Task<ActionResult<TourDetailsDTO>> GetTourDetails(string id)
+        public async Task<ActionResult<TourDetailsDTO>> GetTourDetails(string name)
         {
-            var tour = await _unitOfWork.Tours.GetById(id);
+            var tour = await _unitOfWork.Tours.GetById(name);
 
             if (tour == null)
-                return NotFound($"Tour with ID '{id}' not found.");
+                return NotFound($"Tour with ID '{name}' not found.");
 
             // Fetch reviews
-            var reviews = await _unitOfWork.TourReviews.FindAll(r => r.TourName == id , 0);
+            var reviews = await _unitOfWork.TourReviews.FindAll(r => r.TourName == name, 0);
             var reviewDtos = _mapper.Map<IEnumerable<TourReviewDetailsDTO>>(reviews);
 
             // Calculate average rating
