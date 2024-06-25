@@ -45,6 +45,15 @@ namespace Safary.Controllers
             return Ok(dto);
         }
 
+        [HttpGet("TourGuideTableById")]
+        public async Task<IActionResult> TourGuidesSelectedById(string id)
+        {
+            var tourGuides = await _unitOfWork.SelectedTourGuides.FindAll(t => t.TourguideId == id && t.IsConfirmed == true, 0);
+            
+            return Ok(_mapper.Map<IEnumerable<TourGuideSelectedTableDTO>>(tourGuides));
+
+        }
+
         [HttpGet("GetFilterdAndSorted")]
         public async Task<IActionResult> GetFilteredAndSorted([FromQuery] SieveModel sieveModel)
         {

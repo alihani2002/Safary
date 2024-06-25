@@ -78,6 +78,8 @@ namespace Safary.Mapping
 
 			CreateMap<SelectedTourGuide, TourGuideSelectedDTO>().ReverseMap();
 
+			CreateMap<TourGuideSelectedTableDTO, SelectedTourGuide>().ReverseMap();
+
             //Tours
             CreateMap<Tour, TourDetailsDTO>()
                .ForMember(dest => dest.AverageRating, opt => opt.Ignore()) // Ignore during mapping from Tour to TourDetailsDTO
