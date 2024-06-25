@@ -23,9 +23,13 @@ namespace Safary.Mapping
             CreateMap<Tour, SelectListItem>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Name));
-            
-            
-            CreateMap<TourImage, TourImagesDTO>().ReverseMap(); // Handle Images
+
+            CreateMap<TourHourDTO, Tour>().ReverseMap()
+			    .ForMember(dest => dest.TourImages, opt => opt.MapFrom(src => src.TourImages));
+
+			CreateMap<TourImage, TourImageDTO>();
+
+			CreateMap<TourImage, TourImagesDTO>().ReverseMap(); // Handle Images
 
             CreateMap<TourBlog, TourDTO>();
             CreateMap<TourPostDTO, TourBlog>().ReverseMap();

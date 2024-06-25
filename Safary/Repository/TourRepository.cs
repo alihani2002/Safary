@@ -34,6 +34,11 @@ namespace Safary.Repository
 			return true;
 		}
 
+		public async Task<IEnumerable<Tour>> GetAllToursWithImages()
+		{
+			return await _context.Tours.Include(t => t.TourImages).ToListAsync();
+		}
+
 		public async Task<bool> SelectTourAsync(string userId, string tourName)
 		{
 			var tour = await _context.Tours.FirstOrDefaultAsync(t => t.Name == tourName);

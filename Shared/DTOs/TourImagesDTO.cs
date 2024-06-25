@@ -8,7 +8,7 @@ namespace Shared.DTOs
 {
     public class TourImagesDTO
     {
-        public int TourId { get; set; }  // The ID of the tour to which images will be added
+        public string TourName { get; set; } = null!; // The ID of the tour to which images will be added
         public List<string> ImageUrls { get; set; } = new List<string>();  // List of image URLs to be added
     }
 }

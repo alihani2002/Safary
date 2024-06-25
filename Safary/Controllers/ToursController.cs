@@ -45,10 +45,11 @@ namespace Presentations.Controllers
             var dto = _mapper.Map<IEnumerable<TourHourDTO>>(filteredSortedPagedProducts);
             return Ok(dto);
         }
+
         [HttpGet("GetAll")]
         public async Task<ActionResult> GetTours()
         {
-            var Tours = await _unitOfWork.Tours.GetAll();
+            var Tours = await _tourRepository.GetAllToursWithImages();
             var dto = _mapper.Map<IEnumerable<TourHourDTO>>(Tours);
             return Ok(dto);
         }
@@ -191,10 +192,9 @@ namespace Presentations.Controllers
 
 
 		[HttpPost("AddTourImages")]
-        [Authorize("UserPolicy")]
         public async Task<IActionResult> AddTourImages([FromBody] TourImagesDTO dto)
         {
-            var tour = await _unitOfWork.Tours.Find(id => id.Id == dto.TourId);
+            var tour = await _unitOfWork.Tours.Find(n => n.Name == dto.TourName);
 
             if (tour == null)
             {
@@ -203,7 +203,7 @@ namespace Presentations.Controllers
 
             var tourImages = dto.ImageUrls.Select(url => new TourImage
             {
-                TourId = dto.TourId,
+                TourName = dto.TourName,
                 ImageUrl = url
             }).ToList();
 

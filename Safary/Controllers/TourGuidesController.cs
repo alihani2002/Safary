@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Service.Abstractions;
 using Shared.DTOs;
 using System.Security.Claims;
@@ -61,23 +62,31 @@ namespace Safary.Controllers
         [HttpGet("GetDetails")]
         public async Task<ActionResult> Details(string id)
         {
-            var tourGuide = await _unitOfWork.ApplicationUsers.Find(g => g.Id == id);
 
-            if (tourGuide is null) return NotFound();
+			var tourGuide = await _unitOfWork.ApplicationUsers
+	         .Find(g => g.Id == id);
+			if (tourGuide is null) return NotFound();
 
-            // Fetch reviews
-            var reviews = await _unitOfWork.TourGuideReviews.FindAll(r => r.TourGuideId == id , 0);
-            var reviewDtos = _mapper.Map<IEnumerable<TourGuideReviewDetailsDTO>>(reviews);
+			var reviews = await _unitOfWork.TourGuideReviews
+				.FilterFindAll(r => r.TourGuideId == id, c => c.Include(x => x.Tourist))
+				.ToListAsync();
 
-            // Calculate average rating
-            double averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0.0;
+			var reviewDtos = reviews.Select(review => new TourGuideReviewDetailsDTO
+			{
+				Rating = review.Rating,
+				Comment = review.Comment,
+				TouristName = review.Tourist?.UserName 
+			}).ToList();
 
-            var dto = _mapper.Map<TourGuideDetailsDTO>(tourGuide);
-            dto.Reviews = reviewDtos.ToList();
-            dto.AverageRating = averageRating; // Set the average rating
+			double averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0.0;
 
-            return Ok(dto);
-        }
+			var dto = _mapper.Map<TourGuideDetailsDTO>(tourGuide);
+
+			dto.Reviews = reviewDtos;
+			dto.AverageRating = averageRating; 
+
+			return Ok(dto);
+		}
 
         [HttpPost("AddTourGuideSelected")]
         [Authorize("UserPolicy")]
