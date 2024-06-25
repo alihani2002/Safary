@@ -53,6 +53,8 @@ builder.Services.AddScoped<ISieveConfiguration, SieveConfiguration>();
 builder.Services.AddScoped<ITourGuideRepository, TourGuideRepository>();
 builder.Services.AddScoped<ITourRepository, TourRepository>();
 
+builder.Services.AddCors();
+
 builder.Services.AddAuthentication(option =>
 {
 	option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -143,6 +145,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.UseCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
 app.UseAuthentication();
 app.UseAuthorization();
