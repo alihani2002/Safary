@@ -38,7 +38,7 @@ namespace Presentations.Controllers
         [HttpGet("GetFilterdAndSorted")]
         public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
         {
-            var tours = _unitOfWork.Tours.FilterFindAll(s => s.Id > 0);
+            var tours = _unitOfWork.Tours.FilterFindAll(s => s.Id > 0).Include(x => x.TourImages);
 
             // Apply Sieve to the queryable collection
             var filteredSortedPagedProducts = _sieveProcessor.Apply(sieveModel, tours);
@@ -57,7 +57,7 @@ namespace Presentations.Controllers
         [HttpGet("GetTourDetails")]
         public async Task<ActionResult<TourDetailsDTO>> GetTourDetails(string name)
         {
-            var tour = await _unitOfWork.Tours.GetById(name);
+            var tour = await _tourRepository.GetToursImagesWithName(name);
 
             if (tour == null)
                 return NotFound($"Tour with ID '{name}' not found.");
