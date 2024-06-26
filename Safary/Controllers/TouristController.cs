@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Entities;
 using Domain.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 
@@ -60,26 +58,30 @@ namespace Safary.Controllers
             return Ok(createdTouristDto);
         }
 
-        // PUT: api/Tourists/{id}
+        // PUT: api/Tourists/{email}
         [HttpPut("{email}")]
-        public async Task<ActionResult> UpdateTourist([FromForm] string email, TouristDto touristDto)
+        public async Task<ActionResult> UpdateTourist(string email, [FromForm] TouristDto touristDto)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
             var existingTourist = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
             if (existingTourist == null || existingTourist.Email == null)
             {
                 return NotFound();
             }
 
+            // Ensure the email from the route is set in the DTO
+            touristDto.Email = email;
+
             _mapper.Map(touristDto, existingTourist);
             _unitOfWork.ApplicationUsers.Update(existingTourist);
             _unitOfWork.Complete();
             return Ok(existingTourist);
         }
+
 
         // DELETE: api/Tourists/{id}
         [HttpDelete("{email}")]
