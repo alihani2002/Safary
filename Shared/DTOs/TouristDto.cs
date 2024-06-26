@@ -13,5 +13,7 @@ namespace Shared.DTOs
         public string? ImageUrl { get; set; }
         public int Age { get; set; }
         public string? Bio { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }
