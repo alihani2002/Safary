@@ -9,6 +9,7 @@ namespace Shared.DTOs
     //alixsomaa@gmail.com
     public class TourgiudeDto : RegisterDTO
     {
+        public string Id { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.Now;
         public string? CvUrl { get; set; }
         public string? ImageUrl { get; set; }

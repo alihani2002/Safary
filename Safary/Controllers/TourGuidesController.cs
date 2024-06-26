@@ -36,8 +36,8 @@ namespace Safary.Controllers
             _sieveProcessor = sieveProcessor;
         }
 
-		// GET: api/Tourists
-		[HttpGet("GetAll")]
+        // GET: api/Tourguide
+        [HttpGet("GetAll")]
         public async Task<ActionResult> GetAllTourGiudes()
         {
             var tourGuides = await _unitOfWork.ApplicationUsers.FindAll(r => r.CvUrl != null, 0);
@@ -114,8 +114,7 @@ namespace Safary.Controllers
 		}
 
 
-
-        // POST: api/Tourists
+        // POST: api/Tourguide
         [HttpPost]
         public async Task<ActionResult> CreateTourguide([FromForm]TourgiudeDto tourgiudeDto)
         {
@@ -132,14 +131,14 @@ namespace Safary.Controllers
             return Ok(createdTourgiude);
         }
 
-        // GET: api/Tourists/{id}
-        [HttpGet("{email}")]
-        public async Task<ActionResult> GetTourguideByEmail(string email)
+        // GET: api/Tourguide/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetTourguideById(string id)
         {
 			if (!ModelState.IsValid)
 				return NotFound();
 
-			var tourgiude = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
+			var tourgiude = await _unitOfWork.ApplicationUsers.Find(r => r.Id == id);
             
             if (tourgiude is null)
                 return NotFound(ModelState);
@@ -148,17 +147,17 @@ namespace Safary.Controllers
             return Ok(tourgiudeDto);
         }
 
-		// PUT: api/Tourists/{id}
-		[HttpPut("{email}")]
-        public async Task<ActionResult> UpdateTourGuide(string email, TourgiudeDto TourgiudeDto)
+        // PUT: api/Tourguide/{id}
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateTourGuideById(string id, TourgiudeDto TourgiudeDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var tourguide = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
+            var tourguide = await _unitOfWork.ApplicationUsers.Find(r => r.Id == id);
 
-            if (tourguide is null || tourguide.Email is null)
+            if (tourguide is null || tourguide.Id is null)
             {
                 return NotFound();
             }
@@ -169,12 +168,12 @@ namespace Safary.Controllers
             return Ok(tourguide);
         }
 
-        // DELETE: api/Tourists/{id}
-        [HttpDelete("{email}")]
-        public async Task<ActionResult> DeleteTourguide(string email)
+        // DELETE: api/Tourguide/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTourguide(string id)
         {
-            var tourguide = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
-            if (tourguide == null || tourguide.Email == email)
+            var tourguide = await _unitOfWork.ApplicationUsers.Find(r => r.Email == id);
+            if (tourguide == null || tourguide.Id == id)
             {
                 return NotFound();
             }
