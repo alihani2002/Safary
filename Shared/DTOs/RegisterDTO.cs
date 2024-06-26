@@ -1,4 +1,5 @@
 ﻿using Domain.Consts;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,5 +30,8 @@ namespace Shared.DTOs
         public string Address { get; set; }
 		[RegularExpression(RegexPatterns.MobileNumber, ErrorMessage = Errors.RegexPhoneNumber)]
 		public string PhoneNumber { get; set; }
+        public IFormFile Image { get; set; } = null!;
+
+
     }
 }

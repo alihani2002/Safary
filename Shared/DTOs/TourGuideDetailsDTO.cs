@@ -1,4 +1,6 @@
-﻿namespace Shared.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Shared.DTOs
 {
     public class TourGuideDetailsDTO
 	{
@@ -16,8 +18,8 @@
         public List<TourGuideReviewDetailsDTO> Reviews { get; set; } = new List<TourGuideReviewDetailsDTO>(); // Add this property
         public double AverageRating { get; set; } // Add this property
 
-
-
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
 
     }
 }
