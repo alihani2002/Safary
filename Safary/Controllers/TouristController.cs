@@ -28,11 +28,12 @@ namespace Safary.Controllers
             return Ok(dto);
         }
 
+       
         // GET: api/Tourists/{id}
-        [HttpGet("{email} GetTouristByEmail")]
-        public async Task<ActionResult> GetTouristById(string email)
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetTouristById(string id)
         {
-            var users = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
+            var users = await _unitOfWork.ApplicationUsers.Find(r => r.Id == id);
             if (!ModelState.IsValid)
             {
                 return NotFound();
@@ -58,23 +59,24 @@ namespace Safary.Controllers
             return Ok(createdTouristDto);
         }
 
-        // PUT: api/Tourists/{email}
-        [HttpPut("{email}")]
-        public async Task<ActionResult> UpdateTourist(string email, [FromForm] TouristDto touristDto)
+
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateTouristById(string id, [FromForm] TouristDto touristDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var existingTourist = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
-            if (existingTourist == null || existingTourist.Email == null)
+            var existingTourist = await _unitOfWork.ApplicationUsers.Find(r => r.Id == id);
+            if (existingTourist == null || existingTourist.Id == null)
             {
                 return NotFound();
             }
 
             // Ensure the email from the route is set in the DTO
-            touristDto.Email = email;
+            touristDto.Id = id;
 
             _mapper.Map(touristDto, existingTourist);
             _unitOfWork.ApplicationUsers.Update(existingTourist);
@@ -82,19 +84,18 @@ namespace Safary.Controllers
             return Ok(existingTourist);
         }
 
-
         // DELETE: api/Tourists/{id}
-        [HttpDelete("{email}")]
-        public async Task<ActionResult> DeleteTourist(string email)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTouristById(string id)
         {
-           
-            var tourist = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
+
+            var tourist = await _unitOfWork.ApplicationUsers.Find(r => r.Id == id);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (tourist == null || tourist.Email == null)
+            if (tourist == null || tourist.Id == null)
             {
                 return NotFound();
             }
@@ -103,5 +104,6 @@ namespace Safary.Controllers
             _unitOfWork.Complete();
             return Ok(tourist);
         }
+
     }
 }
