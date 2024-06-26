@@ -1,5 +1,6 @@
 ﻿using Domain.Consts;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +15,8 @@ namespace Shared.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+
+        public string CoverImage { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int? BlogId { get; set; }
 

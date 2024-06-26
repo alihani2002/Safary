@@ -17,6 +17,7 @@ namespace Domain.Entities
         [Sieve(CanFilter = true, CanSort = true)]
         [MaxLength(150, ErrorMessage = Errors.MaxLength)]
 		public string Name { get; set; } = null!;
+		public string CoverImage { get; set; } = null!;
 		public string Description { get; set; } = null!;
 		public int? BlogId { get; set; }
 		public Blog? Blog { get; set; }
