@@ -1,6 +1,7 @@
 ﻿using Domain.Consts;
 using Domain.Entities;
 using Domain.Filters;
+using Sieve.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,8 @@ namespace Shared.DTOs
         public string Description { get; set; } = null!;
         public string Location { get; set; } = null!;
         public int Duration { get; set; }
-		public ICollection<TourImageDTO>? TourImages { get; set; }
+        public bool IsDeleted { get; set; }
+        public ICollection<TourImageDTO>? TourImages { get; set; }
 	}
     public class TourImageDTO
     {
