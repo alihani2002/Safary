@@ -20,7 +20,6 @@ namespace Shared.DTOs
         // TourGuide
         public string? Description { get; set; }
         public double Rate { get; set; }
-        public decimal DayPrice { get; set; }
         public decimal HourPrice { get; set; }
         public int Age { get; set; }
         public string? Bio { get; set; }
