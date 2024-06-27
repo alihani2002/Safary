@@ -12,7 +12,7 @@ namespace Service.Abstractions
 	{
 		//IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to);
 		Task<bool> AddSelectTourGuide(string touristId, string tourGuideId, DateTime tourTime, string timeToCast, int adults);
-        Task<ApplicationUser?> ToggleUserStatusAsync(string id);
+		Task<ApplicationUser?> ToggleUserStatusAsync(string id);
 
-    }
+	}
 }
