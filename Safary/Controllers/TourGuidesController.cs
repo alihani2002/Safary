@@ -194,7 +194,7 @@ namespace Safary.Controllers
         [HttpPost("ToggleStatusAccept/{id}")]
         public async Task<IActionResult> ToggleStatusAccept(string id)
         {
-            var user = await _tourGuideRepository.ToggleUserStatusAsync(id);
+            var user = await _tourGuideRepository.ToggleUserAcceptedStatusAsync(id);
 
             return user is null ? NotFound() : Ok(user);
         }
