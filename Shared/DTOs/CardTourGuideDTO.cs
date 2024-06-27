@@ -13,7 +13,9 @@ namespace Shared.DTOs
         public string FullName { get; set; } = null!;
         public string? ImageUrl { get; set; }
         public double Rate { get; set; }
-		public decimal HourPrice { get; set; }
+        public bool AdminAccepted { get; set; } = false;
+        public string? CvUrl { get; set; }
+        public decimal HourPrice { get; set; }
 		public List<string> LanguageSpoken { get; set; } = new List<string>();
         public bool IsDeleted { get; set; }
         public bool HasCar { get; set; }

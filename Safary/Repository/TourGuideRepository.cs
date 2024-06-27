@@ -77,25 +77,41 @@ namespace Safary.Repository
 			return user;
 
 		}
+        public async Task<ApplicationUser?> ToggleUserAcceptedStatusAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user is null) return null;
+
+            user.AdminAccepted = !user.AdminAccepted;
+
+            await _userManager.UpdateAsync(user);
+
+            if (user.AdminAccepted)
+                await _userManager.UpdateSecurityStampAsync(user);
+
+            return user;
+
+        }
 
 
 
 
 
-		//public IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to)
-		//{
-		//	throw new NotImplementedException();
-		//}
-		// !(specificStartDate <= user.EndDate && specificEndDate >= user.StartDate)
+        //public IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to)
+        //{
+        //	throw new NotImplementedException();
+        //}
+        // !(specificStartDate <= user.EndDate && specificEndDate >= user.StartDate)
 
-		//public IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to) =>
-		//	 _context.Set<ApplicationUser>().Where(g => !(g.StartDate <= to && g.EndDate >= from))
-		//		.ToList();
+        //public IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to) =>
+        //	 _context.Set<ApplicationUser>().Where(g => !(g.StartDate <= to && g.EndDate >= from))
+        //		.ToList();
 
 
 
-		//public IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to) =>
-		//	 _context.Set<ApplicationUser>().Where(g => !(g.StartDate <= to && g.EndDate >= to) || !(g.StartDate <= from && g.EndDate >= from))
-		//		.ToList();
-	}
+        //public IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to) =>
+        //	 _context.Set<ApplicationUser>().Where(g => !(g.StartDate <= to && g.EndDate >= to) || !(g.StartDate <= from && g.EndDate >= from))
+        //		.ToList();
+    }
 }
