@@ -110,7 +110,7 @@ namespace Presentations.Controllers
             return Ok(existingBlog);
         }
 
-        [HttpPost("ToggleStatus")]
+        [HttpPost("ToggleStatus/{id}")]
         public async Task<IActionResult> ToggleStatus(int id)
         {
             var blog = await _blogService.ToggleStatus(id);

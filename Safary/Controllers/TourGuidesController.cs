@@ -184,7 +184,7 @@ namespace Safary.Controllers
             return Ok(tourguide);
         }
 
-        [HttpPost("ToggleStatus")]
+        [HttpPost("ToggleStatus/{id}")]
         public async Task<IActionResult> ToggleStatus(string id)
         {
             var user = await _tourGuideRepository.ToggleUserStatusAsync(id);

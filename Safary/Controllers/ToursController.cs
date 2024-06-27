@@ -210,7 +210,7 @@ namespace Presentations.Controllers
             return Ok("Images successfully added to the tour.");
         }
 
-        [HttpPost("ToggleStatus")]
+        [HttpPost("ToggleStatus/{id}")]
         public async Task<IActionResult> ToggleStatus(int id)
         {
             var tour = await _tourService.ToggleStatus(id);
