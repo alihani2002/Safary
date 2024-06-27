@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence.Data;
+using Service.Abstractions;
 using Shared.DTOs;
 using Sieve.Models;
 using Sieve.Services;
@@ -18,15 +19,17 @@ namespace Presentations.Controllers
     public class BlogController : ControllerBase
     {
         private readonly ISieveProcessor _sieveProcessor;
-        private readonly IUnitOfWork _unitOfWork;   
+        private readonly IUnitOfWork _unitOfWork; 
+        private readonly IBlogService _blogService;
         private readonly IMapper _mapper;
 
 
-		public BlogController(IMapper mapper, IUnitOfWork unitOfWork , ISieveProcessor sieveProcessor)
-		{
+        public BlogController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor, IBlogService blogService)
+        {
             _mapper = mapper;
-			_unitOfWork = unitOfWork;
-            _sieveProcessor = sieveProcessor; 
+            _unitOfWork = unitOfWork;
+            _sieveProcessor = sieveProcessor;
+            _blogService = blogService;
         }
         [HttpGet("GetFilterdAndSorted")]
         public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
@@ -107,6 +110,13 @@ namespace Presentations.Controllers
             return Ok(existingBlog);
         }
 
+        [HttpPost("ToggleStatus")]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var blog = await _blogService.ToggleStatus(id);
+
+            return blog is null ? NotFound() : Ok(blog);
+        }
 
     }
 }

@@ -15,6 +15,7 @@ namespace Shared.DTOs
         public double Rate { get; set; }
 		public decimal HourPrice { get; set; }
 		public List<string> LanguageSpoken { get; set; } = new List<string>();
+        public bool IsDeleted { get; set; }
         public bool HasCar { get; set; }
         public int ReviewsNumber { get; set; }
 

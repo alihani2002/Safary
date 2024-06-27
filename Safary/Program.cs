@@ -53,6 +53,7 @@ builder.Services.AddScoped<ISieveConfiguration, SieveConfiguration>();
 builder.Services.AddScoped<ITourGuideRepository, TourGuideRepository>();
 builder.Services.AddScoped<ITourRepository, TourRepository>();
 
+
 builder.Services.AddCors();
 
 builder.Services.AddAuthentication(option =>

@@ -75,7 +75,7 @@ namespace Safary.Repository
 			if (!_allowedImageExtensions.Contains(extensionImage))
 				return new TourGuideDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
 
-			if (model.CV.Length > _maxAllowedSizeImage)
+			if (model.Image.Length > _maxAllowedSizeImage)
 				return new TourGuideDTO { Message = "Image cannot be more than 2 MB!" };
 
 			var imageName = $"{Guid.NewGuid()}{extensionImage}";
@@ -117,6 +117,22 @@ namespace Safary.Repository
 
             var user = _mapper.Map<ApplicationUser>(model);
 
+            var extensionImage = Path.GetExtension(model.Image?.FileName);
+
+            if (!_allowedImageExtensions.Contains(extensionImage))
+                return new TourGuideDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
+
+            if (model.Image.Length > _maxAllowedSizeImage)
+                return new TourGuideDTO { Message = "Image cannot be more than 2 MB!" };
+
+            var imageName = $"{Guid.NewGuid()}{extensionImage}";
+
+            var pathImage = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/tourists", imageName);
+            using var streamImage = File.Create(pathImage);
+            model.Image.CopyTo(streamImage);
+
+            user.ImageUrl = imageName;
+
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
@@ -146,9 +162,9 @@ namespace Safary.Repository
 			if (await _userManager.FindByNameAsync(model.UserName) != null)
 				return new UserDTO { Message = "UserName is already registed!" };
 
-			var user = _mapper.Map<ApplicationUser>(model);
+			var admin = _mapper.Map<ApplicationUser>(model);           
 
-			var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(admin, model.Password);
 			if (!result.Succeeded)
 			{
 				var errors = string.Empty;
@@ -158,10 +174,10 @@ namespace Safary.Repository
 				}
 				return new UserDTO { Message = errors };
 			}
-			await _userManager.AddToRoleAsync(user, AppRoles.Admin);
+			await _userManager.AddToRoleAsync(admin, AppRoles.Admin);
 
-			var JwtSecurityToken = await CreateJwtToken(user);
-			var returnModel = _mapper.Map<UserDTO>(user);
+			var JwtSecurityToken = await CreateJwtToken(admin);
+			var returnModel = _mapper.Map<UserDTO>(admin);
 			returnModel.ExpiredOn = JwtSecurityToken.ValidTo;
 			returnModel.IsAuthenticated = true;
 			returnModel.Roles = [AppRoles.Admin];

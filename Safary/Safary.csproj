@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\tourists\" />
     <Folder Include="wwwroot\images\tourguides\" />
     <Folder Include="wwwroot\pdfs\" />
   </ItemGroup>

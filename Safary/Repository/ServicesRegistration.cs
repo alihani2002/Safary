@@ -16,6 +16,8 @@ namespace Safary.Repository
         public static IServiceCollection AddServicesRegistration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITourService, TourService>();
+            services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IEmailBodyBuilder, EmailBodyBuilder>();
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddTransient<IEmailSender, EmailSender>();

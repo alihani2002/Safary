@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence.Data;
+using Safary.Repository;
 using Service.Abstractions;
 using Shared.DTOs;
 using Sieve.Models;
@@ -24,17 +25,19 @@ namespace Presentations.Controllers
         private readonly IMapper _mapper;
         private readonly ISieveProcessor _sieveProcessor;
         private readonly ITourRepository _tourRepository;
+        private readonly ITourService _tourService;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-		public ToursController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor, IHttpContextAccessor httpContextAccessor, ITourRepository tourRepository)
-		{
-			_mapper = mapper;
-			_unitOfWork = unitOfWork;
-			_sieveProcessor = sieveProcessor;
-			_httpContextAccessor = httpContextAccessor;
-			_tourRepository = tourRepository;
-		}
+        public ToursController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor, IHttpContextAccessor httpContextAccessor, ITourRepository tourRepository, ITourService tourService)
+        {
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _sieveProcessor = sieveProcessor;
+            _httpContextAccessor = httpContextAccessor;
+            _tourRepository = tourRepository;
+            _tourService = tourService;
+        }
         [HttpGet("GetFilterdAndSorted")]
         public async Task<IActionResult> GetFilterdAndSorted([FromQuery] SieveModel sieveModel)
         {
@@ -76,12 +79,6 @@ namespace Presentations.Controllers
 
             return Ok(tourDto);
         }
-
-        //[HttpGet("TourGuideId")]
-        //public async Task<IActionResult> ToursByTourGuideId(string email)
-        //{
-        //    var tours = await _unitOfWork.Tours.FindAll(s => s.)
-        //}
 
         [HttpPost]
         public async Task<IActionResult> AddTour(TourHourPostDTO model)
@@ -211,6 +208,14 @@ namespace Presentations.Controllers
             _unitOfWork.Complete();
 
             return Ok("Images successfully added to the tour.");
+        }
+
+        [HttpPost("ToggleStatus")]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var tour = await _tourService.ToggleStatus(id);
+
+            return tour is null ? NotFound() : Ok(tour);
         }
     }
 }
