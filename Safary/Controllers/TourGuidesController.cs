@@ -4,6 +4,7 @@ using Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Safary.Repository;
 using Service.Abstractions;
 using Shared.DTOs;
 using Sieve.Models;
@@ -181,6 +182,14 @@ namespace Safary.Controllers
             _unitOfWork.ApplicationUsers.Remove(tourguide);
             _unitOfWork.Complete();
             return Ok(tourguide);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleStatus(string id)
+        {
+            var user = await _tourGuideRepository.ToggleUserStatusAsync(id);
+
+            return user is null ? NotFound() : Ok(user);
         }
     }
 }
