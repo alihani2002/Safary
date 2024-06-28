@@ -15,9 +15,9 @@ namespace Safary.Repository
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Tour?> ToggleStatus(int id)
+        public async Task<Tour?> ToggleStatus(string name)
         {
-            var tour = await _unitOfWork.Tours.GetById(id);
+            var tour = await _unitOfWork.Tours.GetById(name);
 
             if (tour is null) return null;
 

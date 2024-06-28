@@ -95,13 +95,13 @@ namespace Presentations.Controllers
             return Ok(TourHour);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTourHour(int id, [FromForm] TourHourPostDTO dto)
+        [HttpPut("{name}")]
+        public async Task<IActionResult> UpdateTourHour(string name, [FromForm] TourHourPostDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingTourHour = await _unitOfWork.Tours.GetById(id);
+            var existingTourHour = await _unitOfWork.Tours.GetById(name);
 
             if (existingTourHour == null)
                 return NotFound();
@@ -114,10 +114,10 @@ namespace Presentations.Controllers
             return Ok(existingTourHour);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTourHour(int id)
+        [HttpDelete("{name}")]
+        public async Task<IActionResult> DeleteTourHour(string name)
         {
-            var existingTourHour = await _unitOfWork.Tours.GetById(id);
+            var existingTourHour = await _unitOfWork.Tours.GetById(name);
 
             if (existingTourHour == null)
                 return NotFound();
@@ -210,10 +210,10 @@ namespace Presentations.Controllers
             return Ok("Images successfully added to the tour.");
         }
 
-        [HttpPost("ToggleStatus/{id}")]
-        public async Task<IActionResult> ToggleStatus(int id)
+        [HttpPost("ToggleStatus/{name}")]
+        public async Task<IActionResult> ToggleStatus(string name)
         {
-            var tour = await _tourService.ToggleStatus(id);
+            var tour = await _tourService.ToggleStatus(name);
 
             return tour is null ? NotFound() : Ok(tour);
         }

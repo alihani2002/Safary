@@ -9,6 +9,6 @@ namespace Service.Abstractions
 {
     public interface ITourService
     {
-        Task<Tour?> ToggleStatus(int id);
+        Task<Tour?> ToggleStatus(string name);
     }
 }
