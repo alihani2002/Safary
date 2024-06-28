@@ -96,33 +96,19 @@ namespace Presentations.Controllers
         }
 
         [HttpPut("{name}")]
-        public async Task<IActionResult> UpdateTourHour(string name,  TourHourPostDTO dto)
+        public async Task<IActionResult> Update(string name,  TourHourPostDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var tour = await _tourRepository.GetToursImagesWithName(name);
+            var isUpdated = await _tourRepository.Update(name, dto);
 
-            if (tour == null)
-                return NotFound();
+            if (!isUpdated)
+                return BadRequest(ModelState);
 
-            _mapper.Map(dto, tour);
-
-            if (dto.TourImages != null)
-            {
-                // Clear existing images and add new ones
-                tour.TourImages.Clear();
-                foreach (var imageDto in dto.TourImages)
-                {
-                    var tourImage = _mapper.Map<TourImage>(imageDto);
-                    tour.TourImages.Add(tourImage);
-                }
-            }
-
-            _unitOfWork.Tours.Update(tour);
             _unitOfWork.Complete();
 
-            return Ok(tour);
+            return Ok();
         }
 
         [HttpDelete("{name}")]

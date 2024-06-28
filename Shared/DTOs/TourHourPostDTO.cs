@@ -9,8 +9,6 @@ namespace Shared.DTOs
 {
     public class TourHourPostDTO
     {
-        [JsonIgnore]
-        public int Id { get; set; }
         public string Description { get; set; } = null!;
         public string Location { get; set; } = null!;
         public int Duration { get; set; }
