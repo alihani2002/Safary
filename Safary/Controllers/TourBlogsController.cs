@@ -79,7 +79,7 @@ namespace Safary.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTour(int id, [FromForm] TourPostDTO dto)
+        public async Task<IActionResult> UpdateTour(int id, TourPostDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
