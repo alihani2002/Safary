@@ -13,5 +13,7 @@ namespace Shared.DTOs
         public string Comment { get; set; }
         public string TourName { get; set; }
         public string TouristId { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }
