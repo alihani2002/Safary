@@ -82,7 +82,7 @@ namespace Persistence.Repositories
 		}
 
 		public async Task<T?> GetById(int id) => await _context.Set<T>().FindAsync(id);
-        public async Task<T?> GetById(string id) => await _context.Set<T>().FindAsync(id);
+        public async Task<T?> GetByName(string name) => await _context.Set<T>().FindAsync(name);
 
 
         public async Task<T?> Find(Expression<Func<T, bool>> predicate) =>

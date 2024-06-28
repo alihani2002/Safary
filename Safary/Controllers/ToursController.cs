@@ -101,7 +101,7 @@ namespace Presentations.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingTourHour = await _unitOfWork.Tours.GetById(name);
+            var existingTourHour = await _unitOfWork.Tours.GetByName(name);
 
             if (existingTourHour == null)
                 return NotFound();
@@ -117,7 +117,7 @@ namespace Presentations.Controllers
         [HttpDelete("{name}")]
         public async Task<IActionResult> DeleteTourHour(string name)
         {
-            var existingTourHour = await _unitOfWork.Tours.GetById(name);
+            var existingTourHour = await _unitOfWork.Tours.GetByName(name);
 
             if (existingTourHour == null)
                 return NotFound();

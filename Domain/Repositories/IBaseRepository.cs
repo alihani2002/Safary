@@ -10,7 +10,7 @@ namespace Domain.Repositories
         IQueryable<T> FilterGetAll(bool withNoTracking = true, string? orderByDirection = OrderBy.Ascending, Expression<Func<T, object>>? orderBy = null);
         IQueryable<T> GetQueryable();
 		Task<T?> GetById(int id);
-        Task<T?> GetById(string id);
+        Task<T?> GetByName(string name);
 
         Task<T?> Find(Expression<Func<T, bool>> predicate);
 		Task<T?> Find(Expression<Func<T, bool>> predicate, string[]? includes = null);
