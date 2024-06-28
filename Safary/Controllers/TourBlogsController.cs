@@ -22,6 +22,7 @@ namespace Safary.Controllers
         private readonly IMapper _mapper;
 
         private readonly ITourBlogService _tourBlogService;
+        
         private readonly ISieveProcessor _sieveProcessor;
 
 

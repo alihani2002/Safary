@@ -52,7 +52,7 @@ builder.Services.AddScoped<ISieveProcessor, SieveProcessor>();
 builder.Services.AddScoped<ISieveConfiguration, SieveConfiguration>();
 builder.Services.AddScoped<ITourGuideRepository, TourGuideRepository>();
 builder.Services.AddScoped<ITourRepository, TourRepository>();
-
+builder.Services.AddScoped<ITourBlogService, TourBlogService>();
 
 builder.Services.AddCors();
 
