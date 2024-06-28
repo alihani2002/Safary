@@ -41,6 +41,7 @@ namespace Safary.Repository
 			return await _context.Tours.Include(t => t.TourImages).ToListAsync();
 		}
 
+
         public Task<Tour> GetToursImagesWithName(string name)
         {
             return _context.Tours.Include(t => t.TourImages).FirstOrDefaultAsync(t => t.Name == name);

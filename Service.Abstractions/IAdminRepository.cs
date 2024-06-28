@@ -11,5 +11,6 @@ namespace Service.Abstractions
 	public interface IAdminRepository: IBaseRepository<ApplicationUser>
 	{
 		Task<string> AcceptTourGuideAsync(string email);
-	}
+        Task<ApplicationUser?> ToggleAdminStatusAsync(string id);
+    }
 }

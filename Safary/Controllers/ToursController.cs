@@ -101,17 +101,28 @@ namespace Presentations.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingTourHour = await _unitOfWork.Tours.GetByName(name);
+            var tour = await _tourRepository.GetToursImagesWithName(name);
 
-            if (existingTourHour == null)
+            if (tour == null)
                 return NotFound();
 
-            _mapper.Map(dto, existingTourHour);
+            _mapper.Map(dto, tour);
 
-            _unitOfWork.Tours.Update(existingTourHour);
+            if (dto.TourImages != null)
+            {
+                // Clear existing images and add new ones
+                tour.TourImages.Clear();
+                foreach (var imageDto in dto.TourImages)
+                {
+                    var tourImage = _mapper.Map<TourImage>(imageDto);
+                    tour.TourImages.Add(tourImage);
+                }
+            }
+
+            _unitOfWork.Tours.Update(tour);
             _unitOfWork.Complete();
 
-            return Ok(existingTourHour);
+            return Ok(tour);
         }
 
         [HttpDelete("{name}")]

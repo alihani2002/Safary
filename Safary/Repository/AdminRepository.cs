@@ -29,5 +29,21 @@ namespace Safary.Repository
 			await _userManager.UpdateAsync(user);
 			return "Accepted Successfully";
 		}
-	}
+
+        public async Task<ApplicationUser?> ToggleAdminStatusAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user is null) return null;
+
+            user.IsDeleted = !user.IsDeleted;
+
+            await _userManager.UpdateAsync(user);
+
+            if (user.IsDeleted)
+                await _userManager.UpdateSecurityStampAsync(user);
+
+            return user;
+        }
+    }
 }
