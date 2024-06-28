@@ -96,7 +96,7 @@ namespace Presentations.Controllers
         }
 
         [HttpPut("{name}")]
-        public async Task<IActionResult> UpdateTourHour(string name, [FromForm] TourHourPostDTO dto)
+        public async Task<IActionResult> UpdateTourHour(string name,  TourHourPostDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
