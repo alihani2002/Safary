@@ -62,7 +62,7 @@ public class AccountController : ControllerBase
     }
 
 	[HttpPost("Register-As-Admin")]
-	public async Task<IActionResult> RegisterAsAdminAsync( RegisterDTO model)
+	public async Task<IActionResult> RegisterAsAdminAsync([FromForm] RegisterDTO model)
 	{
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
