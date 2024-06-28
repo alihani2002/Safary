@@ -76,7 +76,7 @@ namespace Presentations.Controllers
             return Ok(blog);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBlog( int id,[FromForm] BlogPostDTO dto)
+        public async Task<IActionResult> UpdateBlog( int id, BlogPostDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
