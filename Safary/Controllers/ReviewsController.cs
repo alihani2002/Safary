@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Safary.Repository;
 using Service.Abstractions;
 using Shared.DTOs;
 
@@ -82,6 +83,20 @@ namespace Safary.Controllers
                 return NotFound();
 
             return NoContent();
+        }
+        [HttpPost("TourToggleStatus/{id}")]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var tour = await _reviewService.ToggleStatus(id);
+
+            return tour is null ? NotFound() : Ok(tour);
+        }
+        [HttpPost("GuideToggleStatus/{id}")]
+        public async Task<IActionResult> GuideToggleStatus(int id)
+        {
+            var guide = await _reviewService.GuideToggleStatus(id);
+
+            return guide is null ? NotFound() : Ok(guide);
         }
     }
 }

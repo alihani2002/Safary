@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-	public class TourBlog
-	{
+	public class TourBlog : BaseModel
+    {
 		public int Id { get; set; }
 
         [Sieve(CanFilter = true, CanSort = true)]

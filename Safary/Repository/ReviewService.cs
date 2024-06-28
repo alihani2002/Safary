@@ -100,6 +100,32 @@ namespace Service.Implementations
 
         }
 
+        public async Task<TourReview?> ToggleStatus(int id)
+        {
+            var tour = await _unitOfWork.TourReviews.GetById(id);
+
+            if (tour is null) return null;
+
+            tour.IsDeleted = !tour.IsDeleted;
+
+            _unitOfWork.Complete();
+
+            return tour;
+        }
+
+        public async Task<TourGuideReview?> GuideToggleStatus(int id)
+        {
+            var tour = await _unitOfWork.TourGuideReviews.GetById(id);
+
+            if (tour is null) return null;
+
+            tour.IsDeleted = !tour.IsDeleted;
+
+            _unitOfWork.Complete();
+
+            return tour;
+        }
+
         //// Method to get all reviews for a specific tour guide by their ID
         //public async Task<TourGuideWithReviewsDTO> GetTourGuideReviewsByGuideIdAsync(string guideId)
         //{

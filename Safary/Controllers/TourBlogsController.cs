@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Safary.Repository;
 using Service.Abstractions;
 using Shared.DTOs;
 using Sieve.Models;
@@ -19,13 +20,16 @@ namespace Safary.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+
+        private readonly ITourBlogService _tourBlogService;
         private readonly ISieveProcessor _sieveProcessor;
 
 
 
-		public TourBlogsController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor)
+		public TourBlogsController(IMapper mapper, IUnitOfWork unitOfWork, ISieveProcessor sieveProcessor, ITourBlogService tourBlogService)
 		{
-			_mapper = mapper;
+            _tourBlogService = tourBlogService;
+            _mapper = mapper;
 			_unitOfWork = unitOfWork;
 			_sieveProcessor = sieveProcessor;
 		}
@@ -105,10 +109,16 @@ namespace Safary.Controllers
 
             return Ok(existingTour);
         }
+        [HttpPost("ToggleStatus/{id}")]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var blog = await _tourBlogService.ToggleStatus(id);
 
-		
+            return blog is null ? NotFound() : Ok(blog);
+        }
 
-	}
+
+    }
 
 
 }
