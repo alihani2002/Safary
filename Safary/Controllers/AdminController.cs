@@ -80,6 +80,13 @@ namespace Safary.Controllers
             var user = await _adminRepository.ToggleAdminStatusAsync(id);
 
             return user is null ? NotFound() : Ok();
-        }        
+        }
+        [HttpPost("AccepdedToggleStatus/{id}")]
+        public async Task<IActionResult> AcceptedToggleStatus(string id)
+        {
+            var user = await _adminRepository.ToggleAdminAcceptedStatusAsync(id);
+
+            return user is null ? NotFound() : Ok();
+        }
     }
 }

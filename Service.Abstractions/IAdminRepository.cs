@@ -12,5 +12,6 @@ namespace Service.Abstractions
 	{
 		Task<string> AcceptTourGuideAsync(string email);
         Task<ApplicationUser?> ToggleAdminStatusAsync(string id);
+        Task<ApplicationUser?> ToggleAdminAcceptedStatusAsync(string id);
     }
 }

@@ -12,6 +12,7 @@ namespace Shared.DTOs
         public string? Id { get; set; }
         public string FullName { get; set; } = null!;
         public bool IsDeleted { get; set; }
+        public bool AdminAccepted { get; set; }
 
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }

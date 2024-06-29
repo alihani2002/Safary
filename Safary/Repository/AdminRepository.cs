@@ -45,5 +45,20 @@ namespace Safary.Repository
 
             return user;
         }
+        public async Task<ApplicationUser?> ToggleAdminAcceptedStatusAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user is null) return null;
+
+            user.AdminAccepted = !user.AdminAccepted;
+
+            await _userManager.UpdateAsync(user);
+
+            if (user.AdminAccepted)
+                await _userManager.UpdateSecurityStampAsync(user);
+
+            return user;
+        }
     }
 }
