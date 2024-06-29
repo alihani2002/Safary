@@ -70,21 +70,16 @@ namespace Safary.Repository
 
             tourGuide.CvUrl = fileName;
 
-			var extensionImage = Path.GetExtension(model.Image.FileName);
-
-			if (!_allowedImageExtensions.Contains(extensionImage))
-				return new TourGuideDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
-
-			if (model.Image.Length > _maxAllowedSizeImage)
-				return new TourGuideDTO { Message = "Image cannot be more than 2 MB!" };
-
-			var imageName = $"{Guid.NewGuid()}{extensionImage}";
-
-			var pathImage = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/tourguides", imageName);
-			using var streamImage = File.Create(pathImage);
-			model.Image.CopyTo(streamImage);
-
-			tourGuide.ImageUrl = imageName;
+			//var extensionImage = Path.GetExtension(model.Image.FileName);
+			//if (!_allowedImageExtensions.Contains(extensionImage))
+			//	return new TourGuideDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
+			//if (model.Image.Length > _maxAllowedSizeImage)
+			//	return new TourGuideDTO { Message = "Image cannot be more than 2 MB!" };
+			//var imageName = $"{Guid.NewGuid()}{extensionImage}";
+			//var pathImage = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/tourguides", imageName);
+			//using var streamImage = File.Create(pathImage);
+			//model.Image.CopyTo(streamImage);
+			//tourGuide.ImageUrl = imageName;
 
 			var result = await _userManager.CreateAsync(tourGuide, model.Password);
             if (!result.Succeeded)
@@ -117,21 +112,21 @@ namespace Safary.Repository
 
             var user = _mapper.Map<ApplicationUser>(model);
 
-            var extensionImage = Path.GetExtension(model.Image?.FileName);
+            //var extensionImage = Path.GetExtension(model.Image?.FileName);
 
-            if (!_allowedImageExtensions.Contains(extensionImage))
-                return new TourGuideDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
+            //if (!_allowedImageExtensions.Contains(extensionImage))
+            //    return new TourGuideDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
 
-            if (model.Image.Length > _maxAllowedSizeImage)
-                return new TourGuideDTO { Message = "Image cannot be more than 2 MB!" };
+            //if (model.Image.Length > _maxAllowedSizeImage)
+            //    return new TourGuideDTO { Message = "Image cannot be more than 2 MB!" };
 
-            var imageName = $"{Guid.NewGuid()}{extensionImage}";
+            //var imageName = $"{Guid.NewGuid()}{extensionImage}";
 
-            var pathImage = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/tourists", imageName);
-            using var streamImage = File.Create(pathImage);
-            model.Image.CopyTo(streamImage);
+            //var pathImage = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/tourists", imageName);
+            //using var streamImage = File.Create(pathImage);
+            //model.Image.CopyTo(streamImage);
 
-            user.ImageUrl = imageName;
+            //user.ImageUrl = imageName;
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)

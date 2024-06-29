@@ -22,7 +22,7 @@ namespace Shared.DTOs
 		[DataType(DataType.EmailAddress)]
 		public string Email { get; set; }
 
-		public IFormFile? Image { get; set; }
+		//public IFormFile? Image { get; set; }
 
 		[DataType(DataType.Password, ErrorMessage = Errors.WeakPassword)]
 		public string Password { get; set; }

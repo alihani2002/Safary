@@ -3,12 +3,9 @@ using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.EntityFrameworkCore;
 using Service.Abstractions;
 using Shared.DTOs;
 using Sieve.Models;
@@ -44,7 +41,7 @@ public class AccountController : ControllerBase
 	}
 
 	[HttpPost("Register-As-User")]
-    public async Task<IActionResult> RegisterAsUserAsync([FromForm] RegisterDTO model)
+    public async Task<IActionResult> RegisterAsUserAsync([FromBody] RegisterDTO model)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -62,7 +59,7 @@ public class AccountController : ControllerBase
     }
 
 	[HttpPost("Register-As-Admin")]
-	public async Task<IActionResult> RegisterAsAdminAsync([FromForm] RegisterDTO model)
+	public async Task<IActionResult> RegisterAsAdminAsync([FromBody] RegisterDTO model)
 	{
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
@@ -97,7 +94,7 @@ public class AccountController : ControllerBase
 	}
 
 	[HttpPost("Login")]
-	public async Task<IActionResult> LoginAsync([FromForm] LoginDTO model)
+	public async Task<IActionResult> LoginAsync([FromBody] LoginDTO model)
 	{
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
