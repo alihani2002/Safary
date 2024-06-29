@@ -54,6 +54,7 @@ namespace Safary.Controllers
             return Ok(_mapper.Map<IEnumerable<TourGuideSelectedTableDTO>>(tourGuides));
 
         }
+        
 
         [HttpGet("GetFilterdAndSorted")]
         public async Task<IActionResult> GetFilteredAndSorted([FromQuery] SieveModel sieveModel)
@@ -136,10 +137,24 @@ namespace Safary.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetTourguideById(string id)
         {
+            if (!ModelState.IsValid)
+                return NotFound();
+
+            var tourgiude = await _unitOfWork.ApplicationUsers.Find(r => r.Id == id);
+
+            if (tourgiude is null)
+                return NotFound(ModelState);
+
+            var tourgiudeDto = _mapper.Map<TourgiudeDto>(tourgiude);
+            return Ok(tourgiudeDto);
+        }
+        [HttpGet("Email{email}")]
+        public async Task<ActionResult> GetTourguideByEmail(string email)
+        {
 			if (!ModelState.IsValid)
 				return NotFound();
 
-			var tourgiude = await _unitOfWork.ApplicationUsers.Find(r => r.Id == id);
+			var tourgiude = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
             
             if (tourgiude is null)
                 return NotFound(ModelState);
