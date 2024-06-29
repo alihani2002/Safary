@@ -46,7 +46,7 @@ namespace Safary.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("TourGuideTableById")]
+        [HttpGet("TourGuideTableById/{id}")]
         public async Task<IActionResult> TourGuidesSelectedById(string id)
         {
             var tourGuides = await _unitOfWork.SelectedTourGuides.FindAll(t => t.TourguideId == id && t.IsConfirmed == true, 0);
@@ -148,7 +148,7 @@ namespace Safary.Controllers
             var tourgiudeDto = _mapper.Map<TourgiudeDto>(tourgiude);
             return Ok(tourgiudeDto);
         }
-        [HttpGet("Email{email}")]
+        [HttpGet("Email/{email}")]
         public async Task<ActionResult> GetTourguideByEmail(string email)
         {
 			if (!ModelState.IsValid)
