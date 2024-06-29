@@ -76,7 +76,7 @@ public class AccountController : ControllerBase
 
 
 	[HttpPost("Register-As-TourGuide")]
-	public async Task<IActionResult> RegisterAsTourGuideAsync([FromBody] RegisterTourGuideDTO model)
+	public async Task<IActionResult> RegisterAsTourGuideAsync([FromForm] RegisterTourGuideDTO model)
 	{
 		if (!ModelState.IsValid)
 			return BadRequest(ModelState);
