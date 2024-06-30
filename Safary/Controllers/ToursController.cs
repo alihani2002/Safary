@@ -81,7 +81,7 @@ namespace Presentations.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTour(TourHourPostDTO model)
+        public async Task<IActionResult> AddTour(CreateTourDTO model)
         {
             if (!ModelState.IsValid)
             {
