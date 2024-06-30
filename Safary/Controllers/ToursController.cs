@@ -92,7 +92,10 @@ namespace Presentations.Controllers
 
             await _unitOfWork.Tours.Add(TourHour);
             _unitOfWork.Complete();
-            return Ok(TourHour);
+            return Ok( $"Id :{TourHour.Id} ,\n" +
+                       $"Name {TourHour.Name}\n," +
+                       $"Location {TourHour.Location}\n," +
+                       $"Description {TourHour.Description} " );
         }
 
         [HttpPut("{name}")]
