@@ -55,12 +55,12 @@ namespace Presentations.Controllers
         {
             
 
-            var blog = await _unitOfWork.Blogs.GetById(id);
+            var blog = await _unitOfWork.Blogs.Find(s => s.Id == id, include: s => s.Include(x => x.Tours));
 
             if(blog is null)
                 return NotFound();
-
-            return Ok(blog);
+            var dto = _mapper.Map<BlogDTO>(blog);
+            return Ok(dto);
         }
         [HttpPost]
         public async Task<IActionResult> AddBlog(BlogPostDTO model)
