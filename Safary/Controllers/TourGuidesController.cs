@@ -103,7 +103,7 @@ namespace Safary.Controllers
 
         [HttpPost("AddTourGuideSelected")]
         [Authorize("UserPolicy")]
-        public async Task<IActionResult> TourGuideSelected([FromForm] TourGuideSelectedDTO dto)
+        public async Task<IActionResult> TourGuideSelected([FromBody] TourGuideSelectedDTO dto)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
