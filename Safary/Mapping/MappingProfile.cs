@@ -11,8 +11,8 @@ namespace Safary.Mapping
         public MappingProfile()
         {
             //Blog 
-            CreateMap<Blog,BlogDTO>().ReverseMap();
-            CreateMap<BlogPostDTO,Blog>().ReverseMap();
+            CreateMap<Blog, BlogDTO>().ReverseMap();
+            CreateMap<BlogPostDTO, Blog>().ReverseMap();
             CreateMap<Blog, SelectListItem>()
                 .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Title));
@@ -25,7 +25,7 @@ namespace Safary.Mapping
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Name));
 
             CreateMap<TourHourDTO, Tour>().ReverseMap()
-			    .ForMember(dest => dest.TourImages, opt => opt.MapFrom(src => src.TourImages));
+                .ForMember(dest => dest.TourImages, opt => opt.MapFrom(src => src.TourImages));
 
             CreateMap<Tour, TourHourPostDTO>().ReverseMap()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -35,7 +35,7 @@ namespace Safary.Mapping
 
             CreateMap<TourImage, TourImageDTO>().ReverseMap();
 
-			CreateMap<TourImage, TourImagesDTO>().ReverseMap(); // Handle Images
+            CreateMap<TourImage, TourImagesDTO>().ReverseMap(); // Handle Images
 
             CreateMap<TourBlog, TourDTO>();
             CreateMap<TourPostDTO, TourBlog>().ReverseMap();
@@ -48,9 +48,10 @@ namespace Safary.Mapping
 
             // tour guide
             CreateMap<RegisterTourGuideDTO, ApplicationUser>().ReverseMap();
+            CreateMap<TourGuideImageDTO, ApplicationUser>().ReverseMap();
 
             CreateMap<TourGuideDTO, ApplicationUser>().ReverseMap();
-           
+
 
             CreateMap<TourBlog, TourDTO>().ReverseMap();
 
@@ -69,7 +70,7 @@ namespace Safary.Mapping
             CreateMap<TourReview, TourReviewDTO>();
             CreateMap<TourReviewPostDTO, TourReview>().ReverseMap();
 
-             CreateMap<ApplicationUser, TourGuideDetailsDTO>();
+            CreateMap<ApplicationUser, TourGuideDetailsDTO>();
             CreateMap<TourGuideReview, TourGuideReviewDetailsDTO>();
 
             //Tourist 
@@ -82,9 +83,9 @@ namespace Safary.Mapping
             CreateMap<TourGuideDetailsDTO, ApplicationUser>().ReverseMap()
                 .ForPath(dest => dest.TourGuideSelectedDTO.TourGuideId, opt => opt.MapFrom(src => src.Id));
 
-			CreateMap<SelectedTourGuide, TourGuideSelectedDTO>().ReverseMap();
+            CreateMap<SelectedTourGuide, TourGuideSelectedDTO>().ReverseMap();
 
-			CreateMap<TourGuideSelectedTableDTO, SelectedTourGuide>().ReverseMap();
+            CreateMap<TourGuideSelectedTableDTO, SelectedTourGuide>().ReverseMap();
 
             //Tours
             CreateMap<Tour, TourDetailsDTO>()
@@ -95,16 +96,6 @@ namespace Safary.Mapping
 
             //admin
             CreateMap<ApplicationUser, AdminDTO>().ReverseMap();
-
-            //tours
-            CreateMap<Tour, TourDetailsDTO>()
-       .ForMember(dest => dest.TourImages, opt => opt.MapFrom(src => src.TourImages));
-
-            // Mapping for TourImage to TourImageDetailsDTO
-            CreateMap<TourImage, TourImageDetailsDTO>();
-
-            // Mapping for TourReview to TourReviewDetailsDTO (assuming you have this class)
-            CreateMap<TourReview, TourReviewDetailsDTO>();
 
         }
     }
