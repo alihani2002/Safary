@@ -7,6 +7,7 @@
         public string Comment { get; set; }
         public string TourGuideId { get; set; }
         public string TouristId { get; set; }
+        public int AverageRating { get; set; }
 
     }
 

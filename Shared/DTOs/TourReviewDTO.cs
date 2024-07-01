@@ -13,6 +13,8 @@ namespace Shared.DTOs
         public string Comment { get; set; }
         public string TourName { get; set; }
         public string TouristId { get; set; }
+        public int AverageRating { get; set; }
+
 
     }
 }
