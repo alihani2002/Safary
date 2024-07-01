@@ -1,4 +1,6 @@
-﻿using Domain.Models;
+﻿using Domain.Entities;
+using Domain.Models;
+using Microsoft.AspNetCore.Http;
 using Shared.DTOs;
 
 namespace Service.Abstractions
@@ -11,5 +13,7 @@ namespace Service.Abstractions
         Task<bool> ConfirmEmailAsync(string email, string token);
 		//Task<AuthModel> GetTokensTourGuideAsync(LoginDTO model);
 		Task<AuthModel> GetTokenAsync(LoginDTO model);
-	}
+        Task<TourGuideImageDTO> UploadTourGuideImageAsync(string id, IFormFile image);
+        Task<TouristImageDTO> UploadTouristImageAsync(string id, IFormFile image);
+    }
 }

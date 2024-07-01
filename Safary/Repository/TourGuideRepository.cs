@@ -93,25 +93,5 @@ namespace Safary.Repository
             return user;
 
         }
-
-
-
-
-
-        //public IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to)
-        //{
-        //	throw new NotImplementedException();
-        //}
-        // !(specificStartDate <= user.EndDate && specificEndDate >= user.StartDate)
-
-        //public IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to) =>
-        //	 _context.Set<ApplicationUser>().Where(g => !(g.StartDate <= to && g.EndDate >= from))
-        //		.ToList();
-
-
-
-        //public IEnumerable<ApplicationUser> GetAll(DateTime from, DateTime to) =>
-        //	 _context.Set<ApplicationUser>().Where(g => !(g.StartDate <= to && g.EndDate >= to) || !(g.StartDate <= from && g.EndDate >= from))
-        //		.ToList();
     }
 }

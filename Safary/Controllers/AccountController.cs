@@ -191,7 +191,35 @@ public class AccountController : ControllerBase
 		return Ok("Password has changed");
 	}
 
-	[HttpPost("logout")]
+	[HttpPost("UploadTourGuideImage")]
+	public async Task<IActionResult> UploadTourGuideImage(string id, IFormFile image)
+	{
+		if (!ModelState.IsValid) return BadRequest();
+
+		var dto = await _authService.UploadTourGuideImageAsync(id, image);
+
+		var result = _mapper.Map<ApplicationUser>(dto);
+
+		_unitOfWork.Complete();
+
+		return Ok(dto);	
+	}
+
+    [HttpPost("UploadTouristImage")]
+    public async Task<IActionResult> UploadTouristImage(string id, IFormFile image)
+    {
+        if (!ModelState.IsValid) return BadRequest();
+
+        var dto = await _authService.UploadTouristImageAsync(id, image);
+
+        var result = _mapper.Map<ApplicationUser>(dto);
+
+        _unitOfWork.Complete();
+
+        return Ok(dto);
+    }
+
+    [HttpPost("logout")]
 	[Authorize]
 	public async Task<IActionResult> Logout()
 	{

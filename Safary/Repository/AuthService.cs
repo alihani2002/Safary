@@ -70,17 +70,6 @@ namespace Safary.Repository
 
             tourGuide.CvUrl = fileName;
 
-			//var extensionImage = Path.GetExtension(model.Image.FileName);
-			//if (!_allowedImageExtensions.Contains(extensionImage))
-			//	return new TourGuideDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
-			//if (model.Image.Length > _maxAllowedSizeImage)
-			//	return new TourGuideDTO { Message = "Image cannot be more than 2 MB!" };
-			//var imageName = $"{Guid.NewGuid()}{extensionImage}";
-			//var pathImage = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/tourguides", imageName);
-			//using var streamImage = File.Create(pathImage);
-			//model.Image.CopyTo(streamImage);
-			//tourGuide.ImageUrl = imageName;
-
 			var result = await _userManager.CreateAsync(tourGuide, model.Password);
             if (!result.Succeeded)
             {
@@ -101,6 +90,102 @@ namespace Safary.Repository
             returnModel.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
             return returnModel;
         }
+
+        #region UploadCvTourGuideIsAJson
+        //public async Task<TourGuideDTO> RegisterAsTourGuideAsync(RegisterTourGuideDTO model)
+        //{
+        //    if (await _userManager.FindByEmailAsync(model.Email) != null)
+        //        return new TourGuideDTO { Message = "Email is already registed!" };
+
+        //    if (await _userManager.FindByNameAsync(model.UserName) != null)
+        //        return new TourGuideDTO { Message = "UserName is already registed!" };
+
+        //    var tourGuide = _mapper.Map<ApplicationUser>(model);
+
+        //    if (string.IsNullOrEmpty(model.CVBase64))
+        //        return new TourGuideDTO { Message = "CVBase64 is required!" };
+
+        //    byte[] cvBytes;
+        //    try
+        //    {
+        //        cvBytes = Convert.FromBase64String(model.CVBase64);
+        //    }
+        //    catch (FormatException)
+        //    {
+        //        return new TourGuideDTO { Message = "Invalid base64 format for CVBase64." };
+        //    }
+
+        //    //var extension = GetFileExtensionFromBase64(model.CVBase64);
+        //    var extension = ".pdf";
+
+        //    if (!_allowedFileExtensions.Contains(extension))
+        //        return new TourGuideDTO { Message = "Only .pdf, .docx files are allowed!" };
+
+        //    if (model.CVBase64.Length > _maxAllowedSizeFile)
+        //        return new TourGuideDTO { Message = "File cannot be more than 5 MB!" };
+
+        //    var fileName = $"{Guid.NewGuid()}{extension}";
+
+        //    var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/pdfs", fileName);
+        //    await System.IO.File.WriteAllBytesAsync(path, cvBytes);
+        //    tourGuide.CvUrl = fileName;
+
+        //    var result = await _userManager.CreateAsync(tourGuide, model.Password);
+
+        //    if (!result.Succeeded)
+        //    {
+        //        var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+        //        return new TourGuideDTO { Message = $"Failed to create user: {errors}" };
+        //    }
+        //    await _userManager.AddToRoleAsync(tourGuide, AppRoles.TourGuide);
+
+        //    var JwtSecurityToken = await CreateJwtToken(tourGuide);
+        //    var returnModel = _mapper.Map<TourGuideDTO>(tourGuide);
+        //    returnModel.ExpiredOn = JwtSecurityToken.ValidTo;
+        //    returnModel.IsAuthenticated = true;
+        //    returnModel.Roles = [AppRoles.TourGuide];
+        //    returnModel.Token = new JwtSecurityTokenHandler().WriteToken(JwtSecurityToken);
+        //    return returnModel;
+        //}
+
+        //public static string GetFileExtensionFromBase64(string base64String)
+        //{
+        //    // Remove data URI scheme if present (e.g., "data:image/png;base64,")
+        //    var base64Parts = base64String.Split(',');
+        //    //if (base64Parts.Length < 2)
+        //    //{
+        //    //    // Invalid base64 format
+        //    //    return null;
+        //    //}
+
+        //    var base64Data = base64Parts[1]; // Actual base64 data part
+        //    byte[] bytes;
+        //    try
+        //    {
+        //        bytes = Convert.FromBase64String(base64Data);
+        //    }
+        //    catch (FormatException)
+        //    {
+        //        // Invalid base64 string
+        //        return null;
+        //    }
+
+        //    // Check the file signature or magic numbers for common file types
+        //    if (bytes.Length >= 4 && bytes[0] == 0x25 && bytes[1] == 0x50 && bytes[2] == 0x44 && bytes[3] == 0x46)
+        //    {
+        //        return ".pdf"; // PDF
+        //    }
+        //    else if (bytes.Length >= 2 && bytes[0] == 0x50 && bytes[1] == 0x4B)
+        //    {
+        //        return ".docx"; // DOCX (ZIP format)
+        //    }
+
+        //    // Add more checks for other file types as needed
+
+        //    // If unable to determine based on content, return null or handle as needed
+        //    return null;
+        //}
+#endregion
 
         public async Task<UserDTO> RegisterAsUserAsync(RegisterDTO model)
         {
@@ -305,5 +390,62 @@ namespace Safary.Repository
             return false;
         }
 
-	}
+        public async Task<TourGuideImageDTO> UploadTourGuideImageAsync(string id, IFormFile image)
+        {
+            var tourguide = await _userManager.FindByIdAsync(id);
+
+            if (tourguide is null) return null;
+
+            var extension = Path.GetExtension(image.FileName);
+
+            if (!_allowedImageExtensions.Contains(extension))
+                return new TourGuideImageDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
+
+            if (image.Length > _maxAllowedSizeImage)
+                return new TourGuideImageDTO { Message = "Image cannot be more than 2 MB!" };
+
+            var imageName = $"{Guid.NewGuid()}{extension}";
+
+            var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/tourguides", imageName);
+            using var stream = File.Create(path);
+            image.CopyTo(stream);
+
+            tourguide.ImageUrl = imageName;
+
+            return new TourGuideImageDTO
+            {
+                Message = "Added Successfully",
+                ImageUrl = tourguide.ImageUrl,
+            };
+        }
+
+        public async Task<TouristImageDTO> UploadTouristImageAsync(string id, IFormFile image)
+        {
+            var tourist = await _userManager.FindByIdAsync(id);
+
+            if (tourist is null) return null;
+
+            var extension = Path.GetExtension(image.FileName);
+
+            if (!_allowedFileExtensions.Contains(extension))
+                return new TouristImageDTO { Message = "Only .jpg, .jpeg, .png images are allowed!" };
+
+            if (image.Length > _maxAllowedSizeFile)
+                return new TouristImageDTO { Message = "Image cannot be more than 2 MB!" };
+
+            var imageName = $"{Guid.NewGuid()}{extension}";
+
+            var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/tourists", imageName);
+            using var stream = File.Create(path);
+            image.CopyTo(stream);
+
+            tourist.ImageUrl = imageName;
+
+            return new TouristImageDTO
+            {
+                Message = "Added Successfully",
+                ImageUrl = tourist.ImageUrl,
+            };
+        }
+    }
 }

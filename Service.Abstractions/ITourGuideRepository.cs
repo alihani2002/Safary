@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Service.Abstractions
 		Task<bool> AddSelectTourGuide(string touristId, string tourGuideId, DateTime tourTime, string timeToCast, int adults);
 		Task<ApplicationUser?> ToggleUserStatusAsync(string id);
         Task<ApplicationUser?> ToggleUserAcceptedStatusAsync(string id);
+		
 
     }
 }
