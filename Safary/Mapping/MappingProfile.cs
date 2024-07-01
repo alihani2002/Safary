@@ -96,6 +96,16 @@ namespace Safary.Mapping
             //admin
             CreateMap<ApplicationUser, AdminDTO>().ReverseMap();
 
+            //tours
+            CreateMap<Tour, TourDetailsDTO>()
+       .ForMember(dest => dest.TourImages, opt => opt.MapFrom(src => src.TourImages));
+
+            // Mapping for TourImage to TourImageDetailsDTO
+            CreateMap<TourImage, TourImageDetailsDTO>();
+
+            // Mapping for TourReview to TourReviewDetailsDTO (assuming you have this class)
+            CreateMap<TourReview, TourReviewDetailsDTO>();
+
         }
     }
 }
