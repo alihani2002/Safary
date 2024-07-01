@@ -29,13 +29,24 @@ namespace Service.Implementations
         public async Task<IEnumerable<TourReviewDTO>> GetAllTourReviewsAsync()
         {
             var reviews = await _unitOfWork.TourReviews.GetAll();
-            return _mapper.Map<IEnumerable<TourReviewDTO>>(reviews);
+            var reviewDTOs = _mapper.Map<IEnumerable<TourReviewDTO>>(reviews);
+            var averageRating = (int)reviews.Average(r => r.Rating);
+
+            foreach (var review in reviewDTOs)
+            {
+                review.AverageRating = averageRating;
+            }
+
+            return reviewDTOs;
         }
 
         public async Task<TourReviewDTO> GetTourReviewByIdAsync(int id)
         {
             var review = await _unitOfWork.TourReviews.GetById(id);
-            return _mapper.Map<TourReviewDTO>(review);
+            var reviewDTO = _mapper.Map<TourReviewDTO>(review);
+            var allReviews = await _unitOfWork.TourReviews.GetAll();
+            reviewDTO.AverageRating = (int)allReviews.Average(r => r.Rating);
+            return reviewDTO;
         }
 
         public async Task<TourReviewDTO> AddTourReviewAsync(TourReviewPostDTO reviewPostDto)
@@ -65,7 +76,16 @@ namespace Service.Implementations
         public async Task<IEnumerable<TourGuideReviewDTO>> GetAllTourGuideReviewsAsync()
         {
             var reviews = await _unitOfWork.TourGuideReviews.GetAll();
-            return _mapper.Map<IEnumerable<TourGuideReviewDTO>>(reviews);
+            var reviewDTOs = _mapper.Map<IEnumerable<TourGuideReviewDTO>>(reviews);
+            var averageRating = (int)reviews.Average(r => r.Rating);
+
+            foreach (var review in reviewDTOs)
+            {
+                review.AverageRating = averageRating;
+            }
+
+            return reviewDTOs;
+
         }
 
 
@@ -126,24 +146,6 @@ namespace Service.Implementations
             return tour;
         }
 
-        //// Method to get all reviews for a specific tour guide by their ID
-        //public async Task<TourGuideWithReviewsDTO> GetTourGuideReviewsByGuideIdAsync(string guideId)
-        //{
-        //    var reviews = await _unitOfWork.TourGuideReviews.Find(r => r.TourGuideId == guideId);
-
-        //    var reviewDTOs = _mapper.Map<IEnumerable<TourGuideReviewDTO>>(reviews).ToList();
-
-        //    return new TourGuideWithReviewsDTO
-        //    {
-        //        Id = guideId,
-        //        Reviews = reviewDTOs
-        //    };
-        //}
-
-        //public async Task<IEnumerable<TourWithReviewsDTO>> GetTourReviewsByTourNameAsync(string tourName)
-        //{
-        //    var reviews = await _unitOfWork.TourReviews.Find(r => r.Tour.Name == tourName);
-        //    return _mapper.Map<IEnumerable<TourWithReviewsDTO>>(reviews);
-        //}
+        
     }
 }
