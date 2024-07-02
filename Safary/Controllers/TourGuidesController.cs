@@ -38,12 +38,27 @@ namespace Safary.Controllers
         }
 
         // GET: api/Tourguide
+        // GET: api/Tourguide
         [HttpGet("GetAll")]
-        public async Task<ActionResult> GetAllTourGiudes()
+        public async Task<ActionResult> GetAllTourGuides()
         {
+            var reviews = await _unitOfWork.TourGuideReviews.GetAll();
             var tourGuides = await _unitOfWork.ApplicationUsers.FindAll(r => r.CvUrl != null, 0);
-            var dto = _mapper.Map<IEnumerable<CardTourGuideDTO>>(tourGuides);
-            return Ok(dto);
+
+            var tourGuideDtos = new List<CardTourGuideDTO>();
+
+            foreach (var tourGuide in tourGuides)
+            {
+                var tourGuideReviews = reviews.Where(r => r.TourGuideId == tourGuide.Id);
+                double averageRating = tourGuideReviews.Any() ? tourGuideReviews.Average(r => r.Rating) : 0.0;
+
+                var tourGuideDto = _mapper.Map<CardTourGuideDTO>(tourGuide);
+                tourGuideDto.AverageRating = averageRating;
+
+                tourGuideDtos.Add(tourGuideDto);
+            }
+
+            return Ok(tourGuideDtos);
         }
 
         [HttpGet("TourGuideTableById/{id}")]

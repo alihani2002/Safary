@@ -20,7 +20,9 @@ namespace Shared.DTOs
         public int Duration { get; set; }
         public bool IsDeleted { get; set; }
         public ICollection<TourImageDTO>? TourImages { get; set; }
-	}
+        public double AverageRating { get; set; }
+
+    }
     public class TourImageDTO
     {
         public string ImageUrl { get; set; } = null!;

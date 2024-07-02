@@ -23,5 +23,7 @@ namespace Shared.DTOs
 
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+        public double AverageRating { get; set; }
+
     }
 }

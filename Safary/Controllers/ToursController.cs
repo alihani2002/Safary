@@ -52,9 +52,22 @@ namespace Presentations.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult> GetTours()
         {
-            var Tours = await _tourRepository.GetAllToursWithImages();
-            var dto = _mapper.Map<IEnumerable<TourHourDTO>>(Tours);
-            return Ok(dto);
+            var tours = await _tourRepository.GetAllToursWithImages();
+
+            var tourDtos = new List<TourHourDTO>();
+
+            foreach (var tour in tours)
+            {
+                var reviews = await _unitOfWork.TourReviews.FindAll(r => r.TourName == tour.Name, 0);
+                var averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0.0;
+
+                var tourDto = _mapper.Map<TourHourDTO>(tour);
+                tourDto.AverageRating = averageRating;
+
+                tourDtos.Add(tourDto);
+            }
+
+            return Ok(tourDtos);
         }
 
         [HttpGet("GetTourDetails")]
