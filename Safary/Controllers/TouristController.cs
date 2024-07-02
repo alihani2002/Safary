@@ -42,6 +42,21 @@ namespace Safary.Controllers
             return Ok(touristDto);
         }
 
+        [HttpGet("Email/{email}")]
+        public async Task<ActionResult> GetTouristByEmail(string email)
+        {
+            if (!ModelState.IsValid)
+                return NotFound();
+
+            var tourist = await _unitOfWork.ApplicationUsers.Find(r => r.Email == email);
+
+            if (tourist is null)
+                return NotFound(ModelState);
+
+            var tourgiudeDto = _mapper.Map<TouristDto>(tourist);
+            return Ok(tourgiudeDto);
+        }
+
         // POST: api/Tourists
         [HttpPost]
         public async Task<ActionResult<TouristDto>> CreateTourist([FromForm] TouristDto touristDto)
