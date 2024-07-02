@@ -210,7 +210,7 @@ public class AccountController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        var dto = await _authService.UploadTouristImageAsync(id, image);
+        var dto = await _authService.UploadTourGuideImageAsync(id, image);
 
         var result = _mapper.Map<ApplicationUser>(dto);
 

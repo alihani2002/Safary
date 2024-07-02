@@ -435,7 +435,7 @@ namespace Safary.Repository
 
             var imageName = $"{Guid.NewGuid()}{extension}";
 
-            var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/tourists", imageName);
+            var path = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/tourists", imageName);
             using var stream = File.Create(path);
             image.CopyTo(stream);
 
