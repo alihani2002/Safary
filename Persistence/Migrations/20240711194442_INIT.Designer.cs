@@ -12,8 +12,8 @@ using Persistence.Data;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240628025420_addBaseToTourBlog")]
-    partial class addBaseToTourBlog
+    [Migration("20240711194442_INIT")]
+    partial class INIT
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -390,7 +390,6 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TourName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
@@ -642,9 +641,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Tour", "Tour")
                         .WithMany("TourImages")
-                        .HasForeignKey("TourName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TourName");
 
                     b.Navigation("Tour");
                 });

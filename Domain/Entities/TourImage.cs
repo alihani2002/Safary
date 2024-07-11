@@ -10,7 +10,7 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public string ImageUrl { get; set; } = null!;
-        public string TourName { get; set; }
+        public string? TourName { get; set; }
         public Tour? Tour { get; set; }
     }
 }

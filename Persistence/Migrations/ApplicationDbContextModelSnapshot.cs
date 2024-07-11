@@ -202,7 +202,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Blogs");
+                    b.ToTable("Blogs", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.SelectedTourGuide", b =>
@@ -255,7 +255,7 @@ namespace Persistence.Migrations
                     b.HasIndex("TouristId", "TourguideId", "SelectedDate")
                         .IsUnique();
 
-                    b.ToTable("SelectedTourGuides");
+                    b.ToTable("SelectedTourGuides", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Tour", b =>
@@ -292,7 +292,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Tours");
+                    b.ToTable("Tours", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.TourBlog", b =>
@@ -332,7 +332,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("BlogId");
 
-                    b.ToTable("TourBlog");
+                    b.ToTable("TourBlog", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.TourGuideReview", b =>
@@ -371,7 +371,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TouristId");
 
-                    b.ToTable("TourGuideReviews");
+                    b.ToTable("TourGuideReviews", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.TourImage", b =>
@@ -387,14 +387,13 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TourName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TourName");
 
-                    b.ToTable("TourImages");
+                    b.ToTable("TourImages", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.TourReview", b =>
@@ -433,7 +432,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TouristId");
 
-                    b.ToTable("TourReviews");
+                    b.ToTable("TourReviews", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -639,9 +638,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Tour", "Tour")
                         .WithMany("TourImages")
-                        .HasForeignKey("TourName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TourName");
 
                     b.Navigation("Tour");
                 });
